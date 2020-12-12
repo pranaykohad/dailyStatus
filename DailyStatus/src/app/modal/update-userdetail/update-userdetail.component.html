@@ -1,0 +1,59 @@
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Details</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="mb-1">
+          <span class="bold-txt">User Name:</span>
+          <input
+            #userName
+            id="username"
+            class="col-md-2 edit-lbl-border ml-2 mr-2 p-1"
+            [value]="user.userName"
+          />
+        </div>
+        <div class="mb-1">
+          <span class="bold-txt mb-1">Password:</span>
+          <input
+            #password
+            id="pass"
+            class="col-md-2 edit-lbl-border pass-lm ml-2 mr-2 p-1"
+            [value]="user.password"
+          />
+        </div>
+        <div>
+          <span class="bold-txt">Module:</span>
+          <select class="module-name mod-lm" #moduleName>
+            <option
+              *ngFor="let module of moduleList"
+              [selected]="user.moduleName === module"
+            >
+              {{ module }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="updateUserDetails(userName, moduleName)"
+        >
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

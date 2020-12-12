@@ -1,0 +1,26 @@
+#app {
+  width: 100%;
+  font-size: 15px;
+  background-color: #fffafa;
+  .txt-bx {
+    border: 1px solid #c0c0c0 !important;
+  }
+  .module-name {
+    height: 30px;
+  }
+  .num-wd {
+    width: 20px;
+  }
+  .bold-txt {
+    font-weight: 500;
+  }
+  @media (min-width: 1000px) {
+    .hd-box {
+      width: 500px;
+    }
+  }
+}
+.upper-contr {
+  display: flex;
+  justify-content: flex-end;
+}

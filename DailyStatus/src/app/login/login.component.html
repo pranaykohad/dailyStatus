@@ -1,0 +1,9 @@
+<div id="loginPage" style="border: 1px solild black; border-radius: 5px">
+  <div>Username: <input id="username" [(ngModel)]="user.userName" /></div>
+  <div>
+    Pasword:
+    <input id="password" type="password" [(ngModel)]="user.password" />
+  </div>
+  <div class="wrong-cred" *ngIf="wrongCred">{{ errorMsg }}</div>
+  <div><button (click)="login()">Login</button></div>
+</div>

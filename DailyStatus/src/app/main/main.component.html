@@ -1,0 +1,76 @@
+<div id="app" class="pt-3 pl-4">
+  <div class="row pr-5 upper-contr">
+    <button class="btn btn-outline-primary btn-sm">Generate Report</button>
+  </div>
+  <hr />
+  <div>
+    <div class="row m-1">
+      <div class="mr-2 p-1">
+        <span class="bold-txt">User Name: </span>{{ user.userName }}
+      </div>
+      <div class="mr-2 p-1">
+        <span class="bold-txt">Module Name: </span>{{ user.moduleName }}
+      </div>
+      <button
+        data-toggle="modal"
+        data-target="#myModal"
+        class="btn btn-outline-primary btn-sm"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+  <hr />
+  <div
+    class="row mb-2 col-md-12"
+    *ngFor="let row of statusList; let index = index"
+    stye
+  >
+    <span class="mr-2 num-wd">{{ index + 1 }})</span>
+    <div class="mr-2">
+      Ticket Id:
+      <input
+        class="txt-bx"
+        [id]="'tkt-id-' + index + 1"
+        [(ngModel)]="row.ticketId"
+      />
+    </div>
+    <div class="mr-2">
+      Ticket Description:
+      <input
+        class="txt-bx hd-box"
+        [id]="'tkt-desc-' + index + 1"
+        [(ngModel)]="row.description"
+      />
+    </div>
+    <select
+      class="module-name"
+      (change)="changeState($event.target.selectedIndex, row)"
+    >
+      <option
+        *ngFor="let state of stateList"
+        [selected]="selectedState === state"
+      >
+        {{ state }}
+      </option>
+    </select>
+  </div>
+  <hr />
+  <div>
+    <div class="row ml-2">
+      <button
+        class="btn btn-outline-success btn-sm mr-3"
+        (click)="submitStatus()"
+      >
+        Sumbit Status
+      </button>
+      <button class="btn btn-outline-danger btn-sm" (click)="resetStatuses()">
+        Reset Status
+      </button>
+    </div>
+  </div>
+  <app-update-userdetail
+    [user]="user"
+    [moduleList]="moduleList"
+  ></app-update-userdetail>
+</div>
