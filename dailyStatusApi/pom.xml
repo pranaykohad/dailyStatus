@@ -12,7 +12,7 @@
 	<artifactId>dailyStatusApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dailyStatusApi</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Daily status tracking system</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -49,11 +49,33 @@
 
 	<build>
 		<plugins>
+		
+<!--			<plugin> 
+					<artifactId>maven-resources-plugin</artifactId> 
+					<executions> 
+						<execution> 
+							<id>copy-resources</id> 
+							<phase>validate</phase> 
+							<goals>
+								<goal>copy-resources</goal>
+							</goals> 
+							<configuration> 
+								<outputDirectory>${build.directory}/classes/static/</outputDirectory >
+								<resources>
+									<resource>
+										<directory>../DailyStatus/dist</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>-->
+		
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+		
 		</plugins>
 	</build>
-
 </project>
