@@ -12,11 +12,15 @@ export class UserService {
 
   constructor(
     private httpClient: HttpClient,
-    private localStorageService: LocalStorageService
+    private localStoreService: LocalStorageService
   ) {}
 
   getUserDetails(userId: number): Observable<User> {
     return this.httpClient.get<User>(`${BASE_URL}user/${userId}`);
+  }
+
+  updateUserDetails(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${BASE_URL}updateDetails`, user);
   }
 
   authenticateUser(user: User): Observable<User> {
@@ -24,29 +28,7 @@ export class UserService {
   }
 
   getLocalUserName() {
-    return localStorage.getItem('USER') ? localStorage.getItem('USER') : '';
-  }
-
-  getLocalModuleName() {
-    return localStorage.getItem('MODULE_NAME')
-      ? localStorage.getItem('USER')
-      : '';
-  }
-
-  setInitialUserName(user: User) {
-    if (!localStorage.getItem('USER')) {
-      this.localStorageService.setUser(user);
-    } else {
-      user.userName = localStorage.getItem('USER');
-    }
-  }
-
-  setInitialMouduleName(user: User) {
-    if (!localStorage.getItem('MODULE_NAME')) {
-      const moduleName = user.moduleName;
-      this.localStorageService.setModuleName(moduleName, user);
-    } else {
-      user.moduleName = localStorage.getItem('MODULE_NAME');
-    }
+    const USER = this.localStoreService.getUser();
+    return USER && USER['userName'].length ? USER['userName'] : null;
   }
 }

@@ -23,35 +23,17 @@ export class MainComponent implements OnInit {
     private statusService: StatusService,
     private userService: UserService,
     private localStorageService: LocalStorageService,
+    private localStoreService: LocalStorageService,
     private router: Router
   ) {
-    this.user = new User('', '', '');
-    const moduleList: string[] = [
-      'OCR',
-      'Connector',
-      'Workbench 9.2',
-      'Automation',
-    ];
-    moduleList.forEach((element) => {
-      this.moduleList.push(element);
-    });
-    this.statusList = [];
-    for (let row = 1; row <= this.numOfRow; row++) {
-      this.statusList.push(
-        new Status('', '', 'In progress', new Date().toString())
-      );
-    }
+    this.user = this.localStoreService.getUser();
+    this.initModuleList();
+    this.initStatusList();
   }
 
   ngOnInit(): void {
-    if (
-      !this.userService.getLocalUserName() ||
-      !this.userService.getLocalModuleName()
-    ) {
+    if (!this.userService.getLocalUserName()) {
       this.router.navigateByUrl('/');
-    } else {
-      this.userService.setInitialUserName(this.user);
-      this.userService.setInitialMouduleName(this.user);
     }
   }
 
@@ -60,12 +42,15 @@ export class MainComponent implements OnInit {
   }
 
   submitStatus() {
-    // this.statusService.saveStatus(this.statusList).subscribe((res) => {
-    //   console.log(res);
-    // });
-    // this.userService.getUserDetails(1).subscribe((res) => {
-    //   console.log(res);
-    // });
+    const statusList: Status[] = [];
+    this.statusList.forEach((status) => {
+      if (status.ticketId.length) {
+        statusList.push(status);
+      }
+    });
+    this.statusService.saveStatus(statusList).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   resetStatuses() {
@@ -76,5 +61,21 @@ export class MainComponent implements OnInit {
       status.state = 'In progress';
       status.date = '';
     });
+  }
+
+  private initStatusList() {
+    this.statusList = [];
+    for (let row = 1; row <= this.numOfRow; row++) {
+      this.statusList.push(
+        new Status('', '', 'In progress', new Date().toString(), this.user)
+      );
+    }
+  }
+
+  private initModuleList() {
+    this.moduleList[0] = 'OCR';
+    this.moduleList[1] = 'Connector';
+    this.moduleList[2] = 'Workbench 9.2';
+    this.moduleList[3] = 'Automation';
   }
 }

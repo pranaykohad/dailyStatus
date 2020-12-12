@@ -7,12 +7,10 @@ import { User } from 'src/app/model/user';
 export class LocalStorageService {
   setUser(user: User) {
     localStorage.setItem('USER', JSON.stringify(user));
-    // user.userName = userName;
   }
 
-  setModuleName(moduleName: string, user: User) {
-    localStorage.setItem('MODULE_NAME', moduleName);
-    user.moduleName = moduleName;
+  getUser(): User {
+    return JSON.parse(localStorage.getItem('USER'));
   }
 
   resetLocalStorage() {

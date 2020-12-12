@@ -9,26 +9,18 @@ import { LocalStorageService } from 'src/services/local-storage.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   user: User;
   wrongCred = false;
   errorMsg = 'Wrong Credentials';
   constructor(
     private router: Router,
     private userService: UserService,
-    private localStorageService: LocalStorageService,
+    private localStoreService: LocalStorageService,
     private cdrf: ChangeDetectorRef
   ) {
-    this.user = new User(null, null, null);
-    this.localStorageService.resetLocalStorage();
-  }
-
-  ngOnInit(): void {
-    this.user.userName = this.userService.getLocalUserName();
-    this.user.moduleName = this.userService.getLocalModuleName();
-    this.user.password = '';
-    this.userService.setInitialUserName(this.user);
-    this.userService.setInitialMouduleName(this.user);
+    this.user = new User(null, null, null, null);
+    this.localStoreService.resetLocalStorage();
   }
 
   login() {
@@ -36,8 +28,7 @@ export class LoginComponent implements OnInit {
       if (!res['data']) {
         this.wrongCred = true;
       } else {
-        this.userService.setInitialUserName(res['data']);
-        this.userService.setInitialMouduleName(res['data']);
+        this.localStoreService.setUser(res['data']);
         this.router.navigateByUrl('/main');
       }
     });

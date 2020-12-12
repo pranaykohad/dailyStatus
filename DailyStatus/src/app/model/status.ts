@@ -1,9 +1,12 @@
+import { User } from './user';
+
 export interface Status {
   // statusId: number;
   ticketId: string;
   description: string;
   state: string;
   date: string;
+  user: User;
 }
 export class Status {
   constructor(
@@ -11,6 +14,7 @@ export class Status {
     public ticketId: string,
     public description: string,
     public state: string,
-    public date: string
+    public date: string,
+    public user: User
   ) {}
 }

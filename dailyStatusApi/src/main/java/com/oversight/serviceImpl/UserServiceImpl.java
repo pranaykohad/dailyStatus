@@ -16,14 +16,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User autheticateUser(final String  userName,final String password) {
 		User user = userRepo.getUserByUserNameAndPassword(userName, password);
-		//user.setPassword(null);
 		return user;
 	}
 
 	@Override
-	public User updateUserDetails() {
-		// TODO Auto-generated method stub
-		return null;
+	public User updateUserDetails(final User user) {
+		return userRepo.save(user);
 	}
 
 	@Override

@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 import com.oversight.entity.Result;
 import com.oversight.entity.Status;
 import com.oversight.entity.User;
+import com.oversight.serviceInt.StatusService;
 import com.oversight.serviceInt.UserService;
 
 
@@ -28,13 +26,13 @@ public class controller {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	StatusService stsService;
+	
 	@PostMapping("/authnticateUser")
 	public Result authnticateUser(@RequestBody final User user) {
 		final Result result = new Result();
 		final User usr = userService.autheticateUser(user.getUserName(), user.getPassword());
-//		if(usr !=null) {
-//			usr.setPassword(null);
-//		}
 		result.setData(usr);
 		return result;
 	}
@@ -43,13 +41,24 @@ public class controller {
 	@PostMapping("/saveStatus")
 	public Result saveUserStatus(@RequestBody final List<Status> statusList) {
 		final Result result = new Result();
+		List<Status>statusList1 = stsService.saveStatus(statusList);
+		statusList1.forEach(data->{
+			System.out.println(data.getUser().getUserId()+" "+data.getDate());
+		});
+		return result;
+	}
+	
+	@PostMapping("/updateDetails")
+	public Result updateDetails(@RequestBody final User user) {
+		final Result result = new Result();
+		result.setData(userService.updateUserDetails(user));
 		return result;
 	}
 	
 	@GetMapping("/user/{userId}")
 	public Result getUserByUserId(@PathVariable final int userId) {
 		final Result result = new Result();
-		final User user = userService.getUserByUserId(userId);		
+		final User user = userService.getUserByUserId(userId);	
 		result.setData(user);
 		return result;
 	}

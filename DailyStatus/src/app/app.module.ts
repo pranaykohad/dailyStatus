@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
-import { UpdateUserdetailComponent } from './modal/update-userdetail/update-userdetail.component';
+import { UserDetailComponent } from './modal/update-userdetail/user-detail.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -15,7 +15,12 @@ const routes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
 ];
 @NgModule({
-  declarations: [AppComponent, MainComponent, LoginComponent, UpdateUserdetailComponent],
+  declarations: [
+    AppComponent,
+    MainComponent,
+    LoginComponent,
+    UserDetailComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
