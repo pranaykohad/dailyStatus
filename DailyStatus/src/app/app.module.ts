@@ -8,6 +8,12 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
 import { UserDetailComponent } from './modal/userDetail/user-detail.component';
+import { ReportComponent } from './modal/report/report.component';
+import {
+  NgbPaginationModule,
+  NgbAlertModule,
+  NgbModule,
+} from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -20,13 +26,17 @@ const routes: Routes = [
     MainComponent,
     LoginComponent,
     UserDetailComponent,
+    ReportComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    NgbPaginationModule,
+    NgbAlertModule,
     RouterModule.forRoot(routes),
+    NgbModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

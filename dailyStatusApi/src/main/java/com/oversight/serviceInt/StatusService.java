@@ -8,6 +8,6 @@ import com.oversight.entity.Status;
 public interface StatusService {
 	
 	public List<Status> saveStatus(final List<Status> statusList);
-	public List<Status> getUserByUserAndDate(final String user, final String date);
+	public List<Status> getUserByUserAndDate(final String user, final String startDate, final String endDate);
 
 }

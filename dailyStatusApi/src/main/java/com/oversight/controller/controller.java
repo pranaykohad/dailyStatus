@@ -30,9 +30,9 @@ public class controller {
 	StatusService stsService;
 	
 	@GetMapping("/getStatus")
-	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String date) {
+	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String startDate, @RequestParam final String endDate) {
 		final Result result = new Result();
-		final List<Status> statusList = stsService.getUserByUserAndDate(userId, date);
+		final List<Status> statusList = stsService.getUserByUserAndDate(userId, startDate, endDate);
 		if (statusList.size() > 0) {
 			result.setData(statusList);
 		} else {

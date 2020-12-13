@@ -11,8 +11,8 @@ import com.oversight.entity.Status;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Integer>{
 	
-	@Query(value="SELECT * FROM status s where s.user_user_id=?1 and s.date=?2", nativeQuery = true)
-	public List<Status> getUserByUserAndDate(final String userId, final String date);
+	@Query(value="SELECT * FROM status s where s.user_user_id=?1 and s.date in (?2, ?3)", nativeQuery = true)
+	public List<Status> getUserByUserAndDate(final String userId, final String startDate, final String endDate);
 	
 
 }

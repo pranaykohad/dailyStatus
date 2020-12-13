@@ -32,19 +32,6 @@ export class MainComponent implements OnInit {
     if (!this.userService.getLocalUserName()) {
       this.router.navigateByUrl('/');
     }
-
-    this.statusService
-      .getStatus(this.user.userId, new Date().toLocaleDateString())
-      .subscribe((res) => {
-        if (res['data']) {
-          //success
-          //console.log(res['data]);
-        } else {
-          //failrue
-          //console.log(res['descrition']);
-          //console.log(res['status']);
-        }
-      });
   }
 
   changeState(index: number, row: Status) {
@@ -58,16 +45,20 @@ export class MainComponent implements OnInit {
         statusList.push(status);
       }
     });
-    this.statusService.saveStatus(statusList).subscribe((res) => {
-      if (res['data']) {
-        //success
-        //console.log(res['data]);
-      } else {
-        //failrue
-        //console.log(res['descrition']);
-        //console.log(res['status']);
-      }
-    });
+    if (statusList.length) {
+      this.statusService.saveStatus(statusList).subscribe((res) => {
+        if (res['data']) {
+          //success
+          //console.log(res['data]);
+        } else {
+          //failrue
+          //console.log(res['descrition']);
+          //console.log(res['status']);
+        }
+      });
+    } else {
+      //empty status
+    }
   }
 
   resetStatusList() {

@@ -1,0 +1,80 @@
+<!-- The Modal -->
+<div class="modal fade" id="userReport">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Generate Report</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <span>Start Date</span>
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                name="dp"
+                [(ngModel)]="startDate"
+                ngbDatepicker
+                #d1="ngbDatepicker"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary calendar"
+                  (click)="d1.toggle()"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <span>End Date</span>
+        <form class="form-inline">
+          <div class="form-group">
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                name="dp"
+                [(ngModel)]="endDate"
+                ngbDatepicker
+                #d2="ngbDatepicker"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-outline-secondary calendar"
+                  (click)="d2.toggle()"
+                  type="button"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <!-- <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+          (click)="generateReport()"
+        >
+
+        </button> -->
+
+        <a href="javascript:void(0)" id="reportLink">Genrate Report</a>
+      </div>
+    </div>
+  </div>
+</div>

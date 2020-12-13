@@ -21,8 +21,8 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public List<Status> getUserByUserAndDate(String userId, String date) {
-		return stsRepository.getUserByUserAndDate(userId, date);
+	public List<Status> getUserByUserAndDate(String userId, final String startDate, final String endDate) {
+		return stsRepository.getUserByUserAndDate(userId, startDate, endDate);
 	}
 
 }
