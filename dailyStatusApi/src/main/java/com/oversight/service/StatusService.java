@@ -1,4 +1,4 @@
-package com.oversight.serviceInt;
+package com.oversight.service;
 
 import java.util.List;
 

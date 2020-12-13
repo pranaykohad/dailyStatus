@@ -1,11 +1,11 @@
-package com.oversight.serviceImpl;
+package com.oversight.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.oversight.entity.User;
+import com.oversight.entity.UserDTO;
 import com.oversight.repository.UserRepository;
-import com.oversight.serviceInt.UserService;
+import com.oversight.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -14,13 +14,12 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepo;
 
 	@Override
-	public User autheticateUser(final String  userName,final String password) {
-		User user = userRepo.getUserByUserNameAndPassword(userName, password);
-		return user;
+	public UserDTO autheticateUser(final String  userName,final String password) {
+		return userRepo.getUserByUserNameAndPassword(userName, password);
 	}
 
 	@Override
-	public User updateUserDetails(final User user) {
+	public UserDTO updateUserDetails(final UserDTO user) {
 		return userRepo.save(user);
 	}
 

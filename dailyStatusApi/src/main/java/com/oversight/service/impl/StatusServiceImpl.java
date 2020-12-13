@@ -1,4 +1,4 @@
-package com.oversight.serviceImpl;
+package com.oversight.service.impl;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.oversight.entity.Status;
 import com.oversight.repository.StatusRepository;
-import com.oversight.serviceInt.StatusService;
+import com.oversight.service.StatusService;
 
 @Service
 public class StatusServiceImpl implements StatusService {

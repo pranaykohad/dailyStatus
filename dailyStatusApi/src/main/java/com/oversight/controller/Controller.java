@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.oversight.entity.Attachment;
 import com.oversight.entity.Result;
 import com.oversight.entity.Result.ResStatus;
+import com.oversight.service.StatusService;
+import com.oversight.service.UserService;
 import com.oversight.entity.Status;
-import com.oversight.entity.User;
-import com.oversight.serviceInt.StatusService;
-import com.oversight.serviceInt.UserService;
+import com.oversight.entity.UserDTO;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class Controller {
 	
-	Logger LOG = LoggerFactory.getLogger("controller.class");
+	private static final Logger LOG = LoggerFactory.getLogger("controller.class");
 
 	@Autowired
 	UserService userService;
@@ -36,9 +36,9 @@ public class Controller {
 	StatusService stsService;
 	
 	@PostMapping("/authnticate")
-	public Result authnticateUser(@RequestBody final User user) {
+	public Result authnticateUser(@RequestBody final UserDTO user) {
 		final Result result = new Result();
-		final User resultUser = userService.autheticateUser(user.getUserName(), user.getPassword());
+		final UserDTO resultUser = userService.autheticateUser(user.getUserName(), user.getPassword());
 		if (resultUser != null) {
 			result.setData(resultUser);
 		} else {
@@ -53,7 +53,7 @@ public class Controller {
 	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String startDate, @RequestParam final String endDate) {
 		final Result result = new Result();
 		final List<Status> statusList = stsService.getUserByUserAndDate(userId, startDate, endDate);
-		if (statusList.size() > 0) {
+		if (!statusList.isEmpty()) {
 			StringBuilder dailyStatusFileContent = stsService.createDailyStatusReport("hello, I am pranay kohad");
 			byte[] byteConent = dailyStatusFileContent.toString().getBytes();
 			final Attachment attachment = new Attachment();
@@ -73,7 +73,7 @@ public class Controller {
 	public Result saveUserStatus(@RequestBody final List<Status> statusList) {
 		final Result result = new Result();
 		List<Status> ressultList = stsService.saveStatus(statusList);
-		if (ressultList.size() > 0) {
+		if (!ressultList.isEmpty()) {
 			result.setDescription("Status is saved successfully.");
 			result.setStatus(ResStatus.FAILURE);
 		} else {
@@ -85,7 +85,7 @@ public class Controller {
 	}
 
 	@PostMapping("/update")
-	public Result updateDetails(@RequestBody final User user) {
+	public Result updateDetails(@RequestBody final UserDTO user) {
 		final Result result = new Result();
 		result.setData(userService.updateUserDetails(user));
 		return result;

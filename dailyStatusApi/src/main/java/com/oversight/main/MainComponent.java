@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages="com")
 @EntityScan("com.oversight.entity")
 @EnableJpaRepositories("com.oversight.repository")
-public class mainComponent {
+public class MainComponent {
 	
 	private static final Logger LOG = LoggerFactory.getLogger("controller.class");
 
 	public static void main(String[] args) {
-		SpringApplication.run(mainComponent.class, args);
+		SpringApplication.run(MainComponent.class, args);
 		LOG.debug("app started...........");
 	}
 
