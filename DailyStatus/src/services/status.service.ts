@@ -21,8 +21,8 @@ export class StatusService {
     );
   }
 
-  saveStatus(status: Status[]): Observable<any> {
-    return this.httpClient.post<any>(`${BASE_URL}status`, status);
+  saveStatus(statusList: Status[]): Observable<any> {
+    return this.httpClient.post<any>(`${BASE_URL}status`, statusList);
   }
 
   downloadFile(res: Attachment) {

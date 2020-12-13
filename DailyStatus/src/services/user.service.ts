@@ -20,7 +20,7 @@ export class UserService {
   }
 
   authenticateUser(user: User): Observable<User> {
-    return this.httpClient.post<User>(`${BASE_URL}authnticate`, user);
+    return this.httpClient.post<User>(`${BASE_URL}authenticate`, user);
   }
 
   getLocalUserName() {
