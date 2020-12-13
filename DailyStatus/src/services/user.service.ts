@@ -16,7 +16,7 @@ export class UserService {
   ) {}
 
   updateUserDetails(user: User): Observable<User> {
-    return this.httpClient.post<User>(`${BASE_URL}updateDetails`, user);
+    return this.httpClient.post<User>(`${BASE_URL}update`, user);
   }
 
   authenticateUser(user: User): Observable<User> {

@@ -33,20 +33,6 @@ public class Controller {
 	@Autowired
 	StatusService stsService;
 	
-	@GetMapping("/getStatus")
-	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String startDate, @RequestParam final String endDate) {
-		final Result result = new Result();
-		final List<Status> statusList = stsService.getUserByUserAndDate(userId, startDate, endDate);
-		if (statusList.size() > 0) {
-			result.setData(statusList);
-		} else {
-			result.setStatus(ResStatus.FAILURE);
-			result.setDescrition("Some error while getting status. Please contact Administratator.");
-			LOG.error("Some error while getting status. Please contact Administratator.");
-		}
-		return result;
-	}
-
 	@PostMapping("/authnticate")
 	public Result authnticateUser(@RequestBody final User user) {
 		final Result result = new Result();
@@ -60,8 +46,22 @@ public class Controller {
 		}
 		return result;
 	}
+	
+	@GetMapping("/status")
+	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String startDate, @RequestParam final String endDate) {
+		final Result result = new Result();
+		final List<Status> statusList = stsService.getUserByUserAndDate(userId, startDate, endDate);
+		if (statusList.size() > 0) {
+			result.setData(statusList);
+		} else {
+			result.setStatus(ResStatus.FAILURE);
+			result.setDescrition("Some error while getting status. Please contact Administratator.");
+			LOG.error("Some error while getting status. Please contact Administratator.");
+		}
+		return result;
+	}
 
-	@PostMapping("/saveStatus")
+	@PostMapping("/status")
 	public Result saveUserStatus(@RequestBody final List<Status> statusList) {
 		final Result result = new Result();
 		List<Status> ressultList = stsService.saveStatus(statusList);
@@ -76,7 +76,7 @@ public class Controller {
 		return result;
 	}
 
-	@PostMapping("/updateDetails")
+	@PostMapping("/update")
 	public Result updateDetails(@RequestBody final User user) {
 		final Result result = new Result();
 		result.setData(userService.updateUserDetails(user));

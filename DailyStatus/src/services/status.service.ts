@@ -16,11 +16,11 @@ export class StatusService {
     endDate: string
   ): Observable<any> {
     return this.httpClient.get<any>(
-      `${BASE_URL}getStatus?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+      `${BASE_URL}status?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
     );
   }
 
   saveStatus(status: Status[]): Observable<any> {
-    return this.httpClient.post<any>(`${BASE_URL}saveStatus`, status);
+    return this.httpClient.post<any>(`${BASE_URL}status`, status);
   }
 }
