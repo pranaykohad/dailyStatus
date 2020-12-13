@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { moduleList } from 'src/app/app.constant';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { UserService } from 'src/services/user.service';
@@ -10,12 +11,14 @@ import { UserService } from 'src/services/user.service';
 })
 export class UserDetailComponent {
   @Input() user: User;
-  @Input() moduleList = [];
+  moduleList;
 
   constructor(
     private localStoreService: LocalStorageService,
     private userService: UserService
-  ) {}
+  ) {
+    this.initModuleList();
+  }
 
   updateUserDetails(
     userName: HTMLInputElement,
@@ -25,11 +28,20 @@ export class UserDetailComponent {
     this.user.userName = userName.value;
     this.user.password = password.value;
     this.user.moduleName = this.moduleList[moduleName.selectedIndex];
-    this.localStoreService.setUser(this.user);
     this.userService.updateUserDetails(this.user).subscribe((res) => {
       if (res['data']) {
         this.user = res['data'];
+        this.localStoreService.setUser(this.user);
+      } else {
+        alert("can't save user data");
       }
+    });
+  }
+
+  private initModuleList() {
+    this.moduleList = [];
+    moduleList.forEach((module) => {
+      this.moduleList.push(module);
     });
   }
 }

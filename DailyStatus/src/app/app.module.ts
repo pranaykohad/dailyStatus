@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { MainComponent } from './main/main.component';
-import { UserDetailComponent } from './modal/update-userdetail/user-detail.component';
+import { UserDetailComponent } from './modal/userDetail/user-detail.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },

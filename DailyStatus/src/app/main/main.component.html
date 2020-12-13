@@ -47,10 +47,7 @@
       class="module-name"
       (change)="changeState($event.target.selectedIndex, row)"
     >
-      <option
-        *ngFor="let state of stateList"
-        [selected]="selectedState === state"
-      >
+      <option *ngFor="let state of stateList" [selected]="row.state === state">
         {{ state }}
       </option>
     </select>
@@ -64,13 +61,10 @@
       >
         Sumbit Status
       </button>
-      <button class="btn btn-outline-danger btn-sm" (click)="resetStatuses()">
+      <button class="btn btn-outline-danger btn-sm" (click)="resetStatusList()">
         Reset Status
       </button>
     </div>
   </div>
-  <app-update-userdetail
-    [user]="user"
-    [moduleList]="moduleList"
-  ></app-update-userdetail>
+  <app-update-userdetail [user]="user"></app-update-userdetail>
 </div>

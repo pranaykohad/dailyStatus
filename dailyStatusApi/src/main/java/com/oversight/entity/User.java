@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="user")
 public class User {
@@ -20,6 +22,7 @@ public class User {
 	private String password;
 	private String moduleName;
 	@OneToMany(mappedBy = "user")
+	@JsonIgnore
 	private List<Status> statusList;
 	
 	public int getUserId() {
