@@ -2,6 +2,8 @@ package com.oversight.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +23,9 @@ import com.oversight.serviceInt.UserService;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
-public class controller {
+public class Controller {
+	
+	Logger LOG = LoggerFactory.getLogger("controller.class");
 
 	@Autowired
 	UserService userService;
@@ -38,12 +42,12 @@ public class controller {
 		} else {
 			result.setStatus(ResStatus.FAILURE);
 			result.setDescrition("Some error while getting status. Please contact Administratator.");
-			// add logger to print query
+			LOG.error("Some error while getting status. Please contact Administratator.");
 		}
 		return result;
 	}
 
-	@PostMapping("/authnticateUser")
+	@PostMapping("/authnticate")
 	public Result authnticateUser(@RequestBody final User user) {
 		final Result result = new Result();
 		final User resultUser = userService.autheticateUser(user.getUserName(), user.getPassword());
@@ -52,7 +56,7 @@ public class controller {
 		} else {
 			result.setDescrition("Some error while Autheticating. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);
-			// add logger to print query
+			LOG.error("Some error while Autheticating. Please contact Administratator.");
 		}
 		return result;
 	}
@@ -65,9 +69,9 @@ public class controller {
 			result.setDescrition("Status is saved successfully.");
 			result.setStatus(ResStatus.FAILURE);
 		} else {
-			result.setDescrition("Some error while Autheticating. Please contact Administratator.");
+			result.setDescrition("Some error while saving status. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);
-			// add logger to print query
+			LOG.error("Some error while saving status. Please contact Administratator.");
 		}
 		return result;
 	}
