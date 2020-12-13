@@ -48,6 +48,7 @@ export class MainComponent implements OnInit {
     if (statusList.length) {
       this.statusService.saveStatus(statusList).subscribe((res) => {
         if (res['data']) {
+          this.resetStatusList();
           //success
           //console.log(res['data]);
         } else {
