@@ -9,5 +9,6 @@ public interface StatusService {
 	
 	public List<Status> saveStatus(final List<Status> statusList);
 	public List<Status> getUserByUserAndDate(final String user, final String startDate, final String endDate);
+	public StringBuilder createDailyStatusReport(final String data);
 
 }

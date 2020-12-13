@@ -8,7 +8,7 @@ public class Result {
 	}
 	
 	private ResStatus status = ResStatus.SUCCESS;
-	private String descrition;
+	private String description;
 	private Object data;
 	
 	public ResStatus getStatus() {
@@ -17,11 +17,11 @@ public class Result {
 	public void setStatus(ResStatus status) {
 		this.status = status;
 	}
-	public String getDescrition() {
-		return descrition;
+	public String getDescription() {
+		return description;
 	}
-	public void setDescrition(String descrition) {
-		this.descrition = descrition;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public Object getData() {
 		return data;

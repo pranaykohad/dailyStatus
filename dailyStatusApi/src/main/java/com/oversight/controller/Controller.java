@@ -1,5 +1,6 @@
 package com.oversight.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.oversight.entity.Attachment;
 import com.oversight.entity.Result;
 import com.oversight.entity.Result.ResStatus;
 import com.oversight.entity.Status;
@@ -40,22 +42,28 @@ public class Controller {
 		if (resultUser != null) {
 			result.setData(resultUser);
 		} else {
-			result.setDescrition("Some error while Autheticating. Please contact Administratator.");
+			result.setDescription("Some error while Autheticating. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);
 			LOG.error("Some error while Autheticating. Please contact Administratator.");
 		}
 		return result;
 	}
 	
-	@GetMapping("/status")
+	@GetMapping("/report")
 	public Result getUserByUserIdAndDate(@RequestParam final String userId, @RequestParam final String startDate, @RequestParam final String endDate) {
 		final Result result = new Result();
 		final List<Status> statusList = stsService.getUserByUserAndDate(userId, startDate, endDate);
 		if (statusList.size() > 0) {
-			result.setData(statusList);
+			StringBuilder dailyStatusFileContent = stsService.createDailyStatusReport("hello, I am pranay kohad");
+			byte[] byteConent = dailyStatusFileContent.toString().getBytes();
+			final Attachment attachment = new Attachment();
+			attachment.setFileContent(byteConent);
+			attachment.setFilename(LocalDate.now()+".txt");
+			attachment.setMimeType("text/plain");
+			result.setData(attachment);
 		} else {
 			result.setStatus(ResStatus.FAILURE);
-			result.setDescrition("Some error while getting status. Please contact Administratator.");
+			result.setDescription("Some error while getting status. Please contact Administratator.");
 			LOG.error("Some error while getting status. Please contact Administratator.");
 		}
 		return result;
@@ -66,10 +74,10 @@ public class Controller {
 		final Result result = new Result();
 		List<Status> ressultList = stsService.saveStatus(statusList);
 		if (ressultList.size() > 0) {
-			result.setDescrition("Status is saved successfully.");
+			result.setDescription("Status is saved successfully.");
 			result.setStatus(ResStatus.FAILURE);
 		} else {
-			result.setDescrition("Some error while saving status. Please contact Administratator.");
+			result.setDescription("Some error while saving status. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);
 			LOG.error("Some error while saving status. Please contact Administratator.");
 		}

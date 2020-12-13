@@ -1,3 +1,4 @@
+import { Attachment } from './../../model/attachment';
 import { Component, Input, OnInit } from '@angular/core';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
@@ -35,13 +36,20 @@ export class ReportComponent implements OnInit {
 
   generateReport() {
     this.statusService
-      .getStatus(
+      .generateReport(
         this.user.userId,
         `${this.startDate.month}/${this.startDate.day}/${this.startDate.year}`,
         `${this.endDate.month}/${this.endDate.day}/${this.endDate.year}`
       )
       .subscribe((res) => {
         if (res['data']) {
+          const data = res['data'];
+          const attachment: Attachment = new Attachment(
+            data['filename'],
+            data['fileContent'],
+            data['mimeType']
+          );
+          this.statusService.downloadFile(attachment);
           //success
           //console.log(res['data]);
         } else {

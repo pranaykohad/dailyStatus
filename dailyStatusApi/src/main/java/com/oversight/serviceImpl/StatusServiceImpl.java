@@ -25,4 +25,10 @@ public class StatusServiceImpl implements StatusService {
 		return stsRepository.getUserByUserAndDate(userId, startDate, endDate);
 	}
 
+	@Override
+	public StringBuilder createDailyStatusReport(String data) {
+		StringBuilder content = new StringBuilder(data);
+		return content;
+	}
+
 }
