@@ -33,7 +33,9 @@ export class UserDetailComponent {
         this.user = res['data'];
         this.localStoreService.setUser(this.user);
       } else {
-        alert("can't save user data");
+        //failrue
+        //console.log(res['descrition']);
+        //console.log(res['status']);
       }
     });
   }

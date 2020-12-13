@@ -15,10 +15,6 @@ export class UserService {
     private localStoreService: LocalStorageService
   ) {}
 
-  getUserDetails(userId: number): Observable<User> {
-    return this.httpClient.get<User>(`${BASE_URL}user/${userId}`);
-  }
-
   updateUserDetails(user: User): Observable<User> {
     return this.httpClient.post<User>(`${BASE_URL}updateDetails`, user);
   }

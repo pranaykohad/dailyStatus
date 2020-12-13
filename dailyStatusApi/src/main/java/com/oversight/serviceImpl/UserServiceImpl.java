@@ -24,9 +24,5 @@ public class UserServiceImpl implements UserService {
 		return userRepo.save(user);
 	}
 
-	@Override
-	public User getUserByUserId(final int userId) {
-		return userRepo.getUserByUserId(userId);
-	}
 
 }

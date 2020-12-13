@@ -32,6 +32,19 @@ export class MainComponent implements OnInit {
     if (!this.userService.getLocalUserName()) {
       this.router.navigateByUrl('/');
     }
+
+    this.statusService
+      .getStatus(this.user.userId, new Date().toLocaleDateString())
+      .subscribe((res) => {
+        if (res['data']) {
+          //success
+          //console.log(res['data]);
+        } else {
+          //failrue
+          //console.log(res['descrition']);
+          //console.log(res['status']);
+        }
+      });
   }
 
   changeState(index: number, row: Status) {
@@ -46,7 +59,14 @@ export class MainComponent implements OnInit {
       }
     });
     this.statusService.saveStatus(statusList).subscribe((res) => {
-      console.log(res);
+      if (res['data']) {
+        //success
+        //console.log(res['data]);
+      } else {
+        //failrue
+        //console.log(res['descrition']);
+        //console.log(res['status']);
+      }
     });
   }
 
@@ -54,7 +74,13 @@ export class MainComponent implements OnInit {
     this.statusList = [];
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
-        new Status('', '', 'In progress', new Date().toString(), this.user)
+        new Status(
+          '',
+          '',
+          'In progress',
+          new Date().toLocaleDateString(),
+          this.user
+        )
       );
     }
   }

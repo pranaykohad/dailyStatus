@@ -8,7 +8,6 @@ import com.oversight.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer>{
 	
-	public User getUserByUserId(final int userId);
 	public User getUserByUserNameAndPassword(final String userName,final String password);
 
 }

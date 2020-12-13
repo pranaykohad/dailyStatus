@@ -20,4 +20,9 @@ public class StatusServiceImpl implements StatusService {
 		return stsRepository.saveAll(statusList);
 	}
 
+	@Override
+	public List<Status> getUserByUserAndDate(String userId, String date) {
+		return stsRepository.getUserByUserAndDate(userId, date);
+	}
+
 }

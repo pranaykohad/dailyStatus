@@ -10,6 +10,12 @@ import { Status } from 'src/app/model/status';
 export class StatusService {
   constructor(private httpClient: HttpClient) {}
 
+  getStatus(userId: string, date: string): Observable<any> {
+    return this.httpClient.get<any>(
+      `${BASE_URL}getStatus?userId=${userId}&date=${date}`
+    );
+  }
+
   saveStatus(status: Status[]): Observable<any> {
     return this.httpClient.post<any>(`${BASE_URL}saveStatus`, status);
   }

@@ -21,18 +21,6 @@ public class Status {
 	@ManyToOne
 	private User user;
 	
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public User getUser() {
-		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
 	public int getStatusId() {
 		return statusId;
 	}
@@ -51,11 +39,11 @@ public class Status {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getStatus() {
+	public String getState() {
 		return state;
 	}
-	public void setStatus(String status) {
-		this.state = status;
+	public void setState(String state) {
+		this.state = state;
 	}
 	public String getDate() {
 		return date;
@@ -63,5 +51,13 @@ public class Status {
 	public void setDate(String date) {
 		this.date = date;
 	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	
 	
 }

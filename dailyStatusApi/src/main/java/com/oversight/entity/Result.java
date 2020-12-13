@@ -2,19 +2,19 @@ package com.oversight.entity;
 
 public class Result {
 	
-	public enum Status {
+	public enum ResStatus {
 		SUCCESS,
 		FAILURE
 	}
 	
-	private Status status = Status.SUCCESS;
+	private ResStatus status = ResStatus.SUCCESS;
 	private String descrition;
 	private Object data;
 	
-	public Status getStatus() {
+	public ResStatus getStatus() {
 		return status;
 	}
-	public void setStatus(Status status) {
+	public void setStatus(ResStatus status) {
 		this.status = status;
 	}
 	public String getDescrition() {
