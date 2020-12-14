@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.oversight.entity.Result;
 import com.oversight.entity.Result.ResStatus;
-import com.oversight.entity.UserDTO;
+import com.oversight.entity.User;
 import com.oversight.service.UserService;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -25,9 +25,9 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/authenticate")
-	public Result authnticateUser(@RequestBody final UserDTO user) {
+	public Result authnticateUser(@RequestBody final User user) {
 		final Result result = new Result();
-		final UserDTO resultUser = userService.autheticateUser(user.getUserName(), user.getPassword());
+		final User resultUser = userService.autheticateUser(user.getUserName(), user.getPassword());
 		if (resultUser != null) {
 			result.setData(resultUser);
 		} else {
@@ -39,7 +39,7 @@ public class UserController {
 	}
 
 	@PostMapping("/update")
-	public Result updateDetails(@RequestBody final UserDTO user) {
+	public Result updateDetails(@RequestBody final User user) {
 		final Result result = new Result();
 		result.setData(userService.updateUserDetails(user));
 		return result;

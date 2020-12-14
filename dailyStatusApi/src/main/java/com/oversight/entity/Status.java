@@ -19,7 +19,7 @@ public class Status {
 	private String state;
 	private String date;
 	@ManyToOne
-	private UserDTO user;
+	private User user;
 	
 	public int getStatusId() {
 		return statusId;
@@ -51,10 +51,10 @@ public class Status {
 	public void setDate(String date) {
 		this.date = date;
 	}
-	public UserDTO getUser() {
+	public User getUser() {
 		return user;
 	}
-	public void setUser(UserDTO user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 	

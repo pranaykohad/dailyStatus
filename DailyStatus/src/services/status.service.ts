@@ -11,7 +11,11 @@ import { BASE_URL } from './../app/app.constant';
 export class StatusService {
   constructor(private httpClient: HttpClient) {}
 
-  generateReport(
+  getDailyStsReport(date: string): Observable<any> {
+    return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
+  }
+
+  getDailyStsByUserIdAndDaterange(
     userId: string,
     startDate: string,
     endDate: string

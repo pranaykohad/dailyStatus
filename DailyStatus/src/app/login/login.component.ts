@@ -19,7 +19,7 @@ export class LoginComponent {
     private localStoreService: LocalStorageService,
     private cdrf: ChangeDetectorRef
   ) {
-    this.user = new User(null, null, null, null);
+    this.user = new User(null, null, null, null, null, null, null, null);
     this.localStoreService.resetLocalStorage();
   }
 

@@ -13,6 +13,7 @@ export class ReportComponent implements OnInit {
   @Input() user: User;
   startDate: DatePicker;
   endDate: DatePicker;
+  today: DatePicker;
   blob: Blob;
 
   constructor(private statusService: StatusService) {
@@ -30,16 +31,19 @@ export class ReportComponent implements OnInit {
       today.getDate(),
       today.getFullYear()
     );
+    this.today = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
   }
 
   ngOnInit(): void {}
 
   generateReport() {
     this.statusService
-      .generateReport(
-        this.user.userId,
-        `${this.startDate.month}/${this.startDate.day}/${this.startDate.year}`,
-        `${this.endDate.month}/${this.endDate.day}/${this.endDate.year}`
+      .getDailyStsReport(
+        `${this.today.month}/${this.today.day}/${this.today.year}`
       )
       .subscribe((res) => {
         if (res['data']) {

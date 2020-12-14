@@ -1,11 +1,11 @@
 package com.oversight.service;
 
-import com.oversight.entity.UserDTO;
+import com.oversight.entity.User;
 
 
 public interface UserService {
 	
-	public UserDTO autheticateUser(final String userName,final String password);
-	public UserDTO updateUserDetails(final UserDTO user);
+	public User autheticateUser(final String userName,final String password);
+	public User updateUserDetails(final User user);
 
 }

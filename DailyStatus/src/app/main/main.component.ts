@@ -42,6 +42,8 @@ export class MainComponent implements OnInit {
     const statusList: Status[] = [];
     this.statusList.forEach((status) => {
       if (status.ticketId.trim().length) {
+        status.description = status.description.trim();
+        status.ticketId = status.ticketId.trim();
         statusList.push(status);
       }
     });
