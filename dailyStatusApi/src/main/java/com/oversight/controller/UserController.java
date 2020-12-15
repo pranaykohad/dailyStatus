@@ -44,4 +44,11 @@ public class UserController {
 		result.setData(userService.updateUserDetails(user));
 		return result;
 	}
+	
+	@PostMapping("/user")
+	public Result addUser(@RequestBody final User user) {
+		final Result result = new Result();
+		result.setData(userService.addUser(user));
+		return result;
+	}
 }

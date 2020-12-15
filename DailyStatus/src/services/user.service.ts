@@ -15,6 +15,10 @@ export class UserService {
     private localStoreService: LocalStorageService
   ) {}
 
+  addUser(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${BASE_URL}user`, user);
+  }
+
   updateUserDetails(user: User): Observable<User> {
     return this.httpClient.post<User>(`${BASE_URL}update`, user);
   }

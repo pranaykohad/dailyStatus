@@ -1,0 +1,89 @@
+<div class="modal fade" id="addUser">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add User</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div>
+          <table>
+            <tr>
+              <td>First Name:</td>
+              <td><input id="firstName" #firstName /></td>
+            </tr>
+            <tr>
+              <td>Last Name:</td>
+              <td><input id="lastName" #lastName /></td>
+            </tr>
+            <tr>
+              <td>User Name:</td>
+              <td><input id="userName" #userName /></td>
+            </tr>
+            <tr>
+              <td>Password:</td>
+              <td><input id="password" #password /></td>
+            </tr>
+          </table>
+          <hr />
+          <table>
+            <tr>
+              <td>Module Name:</td>
+              <td>
+                <select class="module-name" #module>
+                  <option *ngFor="let module of moduleList">
+                    {{ module }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>User Type:</td>
+              <td>
+                <select class="module-name" #userType>
+                  <option *ngFor="let userType of userTypeList">
+                    {{ userType }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Role:</td>
+              <td>
+                <select class="module-name" #role>
+                  <option *ngFor="let role of roleList">
+                    {{ role }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-success btn-sm"
+          data-dismiss="modal"
+          (click)="
+            addUser(
+              firstName.value,
+              lastName.value,
+              userName.value,
+              password.value,
+              module.selectedIndex,
+              userType.selectedIndex,
+              role.selectedIndex
+            )
+          "
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
