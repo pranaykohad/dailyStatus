@@ -9,6 +9,10 @@ public class ReportConstant {
 		
 	public static final String ONE_LINE = "\r\n";
 	
+	public static final String TWO_LINE = "\r\n\r\n";
+	
+	public static final String THREE_LINE = "\r\n\r\n\r\n";
+	
 	public static final String TAB = "     ";
 	
 	private static final String GREETING= "Hello,"+ONE_LINE+ONE_LINE+"Please find below today’s update:";

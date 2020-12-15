@@ -1,7 +1,6 @@
 package com.oversight.service.impl;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,58 +19,29 @@ import com.oversight.util.ReportUtil;
 @Service
 public class StatusServiceImpl implements StatusService {
 	
+	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
+	
 	@Autowired
 	private StatusRepository stsRepository;
 	
 	@Autowired
 	ReportUtil reportUtil;
 	
-	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
-
 	@Override
 	public StringBuilder createDailyStatusReport(final String date) {
 		StringBuilder content = new StringBuilder();
-		content.append(ReportConstant.getGreeting());
+		reportUtil.addGreeting(content);
 		ReportConstant.getModuleList().forEach(module-> {
 			reportUtil.addModuleName(content, module);
-			List<String> userTypes = new ArrayList<>();
-			userTypes = getUserTypeList(module, userTypes);
-			
-			
-				userTypes.forEach(userType-> {			
-					for(int i=0; i<ReportConstant.getStateList().size(); i++) {			
-						addStatusToContent(date, content, module, userType, i);
-					}
-					content.append(ReportConstant.ONE_LINE);
-				});	
-				
-				
-				
+			List<String> userTypeList = reportUtil.getUserTypeList(module);
+			createContent(date, content, module, userTypeList);
 		});
 		LOG.debug("Date {}", date);
 		LOG.debug("Content {}", content);
 		return content;
 	}
 
-	private List<String> getUserTypeList(String module, List<String> userTypes) {
-		switch (module) {
-		case "OCR":
-			userTypes = ReportConstant.getOcrUserTypeList();
-			break;
-		case "Connector":
-			userTypes = ReportConstant.getConnUserTypeList();
-			break;
-		case "Workbench 9.2":
-			userTypes = ReportConstant.getWbUserTypeList();
-			break;
-		case "Automation":
-			userTypes = ReportConstant.getAutoUserTypeList();
-			break;	
-		default:
-			break;
-		}
-		return userTypes;
-	}
+	
 	
 	@Override
 	public Result createReport(final String date) {
@@ -106,11 +76,23 @@ public class StatusServiceImpl implements StatusService {
 		return stsRepository.getStatus(date, module, type, state);
 	}
 	
-	private void addStatusToContent(final String date, StringBuilder content, String module, String userType, int i) {
-		final List<Status> statusList = getStatus(date, module, userType, ReportConstant.getStateList().get(i));
-		if(!statusList.isEmpty()) {
-			content.append(i+1+"."+ReportConstant.TAB);
-			final String state = ReportConstant.getStateList().get(i);
+	private void createContent(final String date, StringBuilder content, String module, List<String> userTypeList) {
+		int subHeadCntr = 0;		
+		for(int i = 0; i < userTypeList.size(); i++) {
+			for(int stateIndx = 0; stateIndx < ReportConstant.getStateList().size(); stateIndx++) {	
+				addStatusToContent(date, content, module, userTypeList.get(i), stateIndx, ++subHeadCntr);
+			}
+			content.append(ReportConstant.ONE_LINE);
+		}
+	}
+	
+	private void addStatusToContent(final String date, StringBuilder content, String module, String userType, int stateIndx, int subHeadCntr) {
+		final String state = ReportConstant.getStateList().get(stateIndx);
+		final List<Status> statusList = getStatus(date, module, userType, state);
+		if(statusList.isEmpty()) {
+			subHeadCntr--;
+		} else {
+			content.append(subHeadCntr+"."+ReportConstant.TAB);
 			reportUtil.createSubHeading(content, userType, state);
 			reportUtil.addStatus(content, statusList);
 			content.append(ReportConstant.ONE_LINE);
