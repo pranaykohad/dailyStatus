@@ -23,11 +23,11 @@
         </div>
 
         <hr />
-        <div class="row">
+        <div>
           <div>
-            <div>
-              <span>Start Date:</span>
-              <form class="form-inline mb-1">
+            <div class="row mb-2">
+              <span class="mr-2">Start Date:</span>
+              <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
                     <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="startDate" ngbDatepicker
@@ -40,8 +40,8 @@
                   </div>
                 </div>
               </form>
-              <span>End Date:</span>
-              <form class="form-inline mb-1">
+              <span class="mr-2">End Date:</span>
+              <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
                     <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="endDate" ngbDatepicker
@@ -55,8 +55,8 @@
                 </div>
               </form>
             </div>
-            <div>
-              <span class="mr-2">Select User:</span>
+            <div class="mb-2">
+              <span class="mr-2 ml-n3">Select User:</span>
               <select class="module-name" #user>
                 <option *ngFor="let user of userList">
                   {{ user.firstName }} {{ user.lastName }}
@@ -64,10 +64,12 @@
               </select>
             </div>
           </div>
-
-          <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal" (click)="customizedReport()">
-            Get Customized Report
-          </button>
+          <div>
+            <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
+              (click)="customizedReport()">
+              Get Customized Report
+            </button>
+          </div>
         </div>
       </div>
 
