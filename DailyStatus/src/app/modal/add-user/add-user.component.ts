@@ -10,6 +10,7 @@ import { UserService } from 'src/services/user.service';
 })
 export class AddUserComponent implements OnInit {
   user: User;
+
   moduleList = moduleList;
   userTypeList = userTypeList;
   roleList = roleList;

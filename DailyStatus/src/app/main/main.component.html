@@ -1,18 +1,10 @@
 <div id="app" class="pt-3 pl-4">
   <div class="row pr-5 upper-contr">
     <!-- <img class="ml-3" src="../../assets/Capture.PNG" alt="logo" width="100px" /> -->
-    <button
-      data-toggle="modal"
-      data-target="#userReport"
-      class="btn btn-info btn-sm mr-2"
-    >
+    <button data-toggle="modal" data-target="#userReport" class="btn btn-info btn-sm mr-2">
       Generate Report
     </button>
-    <button
-      data-toggle="modal"
-      data-target="#addUser"
-      class="btn btn-success btn-sm"
-    >
+    <button data-toggle="modal" data-target="#addUser" class="btn btn-success btn-sm">
       Add User
     </button>
   </div>
@@ -20,47 +12,29 @@
   <div>
     <div class="row m-1">
       <div class="mr-2 p-1">
-        <span class="bold-txt">User Name: </span>{{ user.userName }}
+        <span class="bold-txt">Name: </span>{{ user.firstName }}
+        {{ user.lastName }}
       </div>
       <div class="mr-2 p-1">
         <span class="bold-txt">Module Name: </span>{{ user.moduleName }}
       </div>
-      <button
-        data-toggle="modal"
-        data-target="#userDetail"
-        class="btn btn-outline-info btn-sm"
-      >
+      <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm">
         Update
       </button>
     </div>
   </div>
   <hr />
-  <div
-    class="row mb-2 col-md-12"
-    *ngFor="let row of statusList; let index = index"
-    stye
-  >
+  <div class="row mb-2 col-md-12" *ngFor="let row of statusList; let index = index" stye>
     <span class="mr-2 num-wd">{{ index + 1 }})</span>
     <div class="mr-2">
       Ticket Id:
-      <input
-        class="txt-bx"
-        [id]="'tkt-id-' + index + 1"
-        [(ngModel)]="row.ticketId"
-      />
+      <input class="txt-bx" [id]="'tkt-id-' + index + 1" [(ngModel)]="row.ticketId" />
     </div>
     <div class="mr-2">
       <span class="mr-2 float-left">Description:</span>
-      <textarea
-        class="txt-bx hd-box"
-        [id]="'tkt-desc-' + index + 1"
-        [(ngModel)]="row.description"
-      ></textarea>
+      <textarea class="txt-bx hd-box" [id]="'tkt-desc-' + index + 1" [(ngModel)]="row.description"></textarea>
     </div>
-    <select
-      class="module-name"
-      (change)="changeState($event.target.selectedIndex, row)"
-    >
+    <select class="module-name" (change)="changeState($event.target.selectedIndex, row)">
       <option *ngFor="let state of stateList" [selected]="row.state === state">
         {{ state }}
       </option>
@@ -69,10 +43,7 @@
   <hr />
   <div>
     <div class="row ml-2">
-      <button
-        class="btn btn-outline-success btn-sm mr-3"
-        (click)="submitStatus()"
-      >
+      <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()">
         Sumbit Status
       </button>
       <button class="btn btn-outline-danger btn-sm" (click)="resetStatusList()">

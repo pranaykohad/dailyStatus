@@ -1,5 +1,8 @@
 package com.oversight.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User addUser(User user) {
 		return userRepo.save(user);
+	}
+
+	@Override
+	public List<User> getAllUser() {
+		final List<User> finalUserList = new ArrayList<>();
+		final List<User> userList = userRepo.findAll();
+		if(!userList.isEmpty()) {
+			userList.forEach(user-> {
+				final User tempUser = new User();
+				tempUser.setFirstName(user.getFirstName());
+				tempUser.setLastName(user.getLastName());
+				tempUser.setUserId(user.getUserId());
+				finalUserList.add(tempUser);
+			});
+		}
+		return finalUserList;
 	}
 
 

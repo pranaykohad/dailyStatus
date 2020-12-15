@@ -3,9 +3,10 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
-import { numOfStatus, stateList } from '../app.constant';
-import { Status } from '../model/status';
+import { stateList } from '../app.constant';
 import { User } from '../model/user';
+import { numOfStatus } from './../app.constant';
+import { Status } from './../model/status';
 
 @Component({
   selector: 'main-root',

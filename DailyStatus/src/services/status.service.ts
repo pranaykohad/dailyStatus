@@ -1,9 +1,9 @@
-import { Attachment } from './../app/model/attachment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { BASE_URL } from 'src/app/app.constant';
+import { Attachment } from 'src/app/model/attachment';
 import { Status } from 'src/app/model/status';
-import { BASE_URL } from './../app/app.constant';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ import { BASE_URL } from './../app/app.constant';
 export class StatusService {
   constructor(private httpClient: HttpClient) {}
 
-  getDailyStsReport(date: string): Observable<any> {
+  getTodaysReport(date: string): Observable<any> {
     return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
   }
 

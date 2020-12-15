@@ -1,8 +1,9 @@
-import { Attachment } from './../../model/attachment';
 import { Component, Input, OnInit } from '@angular/core';
+import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
 import { StatusService } from 'src/services/status.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-report',
@@ -11,12 +12,16 @@ import { StatusService } from 'src/services/status.service';
 })
 export class ReportComponent implements OnInit {
   @Input() user: User;
+  userList: User[];
   startDate: DatePicker;
   endDate: DatePicker;
   today: DatePicker;
   blob: Blob;
 
-  constructor(private statusService: StatusService) {
+  constructor(
+    private statusService: StatusService,
+    private userService: UserService
+  ) {
     this.blob = new Blob(['hello, I an pranay kohad!!!!!!!!!!!!!!'], {
       type: 'text/plain',
     });
@@ -38,11 +43,13 @@ export class ReportComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getAllUser();
+  }
 
-  generateReport() {
+  todaysReport() {
     this.statusService
-      .getDailyStsReport(
+      .getTodaysReport(
         `${this.today.month}/${this.today.day}/${this.today.year}`
       )
       .subscribe((res) => {
@@ -63,4 +70,20 @@ export class ReportComponent implements OnInit {
         }
       });
   }
+
+  getAllUser() {
+    this.userService.gteAllUser().subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        //fail
+      } else {
+        this.userList = res['data'];
+      }
+    });
+  }
+
+  myThisWeekReport() {}
+
+  myThisMonthReport() {}
+
+  customizedReport() {}
 }

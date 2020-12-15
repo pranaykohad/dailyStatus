@@ -11,29 +11,16 @@
       <div class="modal-body">
         <div class="mb-1">
           <span class="bold-txt">User Name:</span>
-          <input
-            #userName
-            id="username"
-            class="col-md-2 edit-lbl-border ml-2 mr-2 p-1"
-            [value]="user.userName"
-          />
+          <input #userName id="username" class="col-md-2 edit-lbl-border ml-2 mr-2 p-1" [value]="user.userName" />
         </div>
         <div class="mb-1">
           <span class="bold-txt mb-1">Password:</span>
-          <input
-            #password
-            id="pass"
-            class="col-md-2 edit-lbl-border pass-lm ml-2 mr-2 p-1"
-            [value]="user.password"
-          />
+          <input #password id="pass" class="col-md-2 edit-lbl-border pass-lm ml-2 mr-2 p-1" [value]="user.password" />
         </div>
         <div>
           <span class="bold-txt">Module:</span>
           <select class="module-name mod-lm" #moduleName>
-            <option
-              *ngFor="let module of moduleList"
-              [selected]="user.moduleName === module"
-            >
+            <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
               {{ module }}
             </option>
           </select>
@@ -41,12 +28,8 @@
       </div>
 
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-success btn-sm"
-          data-dismiss="modal"
-          (click)="updateUserDetails(userName, password, moduleName)"
-        >
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal"
+          (click)="updateUserDetails(userName, password, moduleName)">
           Update
         </button>
       </div>

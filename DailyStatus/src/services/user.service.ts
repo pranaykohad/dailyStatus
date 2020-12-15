@@ -1,9 +1,9 @@
+import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/model/user';
-import { BASE_URL } from './../app/app.constant';
-import { LocalStorageService } from './local-storage.service';
+import { BASE_URL } from 'src/app/app.constant';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,6 +17,10 @@ export class UserService {
 
   addUser(user: User): Observable<User> {
     return this.httpClient.post<User>(`${BASE_URL}user`, user);
+  }
+
+  gteAllUser(): Observable<User> {
+    return this.httpClient.get<User>(`${BASE_URL}user`);
   }
 
   updateUserDetails(user: User): Observable<User> {

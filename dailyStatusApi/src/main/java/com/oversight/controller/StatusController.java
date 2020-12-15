@@ -46,7 +46,7 @@ public class StatusController {
 		} else {
 			result.setDescription("Some error while saving status. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);
-			LOG.error("Some error while saving status. Please contact Administratator.");
+			LOG.error("Some error while saving status. Please contact Administratator with statuslist {}", statusList);
 		}
 		return result;
 	}
