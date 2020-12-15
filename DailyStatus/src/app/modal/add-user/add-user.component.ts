@@ -29,7 +29,7 @@ export class AddUserComponent implements OnInit {
     this.user = new User('', '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
 
     if (this.validate(firstName, lastName, userName, password)) {
-      alert(1);
+      //show notification
     } else {
       this.user.firstName = firstName;
       this.user.lastName = lastName;
@@ -40,7 +40,11 @@ export class AddUserComponent implements OnInit {
       this.user.role = this.roleList[roleSelIndex];
 
       this.userService.addUser(this.user).subscribe((res) => {
-        console.log(res['data']);
+        if (res['data']) {
+          //success
+        } else {
+          //failure
+        }
       });
     }
   }
