@@ -15,6 +15,10 @@
   .bold-txt {
     font-weight: 500;
   }
+  .alrt-contr {
+    display: flex;
+    justify-content: center;
+  }
   @media (min-width: 1000px) {
     .hd-box {
       width: 500px;
@@ -23,5 +27,5 @@
 }
 .upper-contr {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }

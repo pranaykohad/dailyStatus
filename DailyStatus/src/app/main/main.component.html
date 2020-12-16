@@ -1,12 +1,17 @@
 <div id="app" class="pt-3 pl-4">
+
   <div class="row pr-5 upper-contr">
-    <!-- <img class="ml-3" src="../../assets/Capture.PNG" alt="logo" width="100px" /> -->
-    <button data-toggle="modal" data-target="#userReport" class="btn btn-info btn-sm mr-2">
-      Generate Report
-    </button>
-    <button data-toggle="modal" data-target="#addUser" class="btn btn-success btn-sm">
-      Add User
-    </button>
+    <div class="col-md-10 alrt-contr">
+      <app-alert [message]="alert.message" [type]="alert.type"></app-alert>
+    </div>
+    <div>
+      <button data-toggle="modal" data-target="#userReport" class="btn btn-info btn-sm mr-2">
+        Generate Report
+      </button>
+      <button data-toggle="modal" data-target="#addUser" class="btn btn-success btn-sm">
+        Add User
+      </button>
+    </div>
   </div>
   <hr />
   <div>
@@ -54,4 +59,6 @@
   <app-update-userdetail [user]="user"></app-update-userdetail>
   <app-report [user]="user"></app-report>
   <app-add-user></app-add-user>
+
+
 </div>

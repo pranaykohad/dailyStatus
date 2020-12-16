@@ -15,6 +15,7 @@ import {
   NgbModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { AddUserComponent } from './modal/add-user/add-user.component';
+import { AlertComponent } from './modal/alert/alert.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     UserDetailComponent,
     ReportComponent,
     AddUserComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

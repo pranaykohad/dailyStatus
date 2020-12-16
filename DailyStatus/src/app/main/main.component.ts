@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Alert } from './../model/alert';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
@@ -14,6 +15,7 @@ import { Status } from './../model/status';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
+  alert: Alert;
   user: User;
   stateList;
   statusList: Status[];
@@ -22,8 +24,10 @@ export class MainComponent implements OnInit {
     private statusService: StatusService,
     private userService: UserService,
     private localStoreService: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private cdrf: ChangeDetectorRef
   ) {
+    this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
     this.stateList = stateList;
     this.resetStatusList();
@@ -52,16 +56,11 @@ export class MainComponent implements OnInit {
       this.statusService.saveStatus(statusList).subscribe((res) => {
         if (res['description'] === 'Status is saved successfully.') {
           this.resetStatusList();
-          //success
-          //console.log(res['data]);
-        } else {
-          //failrue
-          //console.log(res['descrition']);
-          //console.log(res['status']);
         }
+        this.showResetMsg(res['description'], res['status']);
       });
     } else {
-      //empty status
+      this.showResetMsg('You cannot submit empty status.', 'fail');
     }
   }
 
@@ -78,5 +77,11 @@ export class MainComponent implements OnInit {
         )
       );
     }
+    this.showResetMsg('Status has been reset', 'success');
+  }
+
+  showResetMsg(msg: string, type: string) {
+    this.alert.message = msg;
+    this.alert.type = type;
   }
 }
