@@ -21,7 +21,7 @@ export class StatusService {
     endDate: string
   ): Observable<any> {
     return this.httpClient.get<any>(
-      `${BASE_URL}report?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+      `${BASE_URL}reportByUserAndDateRange?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
     );
   }
 

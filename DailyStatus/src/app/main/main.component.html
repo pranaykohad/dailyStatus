@@ -51,7 +51,8 @@
       <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()">
         Sumbit Status
       </button>
-      <button class="btn btn-outline-danger btn-sm" (click)="resetStatusList()">
+      <button class="btn btn-outline-danger btn-sm"
+        (click)="resetStatusList();this.showResetMsg('Status has been reset', 'success');">
         Reset Status
       </button>
     </div>

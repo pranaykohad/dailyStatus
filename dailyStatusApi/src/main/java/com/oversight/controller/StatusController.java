@@ -30,11 +30,9 @@ public class StatusController {
 	StatusService stsService;
 	
 	@GetMapping("/report")
-	public Result getUserByUserIdAndDate(@RequestParam final String date) {
+	public Result getReportByDate(@RequestParam final String date) {
 		return stsService.createReport(date);
 	}
-
-	
 
 	@Transactional
 	@PostMapping("/status")
@@ -49,6 +47,12 @@ public class StatusController {
 			LOG.error("Some error while saving status. Please contact Administratator with statuslist {}", statusList);
 		}
 		return result;
+	}
+	
+	@GetMapping("/reportByUserAndDateRange")
+	public Result getReportByUserAndDateRange(@RequestParam final String userId, @RequestParam final String startDate, 
+			@RequestParam final String endDate) {
+		return stsService.createReport(userId, startDate, endDate);
 	}
 
 }

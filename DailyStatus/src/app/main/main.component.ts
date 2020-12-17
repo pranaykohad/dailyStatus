@@ -77,7 +77,6 @@ export class MainComponent implements OnInit {
         )
       );
     }
-    this.showResetMsg('Status has been reset', 'success');
   }
 
   showResetMsg(msg: string, type: string) {

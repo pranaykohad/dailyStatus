@@ -7,30 +7,59 @@
           &times;
         </button>
       </div>
-
-      <div class="modal-body ml-4">
-        <div class="row">
-          <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal" (click)="todaysReport()">
-            Get Today's Report
-          </button>
-          <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
-            (click)="myThisWeekReport()">
-            Get My this Week's Report
-          </button>
-          <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal" (click)="myThisMonthReport()">
-            Get My this Month's Report
-          </button>
+      <div class="modal-body">
+        <div>
+          <div class="row ml-4">
+            <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal" (click)="todaysReport()">
+              Get Today's Report
+            </button>
+          </div>
+          <hr />
+          <div class="ml-4">
+            <div class="mb-2">
+              <span class="mr-2">Select User:</span>
+              <select class="module-name" #user>
+                <option *ngFor="let user of userList">
+                  {{ user.firstName }} {{ user.lastName }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
+                (click)="myThisWeekReport()">
+                Get this week's Report
+              </button>
+            </div>
+          </div>
         </div>
-
+        <hr />
+        <div class="mb-2 ml-4">
+          <div>
+            <div class="mb-2">
+              <span class="mr-2">Select User:</span>
+              <select class="module-name" #user>
+                <option *ngFor="let user of userList">
+                  {{ user.firstName }} {{ user.lastName }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
+                (click)="myThisMonthReport()">
+                Get this month's Report
+              </button>
+            </div>
+          </div>
+        </div>
         <hr />
         <div>
           <div>
-            <div class="row mb-2">
+            <div class="row mb-2 ml-4">
               <span class="mr-2">Start Date:</span>
               <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="startDate" ngbDatepicker
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="today" ngbDatepicker
                       #d1="ngbDatepicker" />
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
@@ -44,7 +73,7 @@
               <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="endDate" ngbDatepicker
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="today" ngbDatepicker
                       #d2="ngbDatepicker" />
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
@@ -55,20 +84,22 @@
                 </div>
               </form>
             </div>
-            <div class="mb-2">
-              <span class="mr-2 ml-n3">Select User:</span>
-              <select class="module-name" #user>
-                <option *ngFor="let user of userList">
-                  {{ user.firstName }} {{ user.lastName }}
-                </option>
-              </select>
+            <div class="ml-4">
+              <div class="mb-2">
+                <span class="mr-2">Select User:</span>
+                <select class="module-name" #user>
+                  <option *ngFor="let user of userList">
+                    {{ user.firstName }} {{ user.lastName }}
+                  </option>
+                </select>
+              </div>
+              <div class="ml-3">
+                <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
+                  (click)="customizedReport()">
+                  Get Customized Report
+                </button>
+              </div>
             </div>
-          </div>
-          <div>
-            <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-              (click)="customizedReport()">
-              Get Customized Report
-            </button>
           </div>
         </div>
       </div>

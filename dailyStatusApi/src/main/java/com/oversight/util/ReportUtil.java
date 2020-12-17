@@ -4,13 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.oversight.constant.ReportConstant;
 import com.oversight.entity.Status;
+import com.oversight.entity.User;
+import com.oversight.repository.UserRepository;
 
 @Component
 public class ReportUtil {
+	
+	private static final Logger LOG = LoggerFactory.getLogger("ReportUtil.class");
+	
+	@Autowired
+	UserRepository userRepository;
 		
 	private static final int DESC_LEN = 130;
 	
@@ -19,6 +29,14 @@ public class ReportUtil {
 	public void addGreeting(StringBuilder content) {
 		content.append(ReportConstant.getGreeting());
 		content.append(ReportConstant.THREE_LINE);
+	}
+	
+	public void addName(StringBuilder content, String userId) {
+		final User user = userRepository.getUserByUserId(userId);
+		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
+		content.append(ReportConstant.ONE_LINE);
+		content.append("Weekly Report:");
+		content.append(ReportConstant.TWO_LINE);
 	}
 	
 	public void addModuleName(StringBuilder content, String module) {
@@ -31,6 +49,45 @@ public class ReportUtil {
 			content.append((char)(i+SMALL_A)+".     ");
 			content.append(todayStsList.get(i).getTicketId()+": "+formatDescription(todayStsList, i)+" ");
 			content.append("("+todayStsList.get(i).getUser().getFirstName()+")");
+			content.append(ReportConstant.ONE_LINE);
+		}
+	}
+	
+	public List<String> getDatesOfThisWeek(String startDate, String endDate) {
+		final List<String> datesList = new ArrayList<>();
+		final String[] startDateTokn = startDate.split("/");
+		final String[] endDateTokn = endDate.split("/");
+		try {
+			final int numOfDates = (Integer.parseInt(endDateTokn[1]) - Integer.parseInt(startDateTokn[1]) + 1);
+			int i = Integer.parseInt(startDateTokn[1]);
+			final int lastdate = i+numOfDates; 
+			while(i<lastdate) {
+				datesList.add(startDateTokn[0]+"/"+i+"/"+startDateTokn[2]);
+				 i++;
+			}
+		} catch (Exception e) {
+			LOG.debug("Error while getting date: {}",e.getMessage());
+		}
+		return datesList;
+	}
+	
+	public void addStatusArangeByNum(StringBuilder content, List<Status> todayStsList, List<String> datesList) {
+		for(int i = 0; i < datesList.size(); i++) {
+			content.append(datesList.get(i));
+			content.append(ReportConstant.ONE_LINE);
+			int count = 0;
+			for(int j = 0; j < todayStsList.size(); j++) {
+				count++;
+				if(datesList.get(i).equals(todayStsList.get(j).getDate())) {
+					content.append(count+".     ");
+					content.append(todayStsList.get(j).getTicketId()+": "+formatDescription(todayStsList, j)+" ");
+					content.append("- "+todayStsList.get(j).getState()+" ");
+					content.append(ReportConstant.ONE_LINE);
+				} else {
+					count--;
+				}
+			}
+			content.append("-------------------------------------------------------");
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
@@ -13,32 +14,31 @@ import { UserService } from 'src/services/user.service';
 export class ReportComponent implements OnInit {
   @Input() user: User;
   userList: User[];
-  startDate: DatePicker;
-  endDate: DatePicker;
   today: DatePicker;
-  blob: Blob;
+  alert: Alert;
+  currentMondayDate: DatePicker;
+  currentMonthFirstDate: DatePicker;
 
   constructor(
     private statusService: StatusService,
     private userService: UserService
   ) {
-    this.blob = new Blob(['hello, I an pranay kohad!!!!!!!!!!!!!!'], {
-      type: 'text/plain',
-    });
     const today = new Date();
-    this.startDate = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate(),
-      today.getFullYear()
-    );
-    this.endDate = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate(),
-      today.getFullYear()
-    );
+
     this.today = new DatePicker(
       today.getMonth() + 1,
       today.getDate(),
+      today.getFullYear()
+    );
+    this.currentMondayDate = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate() - (today.getDay() - 1),
+      today.getFullYear()
+    );
+
+    this.currentMonthFirstDate = new DatePicker(
+      today.getMonth() + 1,
+      1,
       today.getFullYear()
     );
   }
@@ -50,7 +50,7 @@ export class ReportComponent implements OnInit {
   todaysReport() {
     this.statusService
       .getTodaysReport(
-        `${this.today.month}/${this.today.day}/${this.today.year}`
+        `${this.today.month}/${this.today.date}/${this.today.year}`
       )
       .subscribe((res) => {
         if (res['data']) {
@@ -81,9 +81,39 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  myThisWeekReport() {}
+  myThisWeekReport() {
+    this.statusService
+      .getDailyStsByUserIdAndDaterange(
+        this.user.userId,
+        this.currentMondayDate.month +
+          '/' +
+          this.currentMondayDate.day +
+          '/' +
+          this.currentMondayDate.year,
+        this.today.month + '/' + this.today.day + '/' + this.today.year
+      )
+      .subscribe((res) => {
+        if (res['data']) {
+          const data = res['data'];
+          const attachment: Attachment = new Attachment(
+            data['filename'],
+            data['fileContent'],
+            data['mimeType']
+          );
+          this.statusService.downloadFile(attachment);
+          //success
+        } else {
+          //failrue
+        }
+      });
+  }
 
   myThisMonthReport() {}
 
   customizedReport() {}
+
+  showResetMsg(msg: string, type: string) {
+    this.alert.message = msg;
+    this.alert.type = type;
+  }
 }

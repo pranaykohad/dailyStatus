@@ -28,7 +28,37 @@ public class StatusServiceImpl implements StatusService {
 	ReportUtil reportUtil;
 	
 	@Override
-	public StringBuilder createDailyStatusReport(final String date) {
+	public List<Status> saveStatus(final List<Status> statusList) {
+		return stsRepository.saveAll(statusList);
+	}
+	
+	@Override
+	public Result createReport(final String date) {
+		Result result = new Result();
+		StringBuilder dailyStatusFileContent = createDailyReport(date);
+		byte[] byteConent = dailyStatusFileContent.toString().getBytes();
+		final Attachment attachment = new Attachment();
+		attachment.setFileContent(byteConent);
+		attachment.setFilename(LocalDate.now()+".txt");
+		attachment.setMimeType("text/plain");
+		result.setData(attachment);
+		return result;
+	}
+
+	@Override
+	public Result createReport(String userId, String startDate, String endDate) {
+		Result result = new Result();
+		StringBuilder dailyStatusFileContent = createDailyReport(userId, startDate, endDate);
+		byte[] byteConent = dailyStatusFileContent.toString().getBytes();
+		final Attachment attachment = new Attachment();
+		attachment.setFileContent(byteConent);
+		attachment.setFilename(LocalDate.now()+".txt");
+		attachment.setMimeType("text/plain");
+		result.setData(attachment);
+		return result;
+	}
+	
+	private StringBuilder createDailyReport(final String date) {
 		StringBuilder content = new StringBuilder();
 		reportUtil.addGreeting(content);
 		ReportConstant.getModuleList().forEach(module-> {
@@ -40,55 +70,31 @@ public class StatusServiceImpl implements StatusService {
 		LOG.debug("Content {}", content);
 		return content;
 	}
+	
+	private StringBuilder createDailyReport(String userId, String startDate, String endDate) {
+		StringBuilder content = new StringBuilder();
+		reportUtil.addName(content, userId);
+		final List<Status> statusList = stsRepository.getStatusByUserAndDateRange(userId, startDate, endDate);
+		final List<String> datesList = reportUtil.getDatesOfThisWeek(startDate, endDate);
+		reportUtil.addStatusArangeByNum(content, statusList, datesList);
+		return content;
+	}
 
 	
-	
-	@Override
-	public Result createReport(final String date) {
-		Result result = new Result();
-		StringBuilder dailyStatusFileContent = createDailyStatusReport(date);
-		byte[] byteConent = dailyStatusFileContent.toString().getBytes();
-		final Attachment attachment = new Attachment();
-		attachment.setFileContent(byteConent);
-		attachment.setFilename(LocalDate.now()+".txt");
-		attachment.setMimeType("text/plain");
-		result.setData(attachment);
-		return result;
-	}
 
-	@Override
-	public List<Status> saveStatus(final List<Status> statusList) {
-		return stsRepository.saveAll(statusList);
-	}
-
-	@Override
-	public List<Status> getStatusByUserAndDateRange(String userId, String startDate, String endDate) {
-		return stsRepository.getStatusByUserAndDateRange(userId, startDate, endDate);
-	}
-
-	@Override
-	public List<Status> getStatusByDate(String date) {
-		return stsRepository.getStateByDate(date);
-	}
-
-	@Override
-	public List<Status> getStatus(String date, String module, String type, String state) {
-		return stsRepository.getStatus(date, module, type, state);
-	}
-	
 	private void createContent(final String date, StringBuilder content, String module, List<String> userTypeList) {
 		int subHeadCntr = 0;		
 		for(int i = 0; i < userTypeList.size(); i++) {
 			for(int stateIndx = 0; stateIndx < ReportConstant.getStateList().size(); stateIndx++) {	
-				addStatusToContent(date, content, module, userTypeList.get(i), stateIndx, ++subHeadCntr);
+				addStsToContent(date, content, module, userTypeList.get(i), stateIndx, ++subHeadCntr);
 			}
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}
 	
-	private void addStatusToContent(final String date, StringBuilder content, String module, String userType, int stateIndx, int subHeadCntr) {
+	private void addStsToContent(final String date, StringBuilder content, String module, String userType, int stateIndx, int subHeadCntr) {
 		final String state = ReportConstant.getStateList().get(stateIndx);
-		final List<Status> statusList = getStatus(date, module, userType, state);
+		final List<Status> statusList = getStatusByDate(date, module, userType, state);
 		if(statusList.isEmpty()) {
 			subHeadCntr--;
 		} else {
@@ -98,5 +104,15 @@ public class StatusServiceImpl implements StatusService {
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}
+
+	private List<Status> getStatusByDate(String date) {
+		return stsRepository.getStateByDate(date);
+	}
+
+	private List<Status> getStatusByDate(String date, String module, String type, String state) {
+		return stsRepository.getStatusByDateModuleTypeAndState(date, module, type, state);
+	}
+
+	
 
 }
