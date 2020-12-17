@@ -32,7 +32,6 @@ export class AddUserComponent {
   ) {
     this.user = new User(null, '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
     if (this.validate(firstName, lastName, userName, password)) {
-      alert(1);
       this.setAlertMsg('All fields are compulsory.', 'fail');
       this.alertEmitter.emit(this.alert);
     } else {

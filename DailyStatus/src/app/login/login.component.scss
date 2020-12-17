@@ -1,5 +1,16 @@
 #loginPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+  background-color: #f8f7de;
   .wrong-cred {
     color: red;
+  }
+  .login-contr {
+    background-color: darkseagreen;
+    padding: 75px;
+    border-radius: 15px;
   }
 }
