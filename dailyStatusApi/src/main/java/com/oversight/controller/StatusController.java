@@ -54,5 +54,5 @@ public class StatusController {
 			@RequestParam final String endDate, @RequestParam final String reportType) {
 		return stsService.createReport(userId, startDate, endDate, reportType);
 	}
-
+	
 }

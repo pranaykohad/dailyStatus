@@ -80,8 +80,6 @@ public class StatusServiceImpl implements StatusService {
 		return content;
 	}
 
-	
-
 	private void createContent(final String date, StringBuilder content, String module, List<String> userTypeList) {
 		int subHeadCntr = 0;		
 		for(int i = 0; i < userTypeList.size(); i++) {
@@ -105,14 +103,8 @@ public class StatusServiceImpl implements StatusService {
 		}
 	}
 
-	private List<Status> getStatusByDate(String date) {
-		return stsRepository.getStateByDate(date);
-	}
-
 	private List<Status> getStatusByDate(String date, String module, String type, String state) {
 		return stsRepository.getStatusByDateModuleTypeAndState(date, module, type, state);
-	}
-
-	
+	}	
 
 }

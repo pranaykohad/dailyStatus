@@ -6,7 +6,6 @@ public class Attachment {
 	private byte[] fileContent;
 	private String mimeType;
 	
-	
 	public String getFilename() {
 		return filename;
 	}
@@ -25,8 +24,5 @@ public class Attachment {
 	public void setMimeType(String mimeType) {
 		this.mimeType = mimeType;
 	}
-
-	
-	
 
 }

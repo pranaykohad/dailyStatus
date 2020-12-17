@@ -58,6 +58,4 @@ public class Status {
 		this.user = user;
 	}
 	
-	
-	
 }

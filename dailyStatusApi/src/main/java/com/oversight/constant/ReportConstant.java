@@ -56,4 +56,5 @@ public class ReportConstant {
 	public static List<String> getStateList() {
 		return STATE_LIST;
 	}
+	
 }

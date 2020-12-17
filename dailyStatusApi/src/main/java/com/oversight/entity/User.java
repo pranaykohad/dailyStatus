@@ -84,5 +84,5 @@ public class User {
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
 	}
-
+	
 }
