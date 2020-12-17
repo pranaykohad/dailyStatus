@@ -7,7 +7,6 @@
           &times;
         </button>
       </div>
-
       <div class="modal-body">
         <div class="mb-1">
           <span class="bold-txt">User Name:</span>
@@ -19,17 +18,16 @@
         </div>
         <div>
           <span class="bold-txt">Module:</span>
-          <select class="module-name mod-lm" #moduleName>
+          <select class="module-name mod-lm" #moduleDropDown>
             <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
               {{ module }}
             </option>
           </select>
         </div>
       </div>
-
       <div class="modal-footer">
         <button type="button" class="btn btn-success btn-sm" data-dismiss="modal"
-          (click)="updateUserDetails(userName, password, moduleName)">
+          (click)="updateUserDetails(userName.value, password.value, moduleList[moduleDropDown.selectedIndex])">
           Update
         </button>
       </div>

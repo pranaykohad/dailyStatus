@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -13,6 +13,7 @@ import { UserService } from 'src/services/user.service';
 })
 export class ReportComponent implements OnInit {
   @Input() user: User;
+  @Output() alertEmitter = new EventEmitter<Alert>();
   userList: User[];
   today: DatePicker;
   alert: Alert;
@@ -24,7 +25,6 @@ export class ReportComponent implements OnInit {
     private userService: UserService
   ) {
     const today = new Date();
-
     this.today = new DatePicker(
       today.getMonth() + 1,
       today.getDate(),
@@ -41,6 +41,7 @@ export class ReportComponent implements OnInit {
       1,
       today.getFullYear()
     );
+    this.alert = new Alert(null, null);
   }
 
   ngOnInit(): void {
@@ -61,12 +62,11 @@ export class ReportComponent implements OnInit {
             data['mimeType']
           );
           this.statusService.downloadFile(attachment);
-          //success
-          //console.log(res['data]);
+          this.setAlertMsg('Status is downloaded successfully.', 'success');
+          this.alertEmitter.emit(this.alert);
         } else {
-          //failrue
-          //console.log(res['descrition']);
-          //console.log(res['status']);
+          this.setAlertMsg(res['description'], res['status']);
+          this.alertEmitter.emit(this.alert);
         }
       });
   }
@@ -74,24 +74,36 @@ export class ReportComponent implements OnInit {
   getAllUser() {
     this.userService.gteAllUser().subscribe((res) => {
       if (res['status'] === 'FAILURE') {
-        //fail
+        this.setAlertMsg(res['description'], res['status']);
+        this.alertEmitter.emit(this.alert);
       } else {
         this.userList = res['data'];
       }
     });
   }
 
-  myThisWeekReport() {
+  myThisWeekReport(userId: string) {
+    const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.date}/${this.currentMondayDate.year}`;
+    const endDate: string = `${this.today.month}/${this.today.date}/${this.today.year}`;
+    this.getStatus(userId, startDate, endDate);
+  }
+
+  myThisMonthReport(userId: string) {
+    const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.date}/${this.currentMonthFirstDate.year}`;
+    const endDate: string = `${this.today.month}/${this.today.date}/${this.today.year}`;
+    this.getStatus(userId, startDate, endDate);
+  }
+
+  customizedReport() {}
+
+  private setAlertMsg(msg: string, type: string) {
+    this.alert.message = msg;
+    this.alert.type = type;
+  }
+
+  private getStatus(userId: string, startDate: string, endDate: string) {
     this.statusService
-      .getDailyStsByUserIdAndDaterange(
-        this.user.userId,
-        this.currentMondayDate.month +
-          '/' +
-          this.currentMondayDate.day +
-          '/' +
-          this.currentMondayDate.year,
-        this.today.month + '/' + this.today.day + '/' + this.today.year
-      )
+      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate)
       .subscribe((res) => {
         if (res['data']) {
           const data = res['data'];
@@ -101,19 +113,12 @@ export class ReportComponent implements OnInit {
             data['mimeType']
           );
           this.statusService.downloadFile(attachment);
-          //success
+          this.setAlertMsg('Status is downloaded successfully.', 'success');
+          this.alertEmitter.emit(this.alert);
         } else {
-          //failrue
+          this.setAlertMsg(res['description'], res['status']);
+          this.alertEmitter.emit(this.alert);
         }
       });
-  }
-
-  myThisMonthReport() {}
-
-  customizedReport() {}
-
-  showResetMsg(msg: string, type: string) {
-    this.alert.message = msg;
-    this.alert.type = type;
   }
 }

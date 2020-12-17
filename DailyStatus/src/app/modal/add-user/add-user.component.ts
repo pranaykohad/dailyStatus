@@ -27,7 +27,7 @@ export class AddUserComponent implements OnInit {
     userSelIndex: number,
     roleSelIndex: number
   ) {
-    this.user = new User('', '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
+    this.user = new User(null, '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
 
     if (this.validate(firstName, lastName, userName, password)) {
       //show notification

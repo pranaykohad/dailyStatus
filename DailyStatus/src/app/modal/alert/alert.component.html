@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: center;" *ngIf="message">
   <div class="alert" style="height: 31px;
-  line-height: 2px;" role="alert" [ngClass]=" type.toUpperCase() === 'SUCCESS' ? 'alert-success' : 'alert-danger' ">
+  line-height: 2px;" role="alert" [ngClass]="type.toUpperCase() === 'SUCCESS' ? 'alert-success' : 'alert-danger' ">
     {{message}}
   </div>
 </div>

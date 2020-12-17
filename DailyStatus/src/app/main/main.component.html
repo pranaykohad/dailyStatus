@@ -8,8 +8,12 @@
       <button data-toggle="modal" data-target="#userReport" class="btn btn-info btn-sm mr-2">
         Generate Report
       </button>
-      <button data-toggle="modal" data-target="#addUser" class="btn btn-success btn-sm">
+      <button *ngIf="user && user.role === 'ADMIN'" data-toggle="modal" data-target="#addUser"
+        class="btn btn-success btn-sm mr-2">
         Add User
+      </button>
+      <button class="btn btn-danger btn-sm " (click)="logout()">
+        Logout
       </button>
     </div>
   </div>
@@ -17,11 +21,11 @@
   <div>
     <div class="row m-1">
       <div class="mr-2 p-1">
-        <span class="bold-txt">Name: </span>{{ user.firstName }}
-        {{ user.lastName }}
+        <span class="bold-txt">Name: </span>{{ user ? user.firstName :'' }}
+        {{ user ? user.lastName : '' }}
       </div>
       <div class="mr-2 p-1">
-        <span class="bold-txt">Module Name: </span>{{ user.moduleName }}
+        <span class="bold-txt">Module Name: </span>{{ user ? user.moduleName:'' }}
       </div>
       <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm">
         Update
@@ -52,14 +56,12 @@
         Sumbit Status
       </button>
       <button class="btn btn-outline-danger btn-sm"
-        (click)="resetStatusList();this.showResetMsg('Status has been reset', 'success');">
+        (click)="resetStatusList();alertHandler({message: 'Status has been reset.',type:'success'})">
         Reset Status
       </button>
     </div>
   </div>
-  <app-update-userdetail [user]="user"></app-update-userdetail>
-  <app-report [user]="user"></app-report>
+  <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
+  <app-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-report>
   <app-add-user></app-add-user>
-
-
 </div>

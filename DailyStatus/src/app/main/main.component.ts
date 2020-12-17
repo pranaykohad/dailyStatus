@@ -57,10 +57,14 @@ export class MainComponent implements OnInit {
         if (res['description'] === 'Status is saved successfully.') {
           this.resetStatusList();
         }
-        this.showResetMsg(res['description'], res['status']);
+        this.alert.message = res['description'];
+        this.alert.type = res['status'];
+        this.alertHandler(this.alert);
       });
     } else {
-      this.showResetMsg('You cannot submit empty status.', 'fail');
+      this.alert.message = 'You cannot submit empty status.';
+      this.alert.type = 'fail';
+      this.alertHandler(this.alert);
     }
   }
 
@@ -79,8 +83,20 @@ export class MainComponent implements OnInit {
     }
   }
 
+  alertHandler(alert: Alert) {
+    this.showResetMsg(alert.message, alert.type);
+    setTimeout(() => {
+      this.alert = new Alert(null, '');
+    }, 5000);
+  }
+
   showResetMsg(msg: string, type: string) {
     this.alert.message = msg;
     this.alert.type = type;
+  }
+
+  logout() {
+    this.localStoreService.resetLocalStorage();
+    this.router.navigateByUrl('/');
   }
 }

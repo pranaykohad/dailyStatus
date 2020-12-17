@@ -1,5 +1,5 @@
 export interface User {
-  userId: string;
+  userId: number;
   userName: string;
   password: string;
   moduleName: string;
@@ -10,7 +10,7 @@ export interface User {
 }
 export class User {
   constructor(
-    public userId: string,
+    public userId: number,
     public userName: string,
     public password: string,
     public moduleName: string,

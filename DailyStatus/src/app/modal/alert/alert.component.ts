@@ -7,7 +7,7 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 })
 export class AlertComponent {
   private _message: string;
-  @Input() type: string;
+  @Input() type: string = 'fail';
 
   constructor(private cdrf: ChangeDetectorRef) {
     this.message = null;
