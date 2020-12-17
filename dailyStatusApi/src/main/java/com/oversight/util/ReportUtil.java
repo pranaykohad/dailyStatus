@@ -1,7 +1,14 @@
 package com.oversight.util;
 
+import java.text.ParseException;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -31,11 +38,11 @@ public class ReportUtil {
 		content.append(ReportConstant.THREE_LINE);
 	}
 	
-	public void addName(StringBuilder content, String userId) {
+	public void addName(StringBuilder content, final String userId, final String reportType) {
 		final User user = userRepository.getUserByUserId(userId);
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
 		content.append(ReportConstant.ONE_LINE);
-		content.append("Weekly Report:");
+		content.append(reportType+" Report:");
 		content.append(ReportConstant.TWO_LINE);
 	}
 	
@@ -53,7 +60,7 @@ public class ReportUtil {
 		}
 	}
 	
-	public List<String> getDatesOfThisWeek(String startDate, String endDate) {
+	public List<String> getDatesOfRange(String startDate, String endDate) {
 		final List<String> datesList = new ArrayList<>();
 		final String[] startDateTokn = startDate.split("/");
 		final String[] endDateTokn = endDate.split("/");

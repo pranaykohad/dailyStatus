@@ -18,10 +18,11 @@ export class StatusService {
   getDailyStsByUserIdAndDaterange(
     userId: string,
     startDate: string,
-    endDate: string
+    endDate: string,
+    reportType: string
   ): Observable<any> {
     return this.httpClient.get<any>(
-      `${BASE_URL}reportByUserAndDateRange?userId=${userId}&startDate=${startDate}&endDate=${endDate}`
+      `${BASE_URL}reportByUserAndDateRange?userId=${userId}&startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`
     );
   }
 

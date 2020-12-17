@@ -15,32 +15,18 @@ export class ReportComponent implements OnInit {
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
   userList: User[];
-  today: DatePicker;
   alert: Alert;
+  today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
+  customStartDate: DatePicker;
+  customEndDate: DatePicker;
 
   constructor(
     private statusService: StatusService,
     private userService: UserService
   ) {
-    const today = new Date();
-    this.today = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate(),
-      today.getFullYear()
-    );
-    this.currentMondayDate = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate() - (today.getDay() - 1),
-      today.getFullYear()
-    );
-
-    this.currentMonthFirstDate = new DatePicker(
-      today.getMonth() + 1,
-      1,
-      today.getFullYear()
-    );
+    this.initDates();
     this.alert = new Alert(null, null);
   }
 
@@ -51,23 +37,10 @@ export class ReportComponent implements OnInit {
   todaysReport() {
     this.statusService
       .getTodaysReport(
-        `${this.today.month}/${this.today.date}/${this.today.year}`
+        `${this.today.month}/${this.today.day}/${this.today.year}`
       )
       .subscribe((res) => {
-        if (res['data']) {
-          const data = res['data'];
-          const attachment: Attachment = new Attachment(
-            data['filename'],
-            data['fileContent'],
-            data['mimeType']
-          );
-          this.statusService.downloadFile(attachment);
-          this.setAlertMsg('Status is downloaded successfully.', 'success');
-          this.alertEmitter.emit(this.alert);
-        } else {
-          this.setAlertMsg(res['description'], res['status']);
-          this.alertEmitter.emit(this.alert);
-        }
+        this.downloadReport(res);
       });
   }
 
@@ -83,42 +56,91 @@ export class ReportComponent implements OnInit {
   }
 
   myThisWeekReport(userId: string) {
-    const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.date}/${this.currentMondayDate.year}`;
-    const endDate: string = `${this.today.month}/${this.today.date}/${this.today.year}`;
-    this.getStatus(userId, startDate, endDate);
+    const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
+    const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
+    this.getStatus(userId, startDate, endDate, 'Weekly');
   }
 
   myThisMonthReport(userId: string) {
-    const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.date}/${this.currentMonthFirstDate.year}`;
-    const endDate: string = `${this.today.month}/${this.today.date}/${this.today.year}`;
-    this.getStatus(userId, startDate, endDate);
+    const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.day}/${this.currentMonthFirstDate.year}`;
+    const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
+    this.getStatus(userId, startDate, endDate, 'Monthly');
   }
 
-  customizedReport() {}
+  customizedReport(userId: string) {
+    this.setAlertMsg('Available soon...', 'fail');
+    this.alertEmitter.emit(this.alert);
+    // const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
+    // const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
+    // this.statusService
+    //   .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, 'Custom')
+    //   .subscribe((res) => {
+    //     this.downloadReport(res);
+    //   });
+  }
 
   private setAlertMsg(msg: string, type: string) {
     this.alert.message = msg;
     this.alert.type = type;
   }
 
-  private getStatus(userId: string, startDate: string, endDate: string) {
+  private getStatus(
+    userId: string,
+    startDate: string,
+    endDate: string,
+    reportType: string
+  ) {
     this.statusService
-      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate)
+      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, reportType)
       .subscribe((res) => {
-        if (res['data']) {
-          const data = res['data'];
-          const attachment: Attachment = new Attachment(
-            data['filename'],
-            data['fileContent'],
-            data['mimeType']
-          );
-          this.statusService.downloadFile(attachment);
-          this.setAlertMsg('Status is downloaded successfully.', 'success');
-          this.alertEmitter.emit(this.alert);
-        } else {
-          this.setAlertMsg(res['description'], res['status']);
-          this.alertEmitter.emit(this.alert);
-        }
+        this.downloadReport(res);
       });
+  }
+
+  private initDates() {
+    const today = new Date();
+    this.today = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
+    this.currentMondayDate = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate() - (today.getDay() - 1),
+      today.getFullYear()
+    );
+    this.currentMonthFirstDate = new DatePicker(
+      today.getMonth() + 1,
+      1,
+      today.getFullYear()
+    );
+    this.customStartDate = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
+    this.customEndDate = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
+  }
+
+  private downloadReport(res: any) {
+    if (res['data']) {
+      const data = res['data'];
+      const attachment: Attachment = new Attachment(
+        data['filename'],
+        data['fileContent'],
+        data['mimeType']
+      );
+      this.statusService.downloadFile(attachment);
+      this.setAlertMsg('Status is downloaded successfully.', 'success');
+      this.alertEmitter.emit(this.alert);
+    } else {
+      this.setAlertMsg(res['description'], res['status']);
+      this.alertEmitter.emit(this.alert);
+    }
+    this.initDates();
   }
 }

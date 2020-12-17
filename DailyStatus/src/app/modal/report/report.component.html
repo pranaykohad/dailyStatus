@@ -11,14 +11,14 @@
         <div>
           <div class="row ml-4">
             <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal" (click)="todaysReport()">
-              Get Today's Report
+              Get Daily Report
             </button>
           </div>
           <hr />
           <div class="ml-4">
             <div class="mb-2">
               <span class="mr-2">Select User:</span>
-              <select class="module-name" #userDropDown1>
+              <select class="module-name" #userDropDown>
                 <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId">
                   {{ usr.firstName }} {{ usr.lastName }}
                 </option>
@@ -27,12 +27,12 @@
             <div class="ml-3">
               <div class="row">
                 <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
-                  (click)="myThisWeekReport(userList[userDropDown1.selectedIndex]['userId'].toString())">
-                  Get this week's Report
+                  (click)="myThisWeekReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                  Get Weekly Report
                 </button>
                 <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
-                  (click)="myThisMonthReport(userList[userDropDown1.selectedIndex]['userId'].toString())">
-                  Get this month's Report
+                  (click)="myThisMonthReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                  Get Monthly Report
                 </button>
               </div>
             </div>
@@ -46,8 +46,8 @@
               <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="today" ngbDatepicker
-                      #d1="ngbDatepicker" />
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customStartDate"
+                      ngbDatepicker #d1="ngbDatepicker" />
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
                         +
@@ -60,8 +60,8 @@
               <form class="form-inline mb-1 mr-2">
                 <div class="form-group">
                   <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="today" ngbDatepicker
-                      #d2="ngbDatepicker" />
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customEndDate"
+                      ngbDatepicker #d2="ngbDatepicker" />
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
                         +
@@ -73,7 +73,7 @@
             </div>
             <div class="ml-4">
               <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-                (click)="customizedReport()">
+                (click)="customizedReport(userList[userDropDown.selectedIndex]['userId'].toString())">
                 Get Customized Report
               </button>
             </div>

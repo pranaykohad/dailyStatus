@@ -10,6 +10,6 @@ public interface StatusService {
 	
 	public List<Status> saveStatus(final List<Status> statusList);
 	public Result createReport(final String date);
-	public Result createReport(final String userId,final String startDate, final String endDate);
+	public Result createReport(final String userId,final String startDate, final String endDate, final String reportType);
 
 }

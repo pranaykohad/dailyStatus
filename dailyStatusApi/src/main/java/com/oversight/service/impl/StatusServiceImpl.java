@@ -46,9 +46,9 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public Result createReport(String userId, String startDate, String endDate) {
+	public Result createReport(final String userId, final String startDate, final String endDate, final String reportType) {
 		Result result = new Result();
-		StringBuilder dailyStatusFileContent = createDailyReport(userId, startDate, endDate);
+		StringBuilder dailyStatusFileContent = createDailyReport(userId, startDate, endDate, reportType);
 		byte[] byteConent = dailyStatusFileContent.toString().getBytes();
 		final Attachment attachment = new Attachment();
 		attachment.setFileContent(byteConent);
@@ -71,11 +71,11 @@ public class StatusServiceImpl implements StatusService {
 		return content;
 	}
 	
-	private StringBuilder createDailyReport(String userId, String startDate, String endDate) {
+	private StringBuilder createDailyReport(final String userId, final String startDate, final String endDate, final String  reportType) {
 		StringBuilder content = new StringBuilder();
-		reportUtil.addName(content, userId);
+		reportUtil.addName(content, userId, reportType);
 		final List<Status> statusList = stsRepository.getStatusByUserAndDateRange(userId, startDate, endDate);
-		final List<String> datesList = reportUtil.getDatesOfThisWeek(startDate, endDate);
+		final List<String> datesList = reportUtil.getDatesOfRange(startDate, endDate);
 		reportUtil.addStatusArangeByNum(content, statusList, datesList);
 		return content;
 	}

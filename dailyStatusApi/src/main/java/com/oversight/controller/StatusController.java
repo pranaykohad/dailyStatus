@@ -51,8 +51,8 @@ public class StatusController {
 	
 	@GetMapping("/reportByUserAndDateRange")
 	public Result getReportByUserAndDateRange(@RequestParam final String userId, @RequestParam final String startDate, 
-			@RequestParam final String endDate) {
-		return stsService.createReport(userId, startDate, endDate);
+			@RequestParam final String endDate, @RequestParam final String reportType) {
+		return stsService.createReport(userId, startDate, endDate, reportType);
 	}
 
 }
