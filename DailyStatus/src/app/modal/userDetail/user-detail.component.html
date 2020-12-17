@@ -8,17 +8,19 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="mb-1">
-          <span class="bold-txt">User Name:</span>
-          <input #userName id="username" class="col-md-2 edit-lbl-border ml-2 mr-2 p-1" [value]="user.userName" />
+        <div class="form-group">
+          <label for="userName">User Name:</label>
+          <input class="form-control form-control-sm col-md-6" id="userName" #userName [value]="user.userName"
+            placeholder="userName" name="userName" />
         </div>
-        <div class="mb-1">
-          <span class="bold-txt mb-1">Password:</span>
-          <input #password id="pass" class="col-md-2 edit-lbl-border pass-lm ml-2 mr-2 p-1" [value]="user.password" />
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input class="form-control form-control-sm col-md-6" id="password" #password [value]="user.password"
+            placeholder="password" name="password" />
         </div>
         <div>
           <span class="bold-txt">Module:</span>
-          <select class="module-name mod-lm" #moduleDropDown>
+          <select class="module-name mod-lm dropdown" #moduleDropDown>
             <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
               {{ module }}
             </option>
@@ -26,7 +28,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal"
+        <button type="button" class="btn btn-success" data-dismiss="modal"
           (click)="updateUserDetails(userName.value, password.value, moduleList[moduleDropDown.selectedIndex])">
           Update
         </button>

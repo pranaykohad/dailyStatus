@@ -9,30 +9,32 @@
       </div>
       <div class="modal-body">
         <div>
-          <table>
-            <tr>
-              <td>First Name:</td>
-              <td><input id="firstName" #firstName /></td>
-            </tr>
-            <tr>
-              <td>Last Name:</td>
-              <td><input id="lastName" #lastName /></td>
-            </tr>
-            <tr>
-              <td>User Name:</td>
-              <td><input id="userName" #userName /></td>
-            </tr>
-            <tr>
-              <td>Password:</td>
-              <td><input id="password" #password /></td>
-            </tr>
-          </table>
+          <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input class="form-control form-control-sm col-md-7" id="firstName" #firstName placeholder="Firstname"
+              name="firstName" />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input class="form-control form-control-sm col-md-7" id="lastName" #lastName placeholder="Lastname"
+              name="lastName" />
+          </div>
+          <div class="form-group">
+            <label for="username">Username: </label>
+            <input class="form-control form-control-sm col-md-7" id="username" #userName placeholder="Username"
+              name="username" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password:</label>
+            <input class="form-control form-control-sm col-md-7" id="password" #password placeholder="Password"
+              name="password" />
+          </div>
           <hr />
           <table>
             <tr>
               <td>Module Name:</td>
               <td>
-                <select class="module-name" #module>
+                <select class="dropdown" #module>
                   <option *ngFor="let module of moduleList">
                     {{ module }}
                   </option>
@@ -42,7 +44,7 @@
             <tr>
               <td>User Type:</td>
               <td>
-                <select class="module-name" #userType>
+                <select class="dropdown" #userType>
                   <option *ngFor="let userType of userTypeList">
                     {{ userType }}
                   </option>
@@ -52,7 +54,7 @@
             <tr>
               <td>Role:</td>
               <td>
-                <select class="module-name" #role>
+                <select class="dropdown" #role>
                   <option *ngFor="let role of roleList">
                     {{ role }}
                   </option>
@@ -63,7 +65,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" (click)="
+        <button type="button" class="btn btn-success" data-dismiss="modal" (click)="
             addUser(
               firstName.value,
               lastName.value,

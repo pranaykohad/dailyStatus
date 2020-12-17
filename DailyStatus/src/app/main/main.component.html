@@ -42,7 +42,7 @@
       <span class="mr-2 float-left">Description:</span>
       <textarea class="txt-bx hd-box" [id]="'tkt-desc-' + index + 1" [(ngModel)]="row.description"></textarea>
     </div>
-    <select class="module-name" (change)="changeState($event.target.selectedIndex, row)">
+    <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)">
       <option *ngFor="let state of stateList" [selected]="row.state === state">
         {{ state }}
       </option>

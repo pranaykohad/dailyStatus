@@ -35,22 +35,22 @@ export class AddUserComponent {
       this.setAlertMsg('All fields are compulsory.', 'fail');
       this.alertEmitter.emit(this.alert);
     } else {
-      // this.user.firstName = firstName;
-      // this.user.lastName = lastName;
-      // this.user.userName = userName;
-      // this.user.password = password;
-      // this.user.moduleName = this.moduleList[moduleSelIndex];
-      // this.user.type = this.userTypeList[userSelIndex];
-      // this.user.role = this.roleList[roleSelIndex];
-      // this.userService.addUser(this.user).subscribe((res) => {
-      //   if (res['data']) {
-      //     this.setAlertMsg('User is added successfullly.', res['status']);
-      //     this.alertEmitter.emit(this.alert);
-      //   } else {
-      //     this.setAlertMsg(res['descrition'], res['status']);
-      //     this.alertEmitter.emit(this.alert);
-      //   }
-      // });
+      this.user.firstName = firstName;
+      this.user.lastName = lastName;
+      this.user.userName = userName;
+      this.user.password = password;
+      this.user.moduleName = this.moduleList[moduleSelIndex];
+      this.user.type = this.userTypeList[userSelIndex];
+      this.user.role = this.roleList[roleSelIndex];
+      this.userService.addUser(this.user).subscribe((res) => {
+        if (res['data']) {
+          this.setAlertMsg('User is added successfullly.', res['status']);
+          this.alertEmitter.emit(this.alert);
+        } else {
+          this.setAlertMsg(res['descrition'], res['status']);
+          this.alertEmitter.emit(this.alert);
+        }
+      });
     }
   }
 
