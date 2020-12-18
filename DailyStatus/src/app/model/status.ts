@@ -4,7 +4,7 @@ export interface Status {
   ticketId: string;
   description: string;
   state: string;
-  date: string;
+  dDate: string;
   user: User;
 }
 export class Status {
@@ -12,7 +12,7 @@ export class Status {
     public ticketId: string,
     public description: string,
     public state: string,
-    public date: string,
+    public dDate: string,
     public user: User
   ) {}
 }

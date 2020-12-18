@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="status")
+@Table(name="dstatus")
 public class Status {
 	
 	@Id
@@ -17,7 +17,7 @@ public class Status {
 	private String ticketId;
 	private String description;
 	private String state;
-	private String date;
+	private String dDate;
 	@ManyToOne
 	private User user;
 	
@@ -45,11 +45,11 @@ public class Status {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getDate() {
-		return date;
+	public String getdDate() {
+		return dDate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setdDate(String dDate) {
+		this.dDate = dDate;
 	}
 	public User getUser() {
 		return user;

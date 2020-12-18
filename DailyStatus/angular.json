@@ -129,5 +129,8 @@
       }
     }
   },
-  "defaultProject": "DailyStatus"
+  "defaultProject": "DailyStatus",
+  "cli": {
+    "analytics": false
+  }
 }

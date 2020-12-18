@@ -85,7 +85,7 @@ public class ReportUtil {
 			int count = 0;
 			for(int j = 0; j < todayStsList.size(); j++) {
 				count++;
-				if(datesList.get(i).equals(todayStsList.get(j).getDate())) {
+				if(datesList.get(i).equals(todayStsList.get(j).getdDate())) {
 					content.append(count+".     ");
 					content.append(todayStsList.get(j).getTicketId()+": "+formatDescription(todayStsList, j)+" ");
 					content.append("- "+todayStsList.get(j).getState()+" ");
