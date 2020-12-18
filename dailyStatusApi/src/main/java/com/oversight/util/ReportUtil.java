@@ -1,14 +1,7 @@
 package com.oversight.util;
 
-import java.text.ParseException;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -85,7 +78,7 @@ public class ReportUtil {
 			int count = 0;
 			for(int j = 0; j < todayStsList.size(); j++) {
 				count++;
-				if(datesList.get(i).equals(todayStsList.get(j).getdDate())) {
+				if(datesList.get(i).equals(todayStsList.get(j).getDate())) {
 					content.append(count+".     ");
 					content.append(todayStsList.get(j).getTicketId()+": "+formatDescription(todayStsList, j)+" ");
 					content.append("- "+todayStsList.get(j).getState()+" ");
