@@ -11,7 +11,7 @@
 	<groupId>com.oversight</groupId>
 	<artifactId>dailyStatusApi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dailyStatusApi</name>
+	<name>DailyStatusApi</name>
 	<description>Daily status tracking system</description>
 
 	<properties>
