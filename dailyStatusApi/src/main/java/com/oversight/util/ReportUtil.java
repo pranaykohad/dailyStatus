@@ -57,12 +57,12 @@ public class ReportUtil {
 	
 	public void addCustomStatus(StringBuilder content, List<Status> todayStsList) {
 		for(int i = 0; i < todayStsList.size(); i++) {
-			if((i > 0) && (!todayStsList.get(i).getDate().equals(todayStsList.get(i-1).getDate()))) {
+			if((i > 0) && (!todayStsList.get(i).getdDate().equals(todayStsList.get(i-1).getdDate()))) {
 				content.append("-------------------------------------------------------");
 				content.append(ReportConstant.ONE_LINE);
 			}
 			content.append(i+1+".     ");
-			content.append(todayStsList.get(i).getDate()+" ");
+			content.append(todayStsList.get(i).getdDate()+" ");
 			content.append(todayStsList.get(i).getTicketId()+" ");
 			content.append(formatDescription(todayStsList, i)+" ");
 			content.append("- "+todayStsList.get(i).getState()+" ");
@@ -119,7 +119,7 @@ public class ReportUtil {
 	public String formatDescription(List<Status> todayStsList, int i) {
 		final StringBuilder finalString = new StringBuilder();
 		String desc = todayStsList.get(i).getDescription();
-		if(desc.length() >= 130) {
+		if(desc != null && desc.length() >= 130) {
 			String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
 			List<String> subStrList = Arrays.asList(tokens);
 			for(int j=0; j<subStrList.size(); j++) {

@@ -1,10 +1,13 @@
 #app {
-  width: 98vw;
   font-size: 15px;
-  background-color: #fffafa;
   .txt-bx {
     border: 1px solid #c0c0c0 !important;
     min-height: 27px;
+  }
+  .top-right-contr {
+    display: flex;
+    justify-content: flex-end;
+    height: 30px;
   }
   .module-name {
     height: 30px;
