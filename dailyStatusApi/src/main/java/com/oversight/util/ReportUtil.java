@@ -115,11 +115,10 @@ public class ReportUtil {
 		content.append(ReportConstant.TWO_LINE);
 	}
 	
-	
 	public String formatDescription(List<Status> todayStsList, int i) {
 		final StringBuilder finalString = new StringBuilder();
-		String desc = todayStsList.get(i).getDescription();
-		if(desc != null && desc.length() >= 130) {
+		String desc = todayStsList.get(i).getDescription() != null ? todayStsList.get(i).getDescription() : "";
+		if(desc.length() >= 130) {
 			String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
 			List<String> subStrList = Arrays.asList(tokens);
 			for(int j=0; j<subStrList.size(); j++) {

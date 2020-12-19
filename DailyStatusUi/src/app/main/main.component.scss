@@ -27,7 +27,10 @@
       width: 500px;
     }
   }
-}
-.upper-contr {
-  justify-content: space-between;
+  .upper-contr {
+    justify-content: space-between;
+  }
+  .dropdown-menu {
+    left: -70px !important;
+  }
 }
