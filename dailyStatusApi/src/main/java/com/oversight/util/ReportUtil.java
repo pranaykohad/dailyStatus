@@ -46,9 +46,10 @@ public class ReportUtil {
 	
 	public void addStatus(StringBuilder content, List<Status> todayStsList) {
 		for(int i=0; i<todayStsList.size(); i++) {
+			final Status sts = todayStsList.get(i);
 			content.append((char)(i+SMALL_A)+".     ");
-			content.append(todayStsList.get(i).getTicketId()+": "+formatDescription(todayStsList, i)+" ");
-			content.append("("+todayStsList.get(i).getUser().getFirstName()+")");
+			content.append(sts.getTicketId()+": "+formatDescription(todayStsList, i)+" ");
+			content.append("("+sts.getUser().getFirstName()+" "+sts.getUser().getLastName()+")");
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}
