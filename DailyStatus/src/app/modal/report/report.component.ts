@@ -55,28 +55,26 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  myThisWeekReport(userId: string) {
+  thisWeekReport(userId: string) {
     const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
     const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
     this.getStatus(userId, startDate, endDate, 'Weekly');
   }
 
-  myThisMonthReport(userId: string) {
+  thisMonthReport(userId: string) {
     const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.day}/${this.currentMonthFirstDate.year}`;
     const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
     this.getStatus(userId, startDate, endDate, 'Monthly');
   }
 
-  customizedReport(userId: string) {
-    this.setAlertMsg('Available soon...', 'fail');
-    this.alertEmitter.emit(this.alert);
-    // const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
-    // const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
-    // this.statusService
-    //   .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, 'Custom')
-    //   .subscribe((res) => {
-    //     this.downloadReport(res);
-    //   });
+  customReport(userId: string) {
+    const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
+    const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
+    this.statusService
+      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, 'Custom')
+      .subscribe((res) => {
+        this.downloadReport(res);
+      });
   }
 
   private setAlertMsg(msg: string, type: string) {

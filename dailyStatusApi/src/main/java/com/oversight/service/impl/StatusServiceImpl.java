@@ -22,14 +22,17 @@ public class StatusServiceImpl implements StatusService {
 	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
 	
 	@Autowired
-	private StatusRepository stsRepository;
+	private StatusRepository stsRepo;
 	
 	@Autowired
 	ReportUtil reportUtil;
 	
 	@Override
 	public List<Status> saveStatus(final List<Status> statusList) {
-		return stsRepository.saveAll(statusList);
+		if(statusList != null) {
+			LOG.debug("Status is saved for {} ",statusList.get(0).getUser().getUserId());
+		}
+		return stsRepo.saveAll(statusList);
 	}
 	
 	@Override
@@ -74,9 +77,8 @@ public class StatusServiceImpl implements StatusService {
 	private StringBuilder createDailyReport(final String userId, final String startDate, final String endDate, final String  reportType) {
 		StringBuilder content = new StringBuilder();
 		reportUtil.addName(content, userId, reportType);
-		final List<Status> statusList = stsRepository.getStatusByUserAndDateRange(userId, startDate, endDate);
-		final List<String> datesList = reportUtil.getDatesOfRange(startDate, endDate);
-		reportUtil.addStatusArangeByNum(content, statusList, datesList);
+		final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
+		reportUtil.addCustomStatus(content, statusList);
 		return content;
 	}
 
@@ -104,7 +106,7 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	private List<Status> getStatusByDate(String date, String module, String type, String state) {
-		return stsRepository.getStatusByDateModuleTypeAndState(date, module, type, state);
+		return stsRepo.getStatusByDateModuleTypeAndState(date, module, type, state);
 	}	
 
 }

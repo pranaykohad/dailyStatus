@@ -33,6 +33,7 @@ public class ReportUtil {
 	
 	public void addName(StringBuilder content, final String userId, final String reportType) {
 		final User user = userRepository.getUserByUserId(userId);
+		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
 		content.append(ReportConstant.ONE_LINE);
 		content.append(reportType+" Report:");
@@ -54,41 +55,17 @@ public class ReportUtil {
 		}
 	}
 	
-	public List<String> getDatesOfRange(String startDate, String endDate) {
-		final List<String> datesList = new ArrayList<>();
-		final String[] startDateTokn = startDate.split("/");
-		final String[] endDateTokn = endDate.split("/");
-		try {
-			final int numOfDates = (Integer.parseInt(endDateTokn[1]) - Integer.parseInt(startDateTokn[1]) + 1);
-			int i = Integer.parseInt(startDateTokn[1]);
-			final int lastdate = i+numOfDates; 
-			while(i<lastdate) {
-				datesList.add(startDateTokn[0]+"/"+i+"/"+startDateTokn[2]);
-				 i++;
+	public void addCustomStatus(StringBuilder content, List<Status> todayStsList) {
+		for(int i = 0; i < todayStsList.size(); i++) {
+			if((i > 0) && (!todayStsList.get(i).getDate().equals(todayStsList.get(i-1).getDate()))) {
+				content.append("-------------------------------------------------------");
+				content.append(ReportConstant.ONE_LINE);
 			}
-		} catch (Exception e) {
-			LOG.debug("Error while getting date: {}",e.getMessage());
-		}
-		return datesList;
-	}
-	
-	public void addStatusArangeByNum(StringBuilder content, List<Status> todayStsList, List<String> datesList) {
-		for(int i = 0; i < datesList.size(); i++) {
-			content.append(datesList.get(i));
-			content.append(ReportConstant.ONE_LINE);
-			int count = 0;
-			for(int j = 0; j < todayStsList.size(); j++) {
-				count++;
-				if(datesList.get(i).equals(todayStsList.get(j).getDate())) {
-					content.append(count+".     ");
-					content.append(todayStsList.get(j).getTicketId()+": "+formatDescription(todayStsList, j)+" ");
-					content.append("- "+todayStsList.get(j).getState()+" ");
-					content.append(ReportConstant.ONE_LINE);
-				} else {
-					count--;
-				}
-			}
-			content.append("-------------------------------------------------------");
+			content.append(i+1+".     ");
+			content.append(todayStsList.get(i).getDate()+" ");
+			content.append(todayStsList.get(i).getTicketId()+" ");
+			content.append(formatDescription(todayStsList, i)+" ");
+			content.append("- "+todayStsList.get(i).getState()+" ");
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}

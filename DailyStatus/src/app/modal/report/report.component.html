@@ -27,11 +27,11 @@
             <div class="ml-3">
               <div class="row">
                 <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
-                  (click)="myThisWeekReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                  (click)="thisWeekReport(userList[userDropDown.selectedIndex]['userId'].toString())">
                   Get Weekly Report
                 </button>
                 <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
-                  (click)="myThisMonthReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                  (click)="thisMonthReport(userList[userDropDown.selectedIndex]['userId'].toString())">
                   Get Monthly Report
                 </button>
               </div>
@@ -73,8 +73,8 @@
             </div>
             <div class="ml-4">
               <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-                (click)="customizedReport(userList[userDropDown.selectedIndex]['userId'].toString())">
-                Get Customized Report
+                (click)="customReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                Get Custom Report
               </button>
             </div>
           </div>
