@@ -2,12 +2,13 @@
   font-size: 15px;
   .txt-bx {
     border: 1px solid #c0c0c0 !important;
-    min-height: 27px;
+    min-height: 31px;
   }
   .top-right-contr {
     display: flex;
     justify-content: flex-end;
-    height: 30px;
+    height: 50px;
+    font-size: 0.875rem;
   }
   .module-name {
     height: 30px;
@@ -24,7 +25,7 @@
   }
   @media (min-width: 1000px) {
     .hd-box {
-      width: 500px;
+      width: 700px;
     }
   }
   .upper-contr {
@@ -32,5 +33,8 @@
   }
   .dropdown-menu {
     left: -70px !important;
+  }
+  .btn-height {
+    height: 31px;
   }
 }
