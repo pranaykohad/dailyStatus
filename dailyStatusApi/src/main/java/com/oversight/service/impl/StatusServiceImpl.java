@@ -1,6 +1,7 @@
 package com.oversight.service.impl;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,10 +30,14 @@ public class StatusServiceImpl implements StatusService {
 	
 	@Override
 	public List<Status> saveStatus(final List<Status> statusList) {
+		List<Status> list = new ArrayList<>();
 		if(statusList != null) {
-			LOG.debug("Status is saved for {} ",statusList.get(0).getUser().getUserId());
+			list = stsRepo.saveAll(statusList);
+			LOG.debug("Status is saved for {}",statusList.get(0).getUser().getUserId());
+		} else {
+			LOG.debug("Cannot save {}",statusList);
 		}
-		return stsRepo.saveAll(statusList);
+		return list;
 	}
 	
 	@Override
@@ -76,7 +81,7 @@ public class StatusServiceImpl implements StatusService {
 	
 	private StringBuilder createDailyReport(final String userId, final String startDate, final String endDate, final String  reportType) {
 		StringBuilder content = new StringBuilder();
-		reportUtil.addName(content, userId, reportType);
+		reportUtil.addName(content, userId, reportType, startDate, endDate);
 		final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
 		reportUtil.addCustomStatus(content, statusList);
 		return content;

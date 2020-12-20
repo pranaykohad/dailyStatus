@@ -12,6 +12,7 @@ export class StatusService {
   constructor(private httpClient: HttpClient) {}
 
   getTodaysReport(date: string): Observable<any> {
+    date = this.formatToTwoDigit(date);
     return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
   }
 
@@ -21,6 +22,8 @@ export class StatusService {
     endDate: string,
     reportType: string
   ): Observable<any> {
+    startDate = this.formatToTwoDigit(startDate);
+    endDate = this.formatToTwoDigit(endDate);
     return this.httpClient.get<any>(
       `${BASE_URL}reportByUserAndDateRange?userId=${userId}&startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`
     );
@@ -47,5 +50,16 @@ export class StatusService {
     a.download = res.fileName;
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  private formatToTwoDigit(date: string): string {
+    const tokens: string[] = date.split('/');
+    return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
+      tokens[2]
+    }`;
+  }
+
+  private formatDate(value: string): string {
+    return value.length === 1 ? '0' + value : value;
   }
 }

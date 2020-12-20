@@ -55,9 +55,18 @@ export class ReportComponent implements OnInit {
   }
 
   thisWeekReport(userId: string) {
-    const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
-    const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
-    this.getStatus(userId, startDate, endDate, 'Weekly');
+    if (
+      new Date().getDay() === 0 ||
+      this.currentMondayDate.day <= 0 ||
+      this.currentMondayDate.day >= this.today.day
+    ) {
+      this.setAlertMsg('Invalid option. Please try custom dates', 'fail');
+      this.alertEmitter.emit(this.alert);
+    } else {
+      const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
+      const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
+      this.getStatus(userId, startDate, endDate, 'Weekly');
+    }
   }
 
   thisMonthReport(userId: string) {

@@ -70,13 +70,14 @@ export class MainComponent implements OnInit {
 
   resetStatusList() {
     this.statusList = [];
+    const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
         new Status(
           '',
           '',
           'In progress',
-          new Date().toLocaleDateString(),
+          this.statusService.formatToTwoDigit(date),
           this.user
         )
       );

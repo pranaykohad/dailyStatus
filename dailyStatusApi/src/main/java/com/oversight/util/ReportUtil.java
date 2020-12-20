@@ -25,18 +25,18 @@ public class ReportUtil {
 	private static final int DESC_LEN = 130;
 	
 	private static final int SMALL_A = 97;
-	
+		
 	public void addGreeting(StringBuilder content) {
 		content.append(ReportConstant.getGreeting());
 		content.append(ReportConstant.THREE_LINE);
 	}
 	
-	public void addName(StringBuilder content, final String userId, final String reportType) {
+	public void addName(StringBuilder content, final String userId, final String reportType, final String startDate, final String endDate) {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
 		content.append(ReportConstant.ONE_LINE);
-		content.append(reportType+" Report:");
+		content.append(reportType+" Report from "+startDate+" to "+endDate+" :");
 		content.append(ReportConstant.TWO_LINE);
 	}
 	
@@ -132,5 +132,15 @@ public class ReportUtil {
 		}
 		return desc;
 	}
+	
+	public String formatDate(String date) {
+		final String[] tokens = date.split("/");
+		String month = tokens[0];
+		String day = tokens[1];
+		final String year = tokens[2];
+		month = month.length() == 1 ? "0"+month : month;
+		day = day.length() == 1 ? "0"+day : day;
+		return month+"/"+day+"/"+year;
+	  }
 
 }
