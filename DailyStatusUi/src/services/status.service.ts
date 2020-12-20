@@ -52,7 +52,7 @@ export class StatusService {
     window.URL.revokeObjectURL(url);
   }
 
-  private formatToTwoDigit(date: string): string {
+  formatToTwoDigit(date: string): string {
     const tokens: string[] = date.split('/');
     return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
       tokens[2]
