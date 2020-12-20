@@ -19,10 +19,10 @@
             [value]="user.password" placeholder="password" name="password" />
         </div>
         <div>
-          <span class="bold-txt">Module:</span>
+          <span>Module:</span>
           <select class="module-name mod-lm dropdown" #moduleDropDown>
             <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
-              {{ module }}
+              {{module}}
             </option>
           </select>
         </div>

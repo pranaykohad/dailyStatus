@@ -9,32 +9,36 @@
       </div>
       <div class="modal-body">
         <div>
-          <div class="form-group">
-            <label for="firstName">First Name:</label>
-            <input class="form-control form-control-sm col-md-7" id="firstName" #firstName placeholder="Firstname"
-              name="firstName" />
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="firstName">First Name:</label>
+              <input class="form-control form-control-sm col-md-12" id="firstName" #firstName placeholder="Firstname"
+                name="firstName" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="lastName">Last Name:</label>
+              <input class="form-control form-control-sm col-md-12" id="lastName" #lastName placeholder="Lastname"
+                name="lastName" />
+            </div>
           </div>
-          <div class="form-group">
-            <label for="lastName">Last Name:</label>
-            <input class="form-control form-control-sm col-md-7" id="lastName" #lastName placeholder="Lastname"
-              name="lastName" />
-          </div>
-          <div class="form-group">
-            <label for="username">Username: </label>
-            <input class="form-control form-control-sm col-md-7" id="username" #userName placeholder="Username"
-              name="username" />
-          </div>
-          <div class="form-group">
-            <label for="password">Password:</label>
-            <input class="form-control form-control-sm col-md-7" id="password" #password placeholder="Password"
-              name="password" />
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="username">Username: </label>
+              <input class="form-control form-control-sm col-md-12" id="username" #userName placeholder="Username"
+                name="username" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="password">Password:</label>
+              <input class="form-control form-control-sm col-md-12" id="password" #password placeholder="Password"
+                name="password" />
+            </div>
           </div>
           <hr />
           <table>
             <tr>
               <td>Module Name:</td>
               <td>
-                <select class="dropdown" #module>
+                <select class="dropdown col-md-12 pl-1" #module>
                   <option *ngFor="let module of moduleList">
                     {{ module }}
                   </option>
@@ -44,7 +48,7 @@
             <tr>
               <td>User Type:</td>
               <td>
-                <select class="dropdown" #userType>
+                <select class="dropdown col-md-12 pl-1" #userType>
                   <option *ngFor="let userType of userTypeList">
                     {{ userType }}
                   </option>
@@ -54,7 +58,7 @@
             <tr>
               <td>Role:</td>
               <td>
-                <select class="dropdown" #role>
+                <select class="dropdown col-md-12 pl-1" #role>
                   <option *ngFor="let role of roleList">
                     {{ role }}
                   </option>
