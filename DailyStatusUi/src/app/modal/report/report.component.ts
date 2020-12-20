@@ -9,7 +9,6 @@ import { UserService } from 'src/services/user.service';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
-  styleUrls: ['./report.component.scss'],
 })
 export class ReportComponent implements OnInit {
   @Input() user: User;

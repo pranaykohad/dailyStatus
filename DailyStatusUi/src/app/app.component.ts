@@ -5,8 +5,5 @@ import { User } from './model/user';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],  
 })
-export class AppComponent {
-  //"start": "ng serve --proxy-config proxy.config.json"
-}
+export class AppComponent {}

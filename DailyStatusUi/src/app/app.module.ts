@@ -39,7 +39,7 @@ const routes: Routes = [
     FormsModule,
     NgbPaginationModule,
     NgbAlertModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { useHash: true }),
     NgbModule,
   ],
   providers: [],
