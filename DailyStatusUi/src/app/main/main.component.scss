@@ -37,4 +37,28 @@
   .btn-height {
     height: 31px;
   }
+
+  //center color #4edaa4;
+  //lower color #96fcab;
+  //upper color #07b99d;
+
+  .gradient-text {
+    font-family: "Jura", sans-serif;
+    background-image: -webkit-linear-gradient(#96fcab, #28bd84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .al-cntr {
+    align-items: center;
+  }
+
+  .logo {
+    width: 50px;
+    border-right: 1px solid #4edaa4;
+  }
+
+  .logo-name {
+    font-size: 35px;
+  }
 }

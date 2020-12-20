@@ -19,8 +19,8 @@
             [value]="user.password" placeholder="password" name="password" />
         </div>
         <div>
-          <span>Module:</span>
-          <select class="module-name mod-lm dropdown" #moduleDropDown>
+          <span class="mr-2">Module:</span>
+          <select class="module-name dropdown" #moduleDropDown>
             <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
               {{module}}
             </option>

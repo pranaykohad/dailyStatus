@@ -1,0 +1,8 @@
+#alert {
+  display: flex;
+  justify-content: center;
+  .alert-body {
+    height: 31px;
+    line-height: 2px;
+  }
+}
