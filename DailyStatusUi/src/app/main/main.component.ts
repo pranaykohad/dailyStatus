@@ -86,9 +86,9 @@ export class MainComponent implements OnInit {
 
   alertHandler(alert: Alert) {
     this.showResetMsg(alert.message, alert.type);
-    // setTimeout(() => {
-    //   this.alert = new Alert(null, '');
-    // }, 5000);
+    setTimeout(() => {
+      this.alert = new Alert(null, '');
+    }, 5000);
   }
 
   showResetMsg(msg: string, type: string) {
