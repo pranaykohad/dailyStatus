@@ -55,11 +55,7 @@ export class ReportComponent implements OnInit {
   }
 
   thisWeekReport(userId: string) {
-    if (
-      new Date().getDay() === 0 ||
-      this.currentMondayDate.day <= 0 ||
-      this.currentMondayDate.day >= this.today.day
-    ) {
+    if (new Date().getDay() === 0 || this.currentMondayDate.day <= 0) {
       this.setAlertMsg('Invalid option. Please try custom dates', 'fail');
       this.alertEmitter.emit(this.alert);
     } else {

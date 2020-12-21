@@ -1,8 +1,9 @@
-import { UserService } from './../../services/user.service';
-import { User } from './../model/user';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
+
+import { UserService } from './../../services/user.service';
+import { User } from './../model/user';
 
 @Component({
   selector: 'app-login',
@@ -27,6 +28,9 @@ export class LoginComponent {
     this.userService.authenticateUser(this.user).subscribe((res) => {
       if (!res['data']) {
         this.wrongCred = true;
+        setTimeout(() => {
+          this.wrongCred = false;
+        }, 5000);
       } else {
         this.localStoreService.setUser(res['data']);
         this.router.navigateByUrl('/main');

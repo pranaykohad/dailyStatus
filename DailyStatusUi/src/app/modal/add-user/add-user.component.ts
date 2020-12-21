@@ -45,6 +45,7 @@ export class AddUserComponent {
         if (res['data']) {
           this.setAlertMsg('User is added successfullly.', res['status']);
           this.alertEmitter.emit(this.alert);
+          this.resetAllFields();
         } else {
           this.setAlertMsg(res['descrition'], res['status']);
           this.alertEmitter.emit(this.alert);
@@ -70,5 +71,13 @@ export class AddUserComponent {
   private setAlertMsg(msg: string, type: string) {
     this.alert.message = msg;
     this.alert.type = type;
+  }
+
+  private resetAllFields() {
+    const firstName: HTMLInputElement = document.querySelector('#newFirstName');
+    const lastName: HTMLInputElement = document.querySelector('#newLastName');
+    const userName: HTMLInputElement = document.querySelector('#newUserName');
+    const password: HTMLInputElement = document.querySelector('#newPassword');
+    firstName.value = lastName.value = userName.value = password.value = '';
   }
 }
