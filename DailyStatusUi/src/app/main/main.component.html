@@ -1,4 +1,4 @@
-<div id="app" class="pt-3 pl-4">
+<div id="app" class="pt-3 pl-4" style="height: 100vh;">
   <div class="row upper-contr">
     <div class="row col-md-3 ml-0 al-cntr">
       <img class="pr-2 logo" src="./../../assets/logo.png" alt="logo" />
@@ -77,4 +77,9 @@
   <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
   <app-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-report>
   <app-add-user (alertEmitter)="alertHandler($event)"></app-add-user>
+  <div class="footer">
+    <div class="mr-2 mb-1">
+      Created By: Pranay Kohad
+    </div>
+  </div>
 </div>
