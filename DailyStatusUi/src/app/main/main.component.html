@@ -4,8 +4,9 @@
       <img class="pr-2 logo" src="./../../assets/logo.png" alt="logo" />
       <div class="ml-2 gradient-text logo-name">Status Hub</div>
     </div>
-    <div class=" col-md-6">
-      <app-alert [message]="alert.message" [type]="alert.type"></app-alert>
+    <div class="col-md-6 alert-parent">
+      <app-alert [message]=" alert.message" [type]="alert.type">
+      </app-alert>
     </div>
     <div class="col-md-3 pr-4 top-right-contr">
       <button data-toggle="modal" data-target="#userReport" class="btn btn-info btn-sm mr-2 btn-height">

@@ -3,6 +3,7 @@ import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
+  styleUrls: ['./alert.component.scss'],
 })
 export class AlertComponent {
   private _message: string;
@@ -14,8 +15,8 @@ export class AlertComponent {
 
   @Input()
   set message(message: string) {
+    this._message = message;
     if (message) {
-      this._message = message;
       setTimeout(() => {
         this._message = null;
         this.cdrf.markForCheck();

@@ -1,5 +1,6 @@
 <div id="alert" *ngIf="message">
-  <div class="alert-body" role="alert" [ngClass]="type.toUpperCase() === 'SUCCESS' ? 'alert-success' : 'alert-danger' ">
+  <div class="alert-body p-1" role="alert"
+    [ngClass]="type.toUpperCase() === 'SUCCESS' ? 'alert-success' : 'alert-danger' ">
     {{message}}
   </div>
 </div>

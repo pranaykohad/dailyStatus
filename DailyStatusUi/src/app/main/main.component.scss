@@ -7,6 +7,7 @@
   .top-right-contr {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     height: 50px;
     font-size: 0.875rem;
   }
@@ -36,6 +37,11 @@
   }
   .btn-height {
     height: 31px;
+  }
+  .alert-parent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   //center color #4edaa4;
