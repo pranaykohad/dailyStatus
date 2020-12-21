@@ -1,4 +1,5 @@
 #app {
+  height: 100vh;
   font-size: 15px;
   .txt-bx {
     border: 1px solid #c0c0c0 !important;
@@ -26,7 +27,7 @@
   }
   @media (min-width: 1000px) {
     .hd-box {
-      width: 700px;
+      width: 670px;
     }
   }
   .upper-contr {
@@ -43,10 +44,9 @@
     align-items: center;
     justify-content: center;
   }
-
+  //upper color #07b99d;
   //center color #4edaa4;
   //lower color #96fcab;
-  //upper color #07b99d;
 
   .gradient-text {
     font-family: "Jura", sans-serif;
@@ -75,5 +75,35 @@
     width: 100%;
     display: flex;
     justify-content: flex-end;
+  }
+  .main-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  .rt-pane-contr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+  }
+  .recent-update-lbl {
+    background-color: #4edaa4;
+    width: 100%;
+    text-align: center;
+    height: 30px;
+    padding-top: 3px;
+  }
+
+  .tab-contr {
+    height: 370px;
+    overflow-y: auto;
+  }
+  .tab-head {
+    vertical-align: middle;
+    text-align: center;
+  }
+  .tab-head-middle {
+    width: 90px;
   }
 }

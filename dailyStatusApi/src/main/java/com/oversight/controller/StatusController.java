@@ -24,20 +24,27 @@ import com.oversight.service.StatusService;
 @RestController
 @RequestMapping("/api")
 public class StatusController {
-		
+
 	private static final Logger LOG = LoggerFactory.getLogger("StatusController.class");
 
 	@Autowired
 	StatusService stsService;
-	
+
 	@GetMapping("/report")
 	public Result getReportByDate(@RequestParam final String date) {
 		return stsService.createReport(date);
 	}
-	
+
+	@GetMapping("/yesterdayUpdate")
+	public Result getYesterdayUpdate(@RequestParam
+	final String date, @RequestParam
+	final String userId) {
+		return stsService.createReportByDateAndUserId(date, userId);
+	}
+
 	@GetMapping("/reportByUserAndDateRange")
 	public Result getReportByUserAndDateRange(@RequestParam final String userId, @RequestParam final String startDate, 
-			@RequestParam final String endDate, @RequestParam final String reportType) {
+		@RequestParam final String endDate, @RequestParam final String reportType) {
 		return stsService.createReport(userId, startDate, endDate, reportType);
 	}
 
@@ -45,7 +52,7 @@ public class StatusController {
 	@PostMapping("/status")
 	public Result saveUserStatus(@RequestBody @NonNull final List<Status> statusList) {
 		final Result result = new Result();
-		List<Status> ressultList = stsService.saveStatus(statusList);
+		final List<Status> ressultList = stsService.saveStatus(statusList);
 		if (!ressultList.isEmpty()) {
 			result.setDescription("Status is saved successfully.");
 		} else {
@@ -55,5 +62,5 @@ public class StatusController {
 		}
 		return result;
 	}
-	
+
 }

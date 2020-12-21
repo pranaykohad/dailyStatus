@@ -106,10 +106,12 @@ export class ReportComponent implements OnInit {
       today.getDate(),
       today.getFullYear()
     );
+    const lastMonday = new Date();
+    lastMonday.setDate(lastMonday.getDate() - (today.getDay() - 1));
     this.currentMondayDate = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate() - (today.getDay() - 1),
-      today.getFullYear()
+      lastMonday.getMonth() + 1,
+      lastMonday.getDate(),
+      lastMonday.getFullYear()
     );
     this.currentMonthFirstDate = new DatePicker(
       today.getMonth() + 1,

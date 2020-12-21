@@ -16,6 +16,13 @@ export class StatusService {
     return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
   }
 
+  getRecentStatus(date: string, userId: number): Observable<any> {
+    date = this.formatToTwoDigit(date);
+    return this.httpClient.get<any>(
+      `${BASE_URL}yesterdayUpdate?date=${date}&&userId=${userId}`
+    );
+  }
+
   getDailyStsByUserIdAndDaterange(
     userId: string,
     startDate: string,

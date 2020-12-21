@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { DatePicker } from 'src/app/model/datePicker';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
@@ -20,6 +21,8 @@ export class MainComponent implements OnInit {
   user: User;
   stateList;
   statusList: Status[];
+  recentDate: DatePicker;
+  recentStatus: Status[];
 
   constructor(
     private statusService: StatusService,
@@ -30,12 +33,16 @@ export class MainComponent implements OnInit {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
     this.stateList = stateList;
+    this.recentStatus = [];
     this.resetStatusList();
   }
 
   ngOnInit(): void {
     if (!this.userService.getLocalUserName()) {
       this.router.navigateByUrl('/');
+    } else {
+      this.setRecentDate();
+      this.getRecentStatus();
     }
   }
 
@@ -99,5 +106,31 @@ export class MainComponent implements OnInit {
   logout() {
     this.localStoreService.resetLocalStorage();
     this.router.navigateByUrl('/');
+  }
+
+  private setRecentDate() {
+    const recentDate = new Date();
+    recentDate.setDate(recentDate.getDate() - 1);
+    if (recentDate.getDay() === 0) {
+      recentDate.setDate(recentDate.getDate() - 2);
+    } else if (recentDate.getDay() === 6) {
+      recentDate.setDate(recentDate.getDate() - 1);
+    }
+    this.recentDate = new DatePicker(
+      recentDate.getMonth() + 1,
+      recentDate.getDate(),
+      recentDate.getFullYear()
+    );
+  }
+
+  private getRecentStatus() {
+    const yesterday: string = `${this.recentDate.month}/${this.recentDate.day}/${this.recentDate.year}`;
+    this.statusService
+      .getRecentStatus(yesterday, this.user.userId)
+      .subscribe((res) => {
+        if (res['data']) {
+          this.recentStatus = res['data'];
+        }
+      });
   }
 }
