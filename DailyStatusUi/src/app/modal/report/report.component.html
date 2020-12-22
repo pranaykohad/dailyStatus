@@ -18,7 +18,7 @@
           <div class="ml-4">
             <div class="mb-2">
               <span class="mr-2">Select User:</span>
-              <select class="module-name" #userDropDown>
+              <select class="module-name" #userDropDown style="border-radius: 3px">
                 <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId">
                   {{ usr.firstName }} {{ usr.lastName }}
                 </option>

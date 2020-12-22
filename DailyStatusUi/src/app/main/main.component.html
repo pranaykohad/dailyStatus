@@ -66,27 +66,27 @@
       </div>
     </div>
     <div class="col-md-4 p-0 rt-pane-contr">
-      <div class="recent-update-lbl">Recent Updates</div>
-      <div *ngIf="recentStatus.length; else noRecordFound" class="p-2 tab-contr">
+      <div class="recent-update-lbl">Your Recent Statuses</div>
+      <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
           <table class="table" aria-label="table">
             <thead>
               <tr>
-                <th id="date" class="tab-head">Date</th>
                 <th id="ticket-id"class="tab-head tab-head-middle">Ticket Id</th>
-                <th id="description" class="tab-head">Description</th>
+                <th id="description" class="tab-head" >Description</th>
+                <th id="date" class="tab-head" style="width: 100px">State</th>
               </tr>
             </thead>
             <tbody>
             <tr *ngFor="let status of recentStatus">
-              <td class="tab-head">{{status.dDate}}</td>
-              <td class="tab-head">{{status.ticketId}}</td>
-              <td class="tab-head">{{status.description}}</td>
+              <td class="tab-head tab-body-align">{{status.ticketId}}</td>
+              <td class="tab-head tab-body-align">{{status.description}}</td>
+              <td class="tab-head tab-body-align">{{status.state}}</td>
             </tr>
           </tbody>
           </table>
       </div>
       <ng-template #noRecordFound>
-        No record found
+        <div class="pt-2">No record found</div>
       </ng-template>
     </div>
   </div>

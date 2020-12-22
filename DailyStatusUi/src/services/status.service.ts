@@ -19,7 +19,7 @@ export class StatusService {
   getRecentStatus(date: string, userId: number): Observable<any> {
     date = this.formatToTwoDigit(date);
     return this.httpClient.get<any>(
-      `${BASE_URL}yesterdayUpdate?date=${date}&&userId=${userId}`
+      `${BASE_URL}recentStatus?date=${date}&&userId=${userId}`
     );
   }
 

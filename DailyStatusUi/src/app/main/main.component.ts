@@ -110,10 +110,12 @@ export class MainComponent implements OnInit {
 
   private setRecentDate() {
     const recentDate = new Date();
-    recentDate.setDate(recentDate.getDate() - 1);
-    if (recentDate.getDay() === 0) {
+    const todaysDay = new Date().getDay();
+    if (todaysDay === 1) {
+      recentDate.setDate(recentDate.getDate() - 3);
+    } else if (todaysDay === 0) {
       recentDate.setDate(recentDate.getDate() - 2);
-    } else if (recentDate.getDay() === 6) {
+    } else {
       recentDate.setDate(recentDate.getDate() - 1);
     }
     this.recentDate = new DatePicker(

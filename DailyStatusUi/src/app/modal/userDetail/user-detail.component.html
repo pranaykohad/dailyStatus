@@ -20,7 +20,7 @@
         </div>
         <div>
           <span class="mr-2">Module:</span>
-          <select class="module-name dropdown" #moduleDropDown>
+          <select class="module-name dropdown" #moduleDropDown style="border-radius: 3px">
             <option *ngFor="let module of moduleList" [selected]="user.moduleName === module">
               {{module}}
             </option>
