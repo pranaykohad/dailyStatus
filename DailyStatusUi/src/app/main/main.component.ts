@@ -53,26 +53,22 @@ export class MainComponent implements OnInit {
 
   submitStatus() {
     const statusList: Status[] = [];
-    this.statusList.forEach((status) => {
-      if (status.ticketId.trim().length) {
-        status.description = status.description.trim();
-        status.ticketId = status.ticketId.trim();
-        statusList.push(status);
-      }
-    });
-    if (statusList.length) {
+    let isStsLenCorrect = true;
+    isStsLenCorrect = this.buildStatusList(isStsLenCorrect, statusList);
+    if (!isStsLenCorrect) {
+      return;
+    } else if (statusList.length) {
       this.statusService.saveStatus(statusList).subscribe((res) => {
         if (res['description'] === 'Status is saved successfully.') {
           this.resetStatusList();
         }
-        this.alert.message = res['description'];
-        this.alert.type = res['status'];
-        this.alertHandler(this.alert);
+        this.alertHandler({ message: res['description'], type: res['status'] });
       });
     } else {
-      this.alert.message = 'You cannot submit status with empty Ticket Id.';
-      this.alert.type = 'fail';
-      this.alertHandler(this.alert);
+      this.alertHandler({
+        message: 'You cannot submit status with empty Ticket Id.',
+        type: 'fail',
+      });
     }
   }
 
@@ -138,5 +134,26 @@ export class MainComponent implements OnInit {
           this.recentStatus = res['data'];
         }
       });
+  }
+
+  private buildStatusList(
+    isStsLenCorrect: boolean,
+    statusList: Status[]
+  ): boolean {
+    this.statusList.forEach((status) => {
+      if (status.ticketId.trim().length) {
+        status.description = status.description.trim();
+        status.ticketId = status.ticketId.trim();
+        if (status.description.length > 250) {
+          this.alertHandler({
+            message: 'Description cannot be more than 250 characters.',
+            type: 'fail',
+          });
+          isStsLenCorrect = false;
+        }
+        statusList.push(status);
+      }
+    });
+    return isStsLenCorrect;
   }
 }
