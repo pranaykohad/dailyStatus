@@ -10,7 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="Dstatus")
 public class Status {
-	
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int statusId;
@@ -18,44 +18,45 @@ public class Status {
 	private String description;
 	private String state;
 	private String dDate;
+
 	@ManyToOne
 	private User user;
-	
+
 	public int getStatusId() {
 		return statusId;
 	}
-	public void setStatusId(int statusId) {
+	public void setStatusId(final int statusId) {
 		this.statusId = statusId;
 	}
 	public String getTicketId() {
 		return ticketId;
 	}
-	public void setTicketId(String ticketId) {
+	public void setTicketId(final String ticketId) {
 		this.ticketId = ticketId;
 	}
 	public String getDescription() {
 		return description;
 	}
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 	public String getState() {
 		return state;
 	}
-	public void setState(String state) {
+	public void setState(final String state) {
 		this.state = state;
 	}
 	public String getdDate() {
 		return dDate;
 	}
-	public void setdDate(String dDate) {
+	public void setdDate(final String dDate) {
 		this.dDate = dDate;
 	}
 	public User getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(final User user) {
 		this.user = user;
 	}
-	
+
 }

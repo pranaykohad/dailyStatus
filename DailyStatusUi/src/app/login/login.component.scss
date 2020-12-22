@@ -4,13 +4,25 @@
   align-items: center;
   height: 100vh;
   justify-content: center;
-  background-color: #f8f7de;
   .wrong-cred {
     color: red;
   }
   .login-contr {
-    background-color: darkseagreen;
+    background-image: -webkit-linear-gradient(#96fcab, #28bd84);
     padding: 75px;
     border-radius: 15px;
+  }
+  .gradient-text {
+    font-family: "Jura", sans-serif;
+    background-image: -webkit-linear-gradient(#96fcab, #28bd84);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .logo-name {
+    font-size: 35px;
+  }
+  .logo {
+    width: 50px;
+    border-right: 1px solid #4edaa4;
   }
 }
