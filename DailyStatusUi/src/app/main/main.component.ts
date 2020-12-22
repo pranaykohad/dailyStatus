@@ -23,6 +23,7 @@ export class MainComponent implements OnInit {
   statusList: Status[];
   recentDate: DatePicker;
   recentStatus: Status[];
+  alertTimeout: NodeJS.Timeout;
 
   constructor(
     private statusService: StatusService,
@@ -93,7 +94,10 @@ export class MainComponent implements OnInit {
 
   alertHandler(alert: Alert) {
     this.showResetMsg(alert.message, alert.type);
-    setTimeout(() => {
+    if (this.alertTimeout) {
+      clearTimeout(this.alertTimeout);
+    }
+    this.alertTimeout = setTimeout(() => {
       this.alert = new Alert(null, '');
     }, 5000);
   }

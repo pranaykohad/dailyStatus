@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Jura";
+  font-style: "meduim";
+  font-weight: 500;
+  src: local("Jura-Meduim"),
+    url("../../assets/Jura/Jura-VariableFont_wght.ttf") format("opentype");
+}
 #loginPage {
   display: flex;
   flex-direction: column;
@@ -19,10 +26,10 @@
     -webkit-text-fill-color: transparent;
   }
   .logo-name {
-    font-size: 35px;
+    font-size: 60px;
   }
   .logo {
-    width: 50px;
+    width: 60px;
     border-right: 1px solid #4edaa4;
   }
 }
