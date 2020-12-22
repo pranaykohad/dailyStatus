@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Jura";
+  font-style: "meduim";
+  font-weight: 500;
+  src: local("Jura-Meduim"),
+    url("../../assets/Jura/Jura-VariableFont_wght.ttf") format("opentype");
+}
+
 #app {
   height: 100vh;
   font-size: 15px;
