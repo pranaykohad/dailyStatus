@@ -1,6 +1,7 @@
 package com.oversight.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class ReportUtil {
 	@Autowired
 	UserRepository userRepository;
 
-	// private static final int DESC_LEN = 130;
+	 private static final int DESC_LEN = 130;
 
 	private static final int SMALL_A = 97;
 
@@ -48,7 +49,7 @@ public class ReportUtil {
 		for(int i=0; i<todayStsList.size(); i++) {
 			final Status sts = todayStsList.get(i);
 			content.append((char)(i+SMALL_A)+".     ");
-			content.append(sts.getTicketId() + ": " + todayStsList.get(i).getDescription() + " ");
+			content.append(sts.getTicketId() + ": " + formatDescription(todayStsList, i) + " ");
 			content.append("("+sts.getUser().getFirstName()+" "+sts.getUser().getLastName()+")");
 			content.append(ReportConstant.ONE_LINE);
 		}
@@ -114,23 +115,23 @@ public class ReportUtil {
 		content.append(ReportConstant.TWO_LINE);
 	}
 
-	//	public String formatDescription(final List<Status> todayStsList, final int i) {
-	//		final StringBuilder finalString = new StringBuilder();
-	//		String desc = todayStsList.get(i).getDescription() != null ? todayStsList.get(i).getDescription() : "";
-	//		if(desc.length() >= 130) {
-	//			final String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
-	//			final List<String> subStrList = Arrays.asList(tokens);
-	//			for(int j=0; j<subStrList.size(); j++) {
-	//				finalString.append(subStrList.get(j));
-	//				if(j < subStrList.size()-1) {
-	//					finalString.append(ReportConstant.ONE_LINE);
-	//					finalString.append("      ");
-	//				}
-	//			}
-	//			desc = finalString.toString();
-	//		}
-	//		return desc;
-	//	}
+		public String formatDescription(final List<Status> todayStsList, final int i) {
+			final StringBuilder finalString = new StringBuilder();
+			String desc = todayStsList.get(i).getDescription() != null ? todayStsList.get(i).getDescription() : "";
+			if(desc.length() >= 130) {
+				final String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
+				final List<String> subStrList = Arrays.asList(tokens);
+				for(int j=0; j<subStrList.size(); j++) {
+					finalString.append(subStrList.get(j));
+					if(j < subStrList.size()-1) {
+						finalString.append(ReportConstant.ONE_LINE);
+						finalString.append("       ");
+					}
+				}
+				desc = finalString.toString();
+			}
+			return desc;
+		}
 
 	public String formatDate(final String date) {
 		final String[] tokens = date.split("/");

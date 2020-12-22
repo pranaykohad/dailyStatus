@@ -21,6 +21,8 @@ import com.oversight.util.ReportUtil;
 public class StatusServiceImpl implements StatusService {
 
 	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
+	
+	static int subHeadCntr;
 
 	@Autowired
 	private StatusRepository stsRepo;
@@ -65,7 +67,7 @@ public class StatusServiceImpl implements StatusService {
 		result.setData(attachment);
 		return result;
 	}
-
+	
 	private StringBuilder createDailyReport(final String date) {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addGreeting(content);
@@ -73,6 +75,7 @@ public class StatusServiceImpl implements StatusService {
 			reportUtil.addModuleName(content, module);
 			final List<String> userTypeList = reportUtil.getUserTypeList(module);
 			createContent(date, content, module, userTypeList);
+			subHeadCntr = 0;
 		});
 		LOG.debug("Date {}", date);
 		LOG.debug("Content {}", content);
@@ -88,26 +91,23 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	private void createContent(final String date, final StringBuilder content, final String module, final List<String> userTypeList) {
-		int subHeadCntr = 0;		
-		for(int i = 0; i < userTypeList.size(); i++) {
-			for(int stateIndx = 0; stateIndx < ReportConstant.getStateList().size(); stateIndx++) {	
-				addStsToContent(date, content, module, userTypeList.get(i), stateIndx, ++subHeadCntr);
-			}
+		userTypeList.forEach(usertype->{
+			ReportConstant.getStateList().forEach(state->{
+				addStsToContent(date, content, module, usertype, state);
+			});
 			content.append(ReportConstant.ONE_LINE);
-		}
+		});
 	}
 
-	private void addStsToContent(final String date, final StringBuilder content, final String module, final String userType, final int stateIndx, int subHeadCntr) {
-		final String state = ReportConstant.getStateList().get(stateIndx);
+	private void addStsToContent(final String date, final StringBuilder content, final String module, final String userType, final String state) {
 		final List<Status> statusList = getStatusByDate(date, module, userType, state);
-		if(statusList.isEmpty()) {
-			subHeadCntr--;
-		} else {
+		if(!statusList.isEmpty()) {
+			subHeadCntr = subHeadCntr+1;
 			content.append(subHeadCntr+"."+ReportConstant.TAB);
 			reportUtil.createSubHeading(content, userType, state);
 			reportUtil.addStatus(content, statusList);
 			content.append(ReportConstant.ONE_LINE);
-		}
+		} 
 	}
 
 	private List<Status> getStatusByDate(final String date, final String module, final String type, final String state) {

@@ -8,7 +8,7 @@ import { ChangeDetectorRef, Component, Input } from '@angular/core';
 export class AlertComponent {
   private _message: string;
   @Input() type: string = 'fail';
-  alertTimeout: NodeJS.Timeout;
+  alertTimeout: any;
 
   constructor(private cdrf: ChangeDetectorRef) {
     this.message = null;

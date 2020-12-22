@@ -1,4 +1,4 @@
-<div id="app" class="pt-3 ml-3">
+<div id="app" class="pt-3 ml-3 mr-3">
   <div class="row upper-contr">
     <div class="row col-md-3 ml-0 al-cntr">
       <img class="pr-2 logo" src="./../../assets/logo.png" alt="logo" />
@@ -44,8 +44,8 @@
     </div>
   </div>
   <hr />
-  <div class="main-content col-md-12 pl-0">
-    <div class="col-md-8">
+  <div class="main-content col-md-12 p-0">
+    <div class="col-md-8 pl-2">
       <div class="row ml-2" *ngFor="let row of statusList; let index = index">
         <div class="form-group row">
           <label [for]="'tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
@@ -68,22 +68,22 @@
     <div class="col-md-4 p-0 rt-pane-contr">
       <div class="recent-update-lbl">Your Recent Statuses</div>
       <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
-          <table class="table" aria-label="table">
-            <thead>
-              <tr>
-                <th id="ticket-id"class="tab-head tab-head-middle">Ticket Id</th>
-                <th id="description" class="tab-head" >Description</th>
-                <th id="date" class="tab-head" style="width: 100px">State</th>
-              </tr>
-            </thead>
-            <tbody>
+        <table class="table" aria-label="table">
+          <thead>
+            <tr>
+              <th id="ticket-id" class="tab-head tab-head-middle">Ticket Id</th>
+              <th id="description" class="tab-head">Description</th>
+              <th id="date" class="tab-head" style="width: 100px">State</th>
+            </tr>
+          </thead>
+          <tbody>
             <tr *ngFor="let status of recentStatus">
               <td class="tab-head tab-body-align">{{status.ticketId}}</td>
               <td class="tab-head tab-body-align">{{status.description}}</td>
               <td class="tab-head tab-body-align">{{status.state}}</td>
             </tr>
           </tbody>
-          </table>
+        </table>
       </div>
       <ng-template #noRecordFound>
         <div class="pt-2">No record found</div>
