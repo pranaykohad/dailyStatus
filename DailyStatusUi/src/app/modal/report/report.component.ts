@@ -72,6 +72,11 @@ export class ReportComponent implements OnInit {
   }
 
   customReport(userId: string) {
+    if (this.isCustDateInvalid()) {
+      this.setAlertMsg('Start Date cannot be greater than End Date', 'fail');
+      this.alertEmitter.emit(this.alert);
+      return;
+    }
     const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
     const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
     this.statusService
@@ -79,6 +84,20 @@ export class ReportComponent implements OnInit {
       .subscribe((res) => {
         this.downloadReport(res);
       });
+  }
+
+  private isCustDateInvalid() {
+    const endDate1 = new Date(
+      this.customEndDate.month,
+      this.customEndDate.day,
+      this.customEndDate.year
+    );
+    const startDate1 = new Date(
+      this.customStartDate.month,
+      this.customStartDate.day,
+      this.customStartDate.year
+    );
+    return endDate1.getTime() - startDate1.getTime() < 0;
   }
 
   private setAlertMsg(msg: string, type: string) {

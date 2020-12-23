@@ -21,7 +21,7 @@ import com.oversight.util.ReportUtil;
 public class StatusServiceImpl implements StatusService {
 
 	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
-	
+
 	static int subHeadCntr;
 
 	@Autowired
@@ -67,7 +67,7 @@ public class StatusServiceImpl implements StatusService {
 		result.setData(attachment);
 		return result;
 	}
-	
+
 	private StringBuilder createDailyReport(final String date) {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addGreeting(content);
@@ -120,6 +120,18 @@ public class StatusServiceImpl implements StatusService {
 		final List<Status> statusList = stsRepo.getStatusByDateAndUserId(date, userId);
 		if (statusList == null || statusList.isEmpty()) {
 			result.setDescription("No record found");
+		} else {
+			result.setData(statusList);
+		}
+		return result;
+	}
+
+	@Override
+	public Result getDefaultersList(final String date) {
+		final Result result = new Result();
+		final List<Status> statusList = stsRepo.getDefaultersList(date);
+		if (statusList.isEmpty()) {
+			result.setDescription("No Defaulters for Today");
 		} else {
 			result.setData(statusList);
 		}

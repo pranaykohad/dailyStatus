@@ -22,7 +22,7 @@ public class ReportUtil {
 	@Autowired
 	UserRepository userRepository;
 
-	 private static final int DESC_LEN = 130;
+	private static final int DESC_LEN = 130;
 
 	private static final int SMALL_A = 97;
 
@@ -115,23 +115,23 @@ public class ReportUtil {
 		content.append(ReportConstant.TWO_LINE);
 	}
 
-		public String formatDescription(final List<Status> todayStsList, final int i) {
-			final StringBuilder finalString = new StringBuilder();
-			String desc = todayStsList.get(i).getDescription() != null ? todayStsList.get(i).getDescription() : "";
-			if(desc.length() >= 130) {
-				final String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
-				final List<String> subStrList = Arrays.asList(tokens);
-				for(int j=0; j<subStrList.size(); j++) {
-					finalString.append(subStrList.get(j));
-					if(j < subStrList.size()-1) {
-						finalString.append(ReportConstant.ONE_LINE);
-						finalString.append("       ");
-					}
+	public String formatDescription(final List<Status> todayStsList, final int i) {
+		final StringBuilder finalString = new StringBuilder();
+		String desc = todayStsList.get(i).getDescription() != null ? todayStsList.get(i).getDescription() : "";
+		if(desc.length() >= 130) {
+			final String[] tokens = desc.split("(?<=\\G.{" + DESC_LEN + "})");
+			final List<String> subStrList = Arrays.asList(tokens);
+			for(int j=0; j<subStrList.size(); j++) {
+				finalString.append(subStrList.get(j));
+				if(j < subStrList.size()-1) {
+					finalString.append(ReportConstant.ONE_LINE);
+					finalString.append("       ");
 				}
-				desc = finalString.toString();
 			}
-			return desc;
+			desc = finalString.toString();
 		}
+		return desc;
+	}
 
 	public String formatDate(final String date) {
 		final String[] tokens = date.split("/");

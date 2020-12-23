@@ -21,12 +21,12 @@ import com.oversight.service.UserService;
 @RestController
 @RequestMapping("/api")
 public class UserController {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger("UserController.class");
 
 	@Autowired
 	UserService userService;
-	
+
 	@PostMapping("/authenticate")
 	public Result authnticateUser(@RequestBody final User user) {
 		final Result result = new Result();
@@ -47,18 +47,18 @@ public class UserController {
 		result.setData(userService.updateUserDetails(user));
 		return result;
 	}
-	
+
 	@PostMapping("/user")
 	public Result addUser(@RequestBody final User user) {
 		final Result result = new Result();
 		result.setData(userService.addUser(user));
 		return result;
 	}
-	
+
 	@GetMapping("/user")
 	public Result getAllUser() {
 		final Result result = new Result();
-		List<User> userList = userService.getAllUser();
+		final List<User> userList = userService.getAllUser();
 		if(userList.isEmpty()) {
 			result.setStatus(ResStatus.FAILURE);
 			result.setDescription("Failed to get User List. Please contact Admnistrator");
@@ -68,5 +68,5 @@ public class UserController {
 		}
 		return result;
 	}
-	
+
 }
