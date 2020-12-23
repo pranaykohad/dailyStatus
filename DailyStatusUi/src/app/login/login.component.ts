@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
 
@@ -17,8 +17,7 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private localStoreService: LocalStorageService,
-    private cdrf: ChangeDetectorRef
+    private localStoreService: LocalStorageService
   ) {
     this.user = new User(null, null, null, null, null, null, null, null);
     this.localStoreService.resetLocalStorage();

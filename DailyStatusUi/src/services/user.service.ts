@@ -1,9 +1,11 @@
-import { LocalStorageService } from './local-storage.service';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/model/user';
 import { BASE_URL } from 'src/app/app.constant';
+import { User } from 'src/app/model/user';
+
+import { LocalStorageService } from './local-storage.service';
+
 @Injectable({
   providedIn: 'root',
 })

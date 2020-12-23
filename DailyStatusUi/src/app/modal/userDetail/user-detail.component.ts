@@ -1,12 +1,6 @@
-import { Alert } from 'src/app/model/alert';
-import {
-  Component,
-  Input,
-  ChangeDetectorRef,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { moduleList } from 'src/app/app.constant';
+import { Alert } from 'src/app/model/alert';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { UserService } from 'src/services/user.service';
