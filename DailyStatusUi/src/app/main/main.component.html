@@ -20,12 +20,13 @@
         Logout
       </button>
     </div>
-    <!-- <div class="dropdown col-md-3 pr-4 top-right-contr">
+    <!-- <div class="dropdown col-md-3 top-right-contr">
       <i class="fa fa-bars" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-hidden="true" style="font-size: 30px"></i>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="javascript:void(0);">Generate Report</a>
-        <a class="dropdown-item" href="javascript:void(0);">Add user</a>
-        <a class="dropdown-item" href="javascript:void(0);">Logout</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);">Generate Report</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);" *ngIf="user && user.role === 'ADMIN'" >Add user</a>
+        <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
+      </div>
     </div> -->
   </div>
   <hr />

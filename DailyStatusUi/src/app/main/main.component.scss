@@ -33,17 +33,17 @@
     display: flex;
     justify-content: center;
   }
-  // @media (min-width: 1000px) {
-  //   .hd-box {
-  //      width: 550px;
-  //   }
-  // }
   .upper-contr {
     justify-content: space-between;
   }
   .dropdown-menu {
-    left: -70px !important;
+    left: -10px !important;
+    border: 1px solid gray;
   }
+  .dropdown :hover {
+    cursor: pointer !important;
+  }
+
   .btn-height {
     height: 31px;
   }
