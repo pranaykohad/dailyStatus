@@ -23,7 +23,7 @@ export class MainComponent implements OnInit {
   statusList: Status[];
   recentDate: DatePicker;
   recentStatus: Status[];
-  alertTimeout: NodeJS.Timeout;
+  alertTimeout: any;
 
   constructor(
     private statusService: StatusService,
