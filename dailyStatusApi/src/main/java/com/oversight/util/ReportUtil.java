@@ -71,7 +71,7 @@ public class ReportUtil {
 	}
 
 	public void createSubHeading(final StringBuilder content, final String userType, final String state) {
-		switch (userType) {
+		switch (userType.toUpperCase().trim()) {
 			case "DEV":
 				addSubHeading(content, "Developement", state);
 				break;
@@ -91,7 +91,7 @@ public class ReportUtil {
 
 	public List<String> getUserTypeList(final String module) {
 		List<String> userTypes = new ArrayList<>();
-		switch (module.trim()) {
+		switch (module.toUpperCase().trim()) {
 			case "OCR":
 				userTypes = ReportConstant.getOcrUserTypeList();
 				break;
