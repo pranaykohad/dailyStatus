@@ -1,10 +1,15 @@
-import { ChangeDetectorRef, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { moduleList } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { UserService } from 'src/services/user.service';
 
+@Component({
+  selector: 'app-update-userdetail',
+  templateUrl: './user-detail.component.html',
+  styleUrls: ['./user-detail.component.scss'],
+})
 export class UserDetailComponent {
   @Input() user: User;
   alert: Alert;
