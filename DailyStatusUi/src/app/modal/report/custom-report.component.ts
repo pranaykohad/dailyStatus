@@ -7,10 +7,10 @@ import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 
 @Component({
-  selector: 'app-report',
-  templateUrl: './report.component.html',
+  selector: 'app-custom-report',
+  templateUrl: './custom-report.component.html',
 })
-export class ReportComponent implements OnInit {
+export class CustomReportComponent implements OnInit {
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
   userList: User[];

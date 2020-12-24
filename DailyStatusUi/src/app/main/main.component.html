@@ -99,7 +99,7 @@
     </div>
   </div>
   <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
-  <app-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-report>
+  <app-custom-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-custom-report>
   <app-add-user (alertEmitter)="alertHandler($event)"></app-add-user>
   <app-defaulter-list [defaulterList]="defaulterList"></app-defaulter-list>
   <div class="footer">
