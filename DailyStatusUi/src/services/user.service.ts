@@ -37,4 +37,20 @@ export class UserService {
     const USER = this.localStoreService.getUser();
     return USER && USER['userName'].length ? USER['userName'] : null;
   }
+
+  defaultersList(date: string): Observable<any> {
+    date = this.formatToTwoDigit(date);
+    return this.httpClient.get<any>(`${BASE_URL}defaultersList?date=${date}`);
+  }
+
+  formatToTwoDigit(date: string): string {
+    const tokens: string[] = date.split('/');
+    return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
+      tokens[2]
+    }`;
+  }
+
+  private formatDate(value: string): string {
+    return value.length === 1 ? '0' + value : value;
+  }
 }

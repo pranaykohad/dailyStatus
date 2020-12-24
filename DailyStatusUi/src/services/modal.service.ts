@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal,
+  NgbModalOptions,
+  NgbModalRef,
+} from '@ng-bootstrap/ng-bootstrap';
+import { AddUserComponent } from 'src/app/modal/add-user/add-user.component';
+import { DefaulterListComponent } from 'src/app/modal/defaulter-list/defaulter-list.component';
+import { User } from 'src/app/model/user';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
@@ -12,14 +19,18 @@ export class ModalService {
     };
   }
 
-  // openHelpModal(): HelpNavComponent {
-  //   const helpModal: NgbModalRef = this.modalService.open(
-  //     HelpNavComponent,
-  //     this.modalOptions
-  //   );
-  //   const comp = <HelpNavComponent>helpModal.componentInstance;
-  //   return comp;
-  // }
+  openDefaulterListModal() {
+    this.modalService.open(DefaulterListComponent, this.modalOptions);
+  }
+
+  openAdduserModal() {
+    const addUserModal: NgbModalRef = this.modalService.open(
+      AddUserComponent,
+      this.modalOptions
+    );
+    const comp = <AddUserComponent>addUserModal.componentInstance;
+    return comp;
+  }
 
   // openAddUserModal(): void {
   //   this.modalService.open(AddUserComponent, this.modalOptions);

@@ -120,6 +120,11 @@
   .tab-body-align {
     vertical-align: top;
   }
+  .disable-view {
+    pointer-events: none !important;
+    cursor: default !important;
+    color: grey;
+  }
 }
 
 select {

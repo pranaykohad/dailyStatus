@@ -48,12 +48,6 @@ public class StatusController {
 		return stsService.createReport(userId, startDate, endDate, reportType);
 	}
 
-	@GetMapping("/defaultersList")
-	public Result getDefaultersList(@RequestParam
-	final String date) {
-		return stsService.getDefaultersList(date);
-	}
-
 	@Transactional
 	@PostMapping("/status")
 	public Result saveUserStatus(@RequestBody @NonNull final List<Status> statusList) {

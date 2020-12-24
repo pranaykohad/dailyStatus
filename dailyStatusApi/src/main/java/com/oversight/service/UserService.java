@@ -2,6 +2,7 @@ package com.oversight.service;
 
 import java.util.List;
 
+import com.oversight.entity.Result;
 import com.oversight.entity.User;
 
 
@@ -12,5 +13,6 @@ public interface UserService {
 	public User updateUserDetails(final User user);
 	public User addUser(final User user);
 	public List<User> getAllUser();
+	public Result getDefaultersList(final String date);
 
 }

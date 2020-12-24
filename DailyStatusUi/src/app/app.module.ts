@@ -16,6 +16,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { AddUserComponent } from './modal/add-user/add-user.component';
 import { AlertComponent } from './modal/alert/alert.component';
+import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
     ReportComponent,
     AddUserComponent,
     AlertComponent,
+    DefaulterListComponent,
   ],
   imports: [
     BrowserModule,

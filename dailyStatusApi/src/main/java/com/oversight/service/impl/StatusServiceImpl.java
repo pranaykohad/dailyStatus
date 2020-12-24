@@ -126,16 +126,6 @@ public class StatusServiceImpl implements StatusService {
 		return result;
 	}
 
-	@Override
-	public Result getDefaultersList(final String date) {
-		final Result result = new Result();
-		final List<Status> statusList = stsRepo.getDefaultersList(date);
-		if (statusList.isEmpty()) {
-			result.setDescription("No Defaulters for Today");
-		} else {
-			result.setData(statusList);
-		}
-		return result;
-	}	
+	
 
 }

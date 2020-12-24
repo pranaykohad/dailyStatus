@@ -86,10 +86,6 @@ export class ReportComponent implements OnInit {
       });
   }
 
-  defaultersList() {
-    alert(1);
-  }
-
   private isCustDateInvalid() {
     const endDate1 = new Date(
       this.customEndDate.month,

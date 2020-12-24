@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.oversight.entity.Result;
 import com.oversight.entity.User;
 import com.oversight.repository.UserRepository;
 import com.oversight.service.UserService;
@@ -46,5 +47,19 @@ public class UserServiceImpl implements UserService {
 		}
 		return finalUserList;
 	}
+
+	@Override
+	public Result getDefaultersList(final String date) {
+		final Result result = new Result();
+		final List<User> allUserList = userRepo.findAll();
+		final  List<User> validUserList = userRepo.getValidUserList(date);
+		allUserList.removeAll(validUserList);
+		if (allUserList.isEmpty()) {
+			result.setDescription("No Defaulters for Today");
+		} else {
+			result.setData(allUserList);
+		}
+		return result;
+	}	
 	
 }

@@ -12,6 +12,5 @@ public interface StatusService {
 	public Result createReport(final String date);
 	public Result createReportByDateAndUserId(final String date, final String userId);
 	public Result createReport(final String userId,final String startDate, final String endDate, final String reportType);
-	public Result getDefaultersList(final String date);
 
 }

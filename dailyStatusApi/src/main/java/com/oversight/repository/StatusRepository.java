@@ -20,7 +20,4 @@ public interface StatusRepository extends JpaRepository<Status, Integer>{
 	@Query(value = "SELECT s.* FROM Dstatus s JOIN Duser u ON s.user_user_id = u.user_id WHERE s.d_date = ?1 and u.user_Id = ?2", nativeQuery = true)
 	public List<Status> getStatusByDateAndUserId(String date, String userId);
 
-	@Query(value = "SELECT s FROM dstatus s RIGHT JOIN duser u ON s.user_user_id = u.user_id AND s.d_date = ?1 AND s.status_id = null", nativeQuery = true)
-	public List<Status> getDefaultersList(String date);
-
 }
