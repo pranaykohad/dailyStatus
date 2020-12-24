@@ -1,37 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
-import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-defaulter-list',
   templateUrl: './defaulter-list.component.html',
   styleUrls: ['./defaulter-list.component.scss'],
 })
-export class DefaulterListComponent implements OnInit {
+export class DefaulterListComponent {
   today: DatePicker;
-  defaulterList: User[];
   message: string = null;
+  private _defaulterList: User[];
 
-  constructor(private userService: UserService) {
-    const today = new Date();
-    this.today = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate(),
-      today.getFullYear()
-    );
+  @Input()
+  set defaulterList(defaulterList: User[]) {
+    this._defaulterList = defaulterList;
+    if (this._defaulterList && !this._defaulterList.length) {
+      this.message = 'No Defaulter Today';
+    }
   }
-  ngOnInit(): void {
-    this.userService
-      .defaultersList(
-        `${this.today.month}/${this.today.day}/${this.today.year}`
-      )
-      .subscribe((res) => {
-        if (res['description']) {
-          this.message = 'No Defaulter Today';
-        } else {
-          this.defaulterList = res['data'];
-        }
-      });
+
+  get defaulterList() {
+    return this._defaulterList;
   }
 }

@@ -2,13 +2,13 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Defaulters List</h4>
+        <h4 class="modal-title">Today's Defaulters List</h4>
         <button type="button" class="close" data-dismiss="modal">
           &times;
         </button>
       </div>
       <div class="modal-body">
-        <div *ngIf="defaulterList; else noDefauters">
+        <div *ngIf="defaulterList && defaulterList.length; else noDefauters">
           <div *ngFor="let user of defaulterList">
             {{user.firstName}} {{user.lastName}}
           </div>

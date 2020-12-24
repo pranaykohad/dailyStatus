@@ -23,6 +23,8 @@ export class MainComponent implements OnInit {
   recentDate: DatePicker;
   recentStatus: Status[];
   alertTimeout: any;
+  today: DatePicker;
+  defaulterList: User[];
 
   constructor(
     private statusService: StatusService,
@@ -35,6 +37,12 @@ export class MainComponent implements OnInit {
     this.stateList = stateList;
     this.recentStatus = [];
     this.resetStatusList();
+    const today = new Date();
+    this.today = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
   }
 
   ngOnInit(): void {
@@ -105,6 +113,21 @@ export class MainComponent implements OnInit {
   logout() {
     this.localStoreService.resetLocalStorage();
     this.router.navigateByUrl('/');
+  }
+
+  getDefaulterList() {
+    this.defaulterList = [];
+    this.userService
+      .defaultersList(
+        `${this.today.month}/${this.today.day}/${this.today.year}`
+      )
+      .subscribe((res) => {
+        if (res['description']) {
+          // this.message = 'No Defaulter Today';
+        } else {
+          this.defaulterList = res['data'];
+        }
+      });
   }
 
   private setRecentDate() {
