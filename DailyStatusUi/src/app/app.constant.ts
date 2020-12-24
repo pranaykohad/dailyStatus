@@ -1,5 +1,5 @@
-export const BASE_URL = 'http://localhost:8000/api/';
-//export const BASE_URL = 'http://172.18.0.6:8000/api/';
+import { environment } from '../environments/environment';
+export const BASE_URL = environment.BASE_URL;
 export const moduleList = ['OCR', 'Connector', 'Workbench 9.2', 'Automation'];
 export const stateList = ['In progress', 'Completed'];
 export const roleList = ['ADMIN', 'NORMAL'];

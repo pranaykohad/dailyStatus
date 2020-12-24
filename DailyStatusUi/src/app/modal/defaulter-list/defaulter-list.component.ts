@@ -9,7 +9,7 @@ import { User } from 'src/app/model/user';
 })
 export class DefaulterListComponent {
   today: DatePicker;
-  message: string = null;
+  message: string = '';
   private _defaulterList: User[];
 
   @Input()
