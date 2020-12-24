@@ -12,14 +12,14 @@
       <i class="fa fa-bars" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
         aria-hidden="true" style="font-size: 30px"></i>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Daily Report</a>
+        <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Today's Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);">Custom
           Report</a>
-        <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
-          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add user</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
           (click)="getDefaulterList()">Today's
           Defaulters</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add user</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>

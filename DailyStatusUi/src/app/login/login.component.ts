@@ -14,6 +14,7 @@ export class LoginComponent {
   user: User;
   wrongCred = false;
   errorMsg = 'Wrong Credentials';
+
   constructor(
     private router: Router,
     private userService: UserService,
