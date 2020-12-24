@@ -13,12 +13,9 @@ export class AddUserComponent {
   moduleList = moduleList;
   userTypeList = userTypeList;
   roleList = roleList;
-  alert: Alert;
   @Output() alertEmitter = new EventEmitter<Alert>();
 
-  constructor(private userService: UserService) {
-    this.alert = new Alert(null, null);
-  }
+  constructor(private userService: UserService) {}
 
   addUser(
     firstName: string,
@@ -31,8 +28,8 @@ export class AddUserComponent {
   ) {
     this.user = new User(null, '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
     if (this.validate(firstName, lastName, userName, password)) {
-      this.setAlertMsg('All fields are compulsory.', 'fail');
-      this.alertEmitter.emit(this.alert);
+      const alert = { message: 'All fields are compulsory.', type: 'fail' };
+      this.alertEmitter.emit(alert);
     } else {
       this.user.firstName = firstName;
       this.user.lastName = lastName;
@@ -41,15 +38,18 @@ export class AddUserComponent {
       this.user.moduleName = this.moduleList[moduleSelIndex];
       this.user.type = this.userTypeList[userSelIndex];
       this.user.role = this.roleList[roleSelIndex];
+      let alert = null;
       this.userService.addUser(this.user).subscribe((res) => {
         if (res['data']) {
-          this.setAlertMsg('User is added successfullly.', res['status']);
-          this.alertEmitter.emit(this.alert);
+          alert = {
+            message: 'User is added successfullly.',
+            type: res['status'],
+          };
           this.resetAllFields();
         } else {
-          this.setAlertMsg(res['descrition'], res['status']);
-          this.alertEmitter.emit(this.alert);
+          alert = { message: res['descrition'], type: res['status'] };
         }
+        this.alertEmitter.emit(alert);
       });
     }
   }
@@ -66,11 +66,6 @@ export class AddUserComponent {
       !userName.trim().length ||
       !password.trim().length
     );
-  }
-
-  private setAlertMsg(msg: string, type: string) {
-    this.alert.message = msg;
-    this.alert.type = type;
   }
 
   private resetAllFields() {
