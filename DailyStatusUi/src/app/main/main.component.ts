@@ -135,7 +135,8 @@ export class MainComponent implements OnInit {
         `${this.today.month}/${this.today.day}/${this.today.year}`
       )
       .subscribe((res) => {
-        this.downloadReport(res);
+        const alert = this.downloadReport(res);
+        this.alertHandler(alert);
       });
   }
 
@@ -188,7 +189,8 @@ export class MainComponent implements OnInit {
     return isStsLenCorrect;
   }
 
-  private downloadReport(res: any) {
+  private downloadReport(res: any): Alert {
+    let alert = null;
     if (res['data']) {
       const data = res['data'];
       const attachment: Attachment = new Attachment(
@@ -197,12 +199,16 @@ export class MainComponent implements OnInit {
         data['mimeType']
       );
       this.statusService.downloadFile(attachment);
-      this.alertHandler({
+      alert = {
         message: 'Status is downloaded successfully.',
         type: 'success',
-      });
+      };
     } else {
-      this.alertHandler({ message: res['description'], type: res['status'] });
+      alert = {
+        message: res['description'],
+        type: res['status'],
+      };
     }
+    return alert;
   }
 }

@@ -14,7 +14,6 @@ export class ReportComponent implements OnInit {
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
   userList: User[];
-  alert: Alert;
   today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
@@ -26,7 +25,6 @@ export class ReportComponent implements OnInit {
     private userService: UserService
   ) {
     this.initDates();
-    this.alert = new Alert(null, null);
   }
 
   ngOnInit(): void {
@@ -36,8 +34,8 @@ export class ReportComponent implements OnInit {
   getAllUser() {
     this.userService.gteAllUser().subscribe((res) => {
       if (res['status'] === 'FAILURE') {
-        this.setAlertMsg(res['description'], res['status']);
-        this.alertEmitter.emit(this.alert);
+        const alert = { message: res['description'], type: res['status'] };
+        this.alertEmitter.emit(alert);
       } else {
         this.userList = res['data'];
       }
@@ -46,8 +44,11 @@ export class ReportComponent implements OnInit {
 
   thisWeekReport(userId: string) {
     if (new Date().getDay() === 0 || this.currentMondayDate.day <= 0) {
-      this.setAlertMsg('Invalid option. Please try custom dates', 'fail');
-      this.alertEmitter.emit(this.alert);
+      const alert = {
+        message: 'Invalid option. Please try custom dates',
+        type: 'fail',
+      };
+      this.alertEmitter.emit(alert);
     } else {
       const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
       const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
@@ -63,8 +64,11 @@ export class ReportComponent implements OnInit {
 
   customReport(userId: string) {
     if (this.isCustDateInvalid()) {
-      this.setAlertMsg('Start Date cannot be greater than End Date', 'fail');
-      this.alertEmitter.emit(this.alert);
+      const alert = {
+        message: 'Start Date cannot be greater than End Date',
+        type: 'fail',
+      };
+      this.alertEmitter.emit(alert);
       return;
     }
     const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
@@ -72,7 +76,9 @@ export class ReportComponent implements OnInit {
     this.statusService
       .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, 'Custom')
       .subscribe((res) => {
-        this.downloadReport(res);
+        const alert = this.downloadReport(res);
+        this.alertEmitter.emit(alert);
+        this.initDates();
       });
   }
 
@@ -90,11 +96,6 @@ export class ReportComponent implements OnInit {
     return endDate1.getTime() - startDate1.getTime() < 0;
   }
 
-  private setAlertMsg(msg: string, type: string) {
-    this.alert.message = msg;
-    this.alert.type = type;
-  }
-
   private getStatus(
     userId: string,
     startDate: string,
@@ -104,7 +105,9 @@ export class ReportComponent implements OnInit {
     this.statusService
       .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, reportType)
       .subscribe((res) => {
-        this.downloadReport(res);
+        const alert = this.downloadReport(res);
+        this.alertEmitter.emit(alert);
+        this.initDates();
       });
   }
 
@@ -139,7 +142,8 @@ export class ReportComponent implements OnInit {
     );
   }
 
-  private downloadReport(res: any) {
+  private downloadReport(res: any): Alert {
+    let alert = null;
     if (res['data']) {
       const data = res['data'];
       const attachment: Attachment = new Attachment(
@@ -148,12 +152,17 @@ export class ReportComponent implements OnInit {
         data['mimeType']
       );
       this.statusService.downloadFile(attachment);
-      this.setAlertMsg('Status is downloaded successfully.', 'success');
-      this.alertEmitter.emit(this.alert);
+
+      alert = {
+        message: 'Status is downloaded successfully.',
+        type: 'success',
+      };
     } else {
-      this.setAlertMsg(res['description'], res['status']);
-      this.alertEmitter.emit(this.alert);
+      alert = {
+        message: res['description'],
+        type: res['status'],
+      };
     }
-    this.initDates();
+    return alert;
   }
 }
