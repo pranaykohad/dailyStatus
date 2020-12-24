@@ -20,6 +20,8 @@
           Defaulters</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add user</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Delete user</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>
@@ -102,6 +104,7 @@
   <app-custom-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-custom-report>
   <app-add-user (alertEmitter)="alertHandler($event)"></app-add-user>
   <app-defaulter-list [defaulterList]="defaulterList"></app-defaulter-list>
+  <app-delete-user *ngIf="user" [user]="user"></app-delete-user>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: Pranay Kohad

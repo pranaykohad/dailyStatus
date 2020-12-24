@@ -1,4 +1,4 @@
-<div class="modal fade" id="addUser">
+<div *ngIf="user && user.role === 'ADMIN'" class="modal fade" id="addUser">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
