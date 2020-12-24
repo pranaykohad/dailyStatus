@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BASE_URL } from 'src/app/app.constant';
 import { User } from 'src/app/model/user';
-
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({

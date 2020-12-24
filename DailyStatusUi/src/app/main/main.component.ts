@@ -5,6 +5,7 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { stateList } from '../app.constant';
+import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
@@ -122,11 +123,19 @@ export class MainComponent implements OnInit {
         `${this.today.month}/${this.today.day}/${this.today.year}`
       )
       .subscribe((res) => {
-        if (res['description']) {
-          // this.message = 'No Defaulter Today';
-        } else {
+        if (res['data']) {
           this.defaulterList = res['data'];
         }
+      });
+  }
+
+  todaysReport() {
+    this.statusService
+      .getTodaysReport(
+        `${this.today.month}/${this.today.day}/${this.today.year}`
+      )
+      .subscribe((res) => {
+        this.downloadReport(res);
       });
   }
 
@@ -177,5 +186,23 @@ export class MainComponent implements OnInit {
       }
     });
     return isStsLenCorrect;
+  }
+
+  private downloadReport(res: any) {
+    if (res['data']) {
+      const data = res['data'];
+      const attachment: Attachment = new Attachment(
+        data['filename'],
+        data['fileContent'],
+        data['mimeType']
+      );
+      this.statusService.downloadFile(attachment);
+      this.alertHandler({
+        message: 'Status is downloaded successfully.',
+        type: 'success',
+      });
+    } else {
+      this.alertHandler({ message: res['description'], type: res['status'] });
+    }
   }
 }

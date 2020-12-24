@@ -33,16 +33,6 @@ export class ReportComponent implements OnInit {
     this.getAllUser();
   }
 
-  todaysReport() {
-    this.statusService
-      .getTodaysReport(
-        `${this.today.month}/${this.today.day}/${this.today.year}`
-      )
-      .subscribe((res) => {
-        this.downloadReport(res);
-      });
-  }
-
   getAllUser() {
     this.userService.gteAllUser().subscribe((res) => {
       if (res['status'] === 'FAILURE') {
