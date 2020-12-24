@@ -1,15 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DatePicker } from 'src/app/model/datePicker';
 import { LocalStorageService } from 'src/services/local-storage.service';
-import { ModalService } from 'src/services/modal.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
-import { numOfStatus, stateList } from '../app.constant';
-import { AddUserComponent } from '../modal/add-user/add-user.component';
-import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
+import { stateList } from '../app.constant';
 import { User } from '../model/user';
+import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
 import { Status } from './../model/status';
 
@@ -31,8 +28,7 @@ export class MainComponent implements OnInit {
     private statusService: StatusService,
     private userService: UserService,
     private localStoreService: LocalStorageService,
-    private router: Router,
-    private modalService: ModalService
+    private router: Router
   ) {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
@@ -109,17 +105,6 @@ export class MainComponent implements OnInit {
   logout() {
     this.localStoreService.resetLocalStorage();
     this.router.navigateByUrl('/');
-  }
-
-  openDefaultersModal() {
-    this.modalService.openDefaulterListModal();
-  }
-
-  openAddUserModal() {
-    const comp = this.modalService.openAdduserModal();
-    comp.alertEmitter.subscribe((alert) => {
-      this.alertHandler(alert);
-    });
   }
 
   private setRecentDate() {

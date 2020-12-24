@@ -15,10 +15,9 @@
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);">Generate
           Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
-          (click)="openAddUserModal()">Add user</a>
+          *ngIf="user && user.role === 'ADMIN'">Add user</a>
         <!-- [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " -->
-        <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
-          (click)="openDefaultersModal()">Get Today's
+        <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);">Get Today's
           Defaulters</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
@@ -100,6 +99,8 @@
   </div>
   <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
   <app-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-report>
+  <app-add-user (alertEmitter)="alertHandler($event)"></app-add-user>
+  <app-defaulter-list></app-defaulter-list>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: Pranay Kohad

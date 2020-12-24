@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { moduleList, roleList, userTypeList } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { User } from 'src/app/model/user';
@@ -17,10 +16,7 @@ export class AddUserComponent {
   alert: Alert;
   @Output() alertEmitter = new EventEmitter<Alert>();
 
-  constructor(
-    private userService: UserService,
-    public activeModal: NgbActiveModal
-  ) {
+  constructor(private userService: UserService) {
     this.alert = new Alert(null, null);
   }
 
@@ -37,7 +33,6 @@ export class AddUserComponent {
     if (this.validate(firstName, lastName, userName, password)) {
       this.setAlertMsg('All fields are compulsory.', 'fail');
       this.alertEmitter.emit(this.alert);
-      this.activeModal.dismiss('close');
     } else {
       this.user.firstName = firstName;
       this.user.lastName = lastName;
@@ -55,7 +50,6 @@ export class AddUserComponent {
           this.setAlertMsg(res['descrition'], res['status']);
           this.alertEmitter.emit(this.alert);
         }
-        this.activeModal.dismiss('close');
       });
     }
   }
