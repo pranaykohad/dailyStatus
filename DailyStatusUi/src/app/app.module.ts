@@ -16,7 +16,7 @@ import { AddUserComponent } from './modal/add-user/add-user.component';
 import { AlertComponent } from './modal/alert/alert.component';
 import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.component';
 import { CustomReportComponent } from './modal/report/custom-report.component';
-import { UserDetailComponent } from './modal/userDetail/user-detail.component';
+import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
