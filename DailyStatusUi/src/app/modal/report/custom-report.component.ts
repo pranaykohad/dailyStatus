@@ -53,17 +53,18 @@ export class CustomReportComponent implements OnInit {
       };
       this.alertEmitter.emit(alert);
     } else {
-      const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
-      const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
-      this.getStatus(userIdList, startDate, endDate, 'Weekly');
+      this.getStatus(userIdList, this.currentMondayDate, this.today, 'Weekly');
     }
   }
 
   thisMonthReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
     const userIdList = this.buildSelectedUserList(selectedUsrList);
-    const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.day}/${this.currentMonthFirstDate.year}`;
-    const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
-    this.getStatus(userIdList, startDate, endDate, 'Monthly');
+    this.getStatus(
+      userIdList,
+      this.currentMonthFirstDate,
+      this.today,
+      'Monthly'
+    );
   }
 
   customReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
@@ -76,9 +77,12 @@ export class CustomReportComponent implements OnInit {
       this.alertEmitter.emit(alert);
       return;
     }
-    const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
-    const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
-    this.getStatus(userIdList, startDate, endDate, 'Custom');
+    this.getStatus(
+      userIdList,
+      this.customStartDate,
+      this.customEndDate,
+      'Custom'
+    );
   }
 
   private isStartDateGreater() {
@@ -97,17 +101,14 @@ export class CustomReportComponent implements OnInit {
 
   private getStatus(
     userIdList: string[],
-    startDate: string,
-    endDate: string,
+    startDate: DatePicker,
+    endDate: DatePicker,
     reportType: string
   ) {
+    const start = `${startDate.month}/${startDate.day}/${startDate.year}`;
+    const end = `${endDate.month}/${endDate.day}/${endDate.year}`;
     this.statusService
-      .getDailyStsByUserIdAndDaterange(
-        userIdList,
-        startDate,
-        endDate,
-        reportType
-      )
+      .getDailyStsByUserIdAndDaterange(userIdList, start, end, reportType)
       .subscribe((res) => {
         const alert = this.downloadReport(res);
         this.alertEmitter.emit(alert);
