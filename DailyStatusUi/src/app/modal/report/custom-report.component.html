@@ -10,27 +10,27 @@
       <div class="modal-body">
         <div class="ml-4">
           <div class="mb-2">
-            <!-- <label for="sel2">Mutiple select list (hold shift to select more than one):</label>
-              <select multiple class="form-control module-name" #userDropDown>
-                <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId">
-                  {{ usr.firstName }} {{ usr.lastName }}
-                </option>
-              </select> -->
-            <span class="mr-2">Select User:</span>
+            <label for="sel2">Mutiple select User List (hold shift to select more than one):</label>
+            <select multiple class="form-control module-name" #userDropDown style="width: 282px">
+              <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId">
+                {{ usr.firstName }} {{ usr.lastName }}
+              </option>
+            </select>
+            <!-- <span class="mr-2">Select User:</span>
             <select class="module-name" #userDropDown style="border-radius: 3px">
               <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId">
                 {{ usr.firstName }} {{ usr.lastName }}
               </option>
-            </select>
+            </select> -->
           </div>
           <div class="ml-3">
             <div class="row">
               <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
-                (click)="thisWeekReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                (click)="thisWeekReport(userDropDown.selectedOptions)">
                 Get Weekly Report
               </button>
               <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
-                (click)="thisMonthReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                (click)="thisMonthReport(userDropDown.selectedOptions)">
                 Get Monthly Report
               </button>
             </div>
@@ -71,7 +71,7 @@
             </div>
             <div class="ml-4">
               <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-                (click)="customReport(userList[userDropDown.selectedIndex]['userId'].toString())">
+                (click)="customReport(userDropDown.selectedOptions)">
                 Get Custom Report
               </button>
             </div>

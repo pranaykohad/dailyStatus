@@ -56,9 +56,9 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public Result createReport(final String userId, final String startDate, final String endDate, final String reportType) {
+	public Result createReport(final List<String> userIdList, final String startDate, final String endDate, final String reportType) {
 		final Result result = new Result();
-		final StringBuilder dailyStatusFileContent = createDailyReport(userId, startDate, endDate, reportType);
+		final StringBuilder dailyStatusFileContent = createDailyReport(userIdList, startDate, endDate, reportType);
 		final byte[] byteConent = dailyStatusFileContent.toString().getBytes();
 		final Attachment attachment = new Attachment();
 		attachment.setFileContent(byteConent);
@@ -82,12 +82,16 @@ public class StatusServiceImpl implements StatusService {
 		return content;
 	}
 
-	private StringBuilder createDailyReport(final String userId, final String startDate, final String endDate, final String  reportType) {
+	private StringBuilder createDailyReport(final List<String> userIdList, final String startDate, final String endDate, final String  reportType) {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addHeading(content, reportType, startDate, endDate);
-		reportUtil.addName(content, userId);
-		final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
-		reportUtil.addCustomStatus(content, statusList);
+		userIdList.forEach(userId->{
+			reportUtil.addName(content, userId);
+			final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
+			reportUtil.addCustomStatus(content, statusList);
+			content.append("-------------------------------------------------------");
+			content.append(ReportConstant.ONE_LINE);
+		});
 		return content;
 	}
 

@@ -24,7 +24,7 @@ export class StatusService {
   }
 
   getDailyStsByUserIdAndDaterange(
-    userId: string,
+    userIdList: string[],
     startDate: string,
     endDate: string,
     reportType: string
@@ -32,7 +32,7 @@ export class StatusService {
     startDate = this.formatToTwoDigit(startDate);
     endDate = this.formatToTwoDigit(endDate);
     return this.httpClient.get<any>(
-      `${BASE_URL}reportByUserAndDateRange?userId=${userId}&startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`
+      `${BASE_URL}reportByUserAndDateRange?userIdList=${userIdList}&startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`
     );
   }
 

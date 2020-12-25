@@ -1,5 +1,7 @@
 package com.oversight.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -43,9 +45,11 @@ public class StatusController {
 	}
 
 	@GetMapping("/reportByUserAndDateRange")
-	public Result getReportByUserAndDateRange(@RequestParam final String userId, @RequestParam final String startDate, 
+	public Result getReportByUserAndDateRange(@RequestParam final Collection<? extends String> userIdList, @RequestParam final String startDate, 
 		@RequestParam final String endDate, @RequestParam final String reportType) {
-		return stsService.createReport(userId, startDate, endDate, reportType);
+		final List<String> newUserIdList = new ArrayList<>();
+		newUserIdList.addAll(userIdList);
+		return stsService.createReport(newUserIdList, startDate, endDate, reportType);
 	}
 
 	@Transactional

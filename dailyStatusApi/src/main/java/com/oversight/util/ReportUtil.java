@@ -63,7 +63,6 @@ public class ReportUtil {
 	public void addCustomStatus(final StringBuilder content, final List<Status> todayStsList) {
 		for(int i = 0; i < todayStsList.size(); i++) {
 			if((i > 0) && (!todayStsList.get(i).getdDate().equals(todayStsList.get(i-1).getdDate()))) {
-				content.append("-------------------------------------------------------");
 				content.append(ReportConstant.ONE_LINE);
 			}
 			content.append(i+1+".     ");
@@ -71,6 +70,10 @@ public class ReportUtil {
 			content.append(todayStsList.get(i).getTicketId()+" ");
 			content.append(todayStsList.get(i).getDescription() + " ");
 			content.append("- "+todayStsList.get(i).getState()+" ");
+			content.append(ReportConstant.ONE_LINE);
+		}
+		if (todayStsList.isEmpty()) {
+			content.append("No record found");
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}

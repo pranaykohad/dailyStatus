@@ -42,7 +42,8 @@ export class CustomReportComponent implements OnInit {
     });
   }
 
-  thisWeekReport(userId: string) {
+  thisWeekReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
+    const userIdList = this.buildSelectedUserList(selectedUsrList);
     if (new Date().getDay() === 0 || this.currentMondayDate.day <= 0) {
       const alert = {
         message: 'Invalid option. Please try custom dates',
@@ -52,18 +53,20 @@ export class CustomReportComponent implements OnInit {
     } else {
       const startDate: string = `${this.currentMondayDate.month}/${this.currentMondayDate.day}/${this.currentMondayDate.year}`;
       const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
-      this.getStatus(userId, startDate, endDate, 'Weekly');
+      this.getStatus(userIdList, startDate, endDate, 'Weekly');
     }
   }
 
-  thisMonthReport(userId: string) {
+  thisMonthReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
+    const userIdList = this.buildSelectedUserList(selectedUsrList);
     const startDate: string = `${this.currentMonthFirstDate.month}/${this.currentMonthFirstDate.day}/${this.currentMonthFirstDate.year}`;
     const endDate: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
-    this.getStatus(userId, startDate, endDate, 'Monthly');
+    this.getStatus(userIdList, startDate, endDate, 'Monthly');
   }
 
-  customReport(userId: string) {
-    if (this.isCustDateInvalid()) {
+  customReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
+    const userIdList = this.buildSelectedUserList(selectedUsrList);
+    if (this.isStartDateGreater()) {
       const alert = {
         message: 'Start Date cannot be greater than End Date',
         type: 'fail',
@@ -73,16 +76,10 @@ export class CustomReportComponent implements OnInit {
     }
     const startDate: string = `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`;
     const endDate: string = `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`;
-    this.statusService
-      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, 'Custom')
-      .subscribe((res) => {
-        const alert = this.downloadReport(res);
-        this.alertEmitter.emit(alert);
-        this.initDates();
-      });
+    this.getStatus(userIdList, startDate, endDate, 'Custom');
   }
 
-  private isCustDateInvalid() {
+  private isStartDateGreater() {
     const endDate1 = new Date(
       this.customEndDate.month,
       this.customEndDate.day,
@@ -97,13 +94,18 @@ export class CustomReportComponent implements OnInit {
   }
 
   private getStatus(
-    userId: string,
+    userIdList: string[],
     startDate: string,
     endDate: string,
     reportType: string
   ) {
     this.statusService
-      .getDailyStsByUserIdAndDaterange(userId, startDate, endDate, reportType)
+      .getDailyStsByUserIdAndDaterange(
+        userIdList,
+        startDate,
+        endDate,
+        reportType
+      )
       .subscribe((res) => {
         const alert = this.downloadReport(res);
         this.alertEmitter.emit(alert);
@@ -119,7 +121,7 @@ export class CustomReportComponent implements OnInit {
       today.getFullYear()
     );
     const lastMonday = new Date();
-    lastMonday.setDate(lastMonday.getDate() - (today.getDay() - 1));
+    lastMonday.setDate(today.getDate() - (today.getDay() - 1));
     this.currentMondayDate = new DatePicker(
       lastMonday.getMonth() + 1,
       lastMonday.getDate(),
@@ -135,11 +137,7 @@ export class CustomReportComponent implements OnInit {
       today.getDate(),
       today.getFullYear()
     );
-    this.customEndDate = new DatePicker(
-      today.getMonth() + 1,
-      today.getDate(),
-      today.getFullYear()
-    );
+    this.customEndDate = this.customStartDate;
   }
 
   private downloadReport(res: any): Alert {
@@ -152,7 +150,6 @@ export class CustomReportComponent implements OnInit {
         data['mimeType']
       );
       this.statusService.downloadFile(attachment);
-
       alert = {
         message: 'Status is downloaded successfully.',
         type: 'success',
@@ -164,5 +161,15 @@ export class CustomReportComponent implements OnInit {
       };
     }
     return alert;
+  }
+
+  private buildSelectedUserList(
+    selectedUsrList: HTMLCollectionOf<HTMLOptionElement>
+  ) {
+    const userIdList = [];
+    Array.from(selectedUsrList).forEach((element) => {
+      userIdList.push(element.value);
+    });
+    return userIdList;
   }
 }
