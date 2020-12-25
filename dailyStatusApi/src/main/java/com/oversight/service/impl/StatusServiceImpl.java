@@ -84,7 +84,8 @@ public class StatusServiceImpl implements StatusService {
 
 	private StringBuilder createDailyReport(final String userId, final String startDate, final String endDate, final String  reportType) {
 		final StringBuilder content = new StringBuilder();
-		reportUtil.addName(content, userId, reportType, startDate, endDate);
+		reportUtil.addHeading(content, reportType, startDate, endDate);
+		reportUtil.addName(content, userId);
 		final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
 		reportUtil.addCustomStatus(content, statusList);
 		return content;

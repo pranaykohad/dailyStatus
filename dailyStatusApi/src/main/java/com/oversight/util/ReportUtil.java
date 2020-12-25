@@ -30,13 +30,18 @@ public class ReportUtil {
 		content.append(ReportConstant.getGreeting());
 		content.append(ReportConstant.THREE_LINE);
 	}
+	
+	public void addHeading(final StringBuilder content, final String reportType, final String startDate, final String endDate) {
+		content.append(reportType+" Report from "+startDate+" to "+endDate+" :");
+		content.append(ReportConstant.TWO_LINE);
+	}
+	
+	
 
-	public void addName(final StringBuilder content, final String userId, final String reportType, final String startDate, final String endDate) {
+	public void addName(final StringBuilder content, final String userId) {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
-		content.append(ReportConstant.ONE_LINE);
-		content.append(reportType+" Report from "+startDate+" to "+endDate+" :");
 		content.append(ReportConstant.TWO_LINE);
 	}
 
