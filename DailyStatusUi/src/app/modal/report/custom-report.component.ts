@@ -5,6 +5,7 @@ import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
+import { UtilService } from 'src/services/util.service';
 
 @Component({
   selector: 'app-custom-report',
@@ -22,7 +23,8 @@ export class CustomReportComponent implements OnInit {
 
   constructor(
     private statusService: StatusService,
-    private userService: UserService
+    private userService: UserService,
+    private utilService: UtilService
   ) {
     this.initDates();
   }
@@ -149,7 +151,7 @@ export class CustomReportComponent implements OnInit {
         data['fileContent'],
         data['mimeType']
       );
-      this.statusService.downloadFile(attachment);
+      this.utilService.downloadFile(attachment);
       alert = {
         message: 'Status is downloaded successfully.',
         type: 'success',

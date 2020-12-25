@@ -4,6 +4,7 @@ import { DatePicker } from 'src/app/model/datePicker';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
+import { UtilService } from 'src/services/util.service';
 import { stateList } from '../app.constant';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
@@ -31,7 +32,8 @@ export class MainComponent implements OnInit {
     private statusService: StatusService,
     private userService: UserService,
     private localStoreService: LocalStorageService,
-    private router: Router
+    private router: Router,
+    private utilService: UtilService
   ) {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
@@ -89,7 +91,7 @@ export class MainComponent implements OnInit {
           '',
           '',
           'In progress',
-          this.statusService.formatToTwoDigit(date),
+          this.utilService.formatToTwoDigit(date),
           this.user
         )
       );
@@ -196,7 +198,7 @@ export class MainComponent implements OnInit {
         data['fileContent'],
         data['mimeType']
       );
-      this.statusService.downloadFile(attachment);
+      this.utilService.downloadFile(attachment);
       alert = {
         message: 'Status is downloaded successfully.',
         type: 'success',
