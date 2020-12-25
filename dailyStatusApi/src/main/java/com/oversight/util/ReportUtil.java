@@ -91,7 +91,7 @@ public class ReportUtil {
 
 	public List<String> getUserTypeList(final String module) {
 		List<String> userTypes = new ArrayList<>();
-		switch (module.toUpperCase().trim()) {
+		switch (module) {
 			case "OCR":
 				userTypes = ReportConstant.getOcrUserTypeList();
 				break;
