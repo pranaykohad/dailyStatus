@@ -125,6 +125,10 @@
     cursor: default !important;
     color: grey;
   }
+  .main-content-left {
+    height: 400px;
+    overflow: auto;
+  }
 }
 
 select {
