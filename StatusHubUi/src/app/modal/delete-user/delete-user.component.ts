@@ -7,8 +7,6 @@ import { User } from 'src/app/model/user';
   styleUrls: ['./delete-user.component.scss'],
 })
 export class DeleteUserComponent implements OnInit {
-  @Input() user: User;
-
   constructor() {}
 
   ngOnInit(): void {}
