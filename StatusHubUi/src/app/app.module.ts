@@ -18,6 +18,7 @@ import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.co
 import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
+import { RowComponent } from './row/row/row.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
     AlertComponent,
     DefaulterListComponent,
     DeleteUserComponent,
+    RowComponent,
   ],
   imports: [
     BrowserModule,

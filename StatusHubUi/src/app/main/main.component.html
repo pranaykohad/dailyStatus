@@ -36,15 +36,17 @@
       <div class="mr-2 p-1">
         <span class="bold-txt">Module Name: </span>{{ user ? user.moduleName:'' }}
       </div>
-      <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm">
+      <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm mr-3">
         Update
       </button>
+      <button class="btn btn-outline-success btn-sm" (click)="addNextRow()">Add Row</button>
     </div>
   </div>
   <hr />
   <div class="main-content col-md-12 p-0">
-    <div class="col-md-8 main-content-left">
-      <div class="row ml-2" *ngFor="let row of statusList; let index = index">
+    <div class="col-md-8 main-content-left pl-0">
+      <ng-template #container></ng-template>
+      <!-- <div class="row ml-2" *ngFor="let row of statusList; let index = index">
         <div class="form-group row">
           <label [for]="'tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
           <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1" [(ngModel)]="row.ticketId"
@@ -61,7 +63,7 @@
             </option>
           </select>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-md-4 p-0 rt-pane-contr">
       <div class="recent-update-lbl">Your Recent Statuses</div>
