@@ -22,7 +22,7 @@ public class StatusServiceImpl implements StatusService {
 
 	private static final Logger LOG = LoggerFactory.getLogger("StatusServiceImpl.class");
 
-	static int subHeadCntr;
+	private int subHeadCntr;
 
 	@Autowired
 	private StatusRepository stsRepo;
@@ -72,34 +72,21 @@ public class StatusServiceImpl implements StatusService {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addGreeting(content);
 		ReportConstant.getModuleList().forEach(module-> {
+			subHeadCntr = 0;
 			reportUtil.addModuleName(content, module);
 			final List<String> userTypeList = reportUtil.getUserTypeList(module);
 			createContent(date, content, module, userTypeList);
-			subHeadCntr = 0;
 		});
 		LOG.debug("Date {}", date);
 		LOG.debug("Content {}", content);
 		return content;
 	}
-
-	private StringBuilder createDailyReport(final List<String> userIdList, final String startDate, final String endDate, final String  reportType) {
-		final StringBuilder content = new StringBuilder();
-		reportUtil.addHeading(content, reportType, startDate, endDate);
-		userIdList.forEach(userId->{
-			reportUtil.addName(content, userId);
-			final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
-			reportUtil.addCustomStatus(content, statusList);
-			content.append("-------------------------------------------------------");
-			content.append(ReportConstant.ONE_LINE);
-		});
-		return content;
-	}
-
+	
 	private void createContent(final String date, final StringBuilder content, final String module, final List<String> userTypeList) {
 		userTypeList.forEach(usertype->{
-			ReportConstant.getStateList().forEach(state->{
-				addStsToContent(date, content, module, usertype, state);
-			});
+			ReportConstant.getStateList().forEach(state->
+				addStsToContent(date, content, module, usertype, state)
+			);
 			content.append(ReportConstant.ONE_LINE);
 		});
 	}
@@ -113,6 +100,19 @@ public class StatusServiceImpl implements StatusService {
 			reportUtil.addStatus(content, statusList);
 			content.append(ReportConstant.ONE_LINE);
 		} 
+	}
+
+	private StringBuilder createDailyReport(final List<String> userIdList, final String startDate, final String endDate, final String  reportType) {
+		final StringBuilder content = new StringBuilder();
+		reportUtil.addHeading(content, reportType, startDate, endDate);
+		userIdList.forEach(userId->{
+			reportUtil.addName(content, userId);
+			final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
+			reportUtil.addCustomStatus(content, statusList);
+			content.append("-------------------------------------------------------");
+			content.append(ReportConstant.ONE_LINE);
+		});
+		return content;
 	}
 
 	private List<Status> getStatusByDate(final String date, final String module, final String type, final String state) {
