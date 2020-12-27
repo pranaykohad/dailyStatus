@@ -8,7 +8,12 @@
         </button>
       </div>
       <div class="modal-body">
-        Coming Soon...
+        <div class="form-check hand-pointer" *ngFor="let user of userList">
+          <label class="form-check-label" for="{{user.userId}}">
+            <input type="radio" class="form-check-input" name="optradio" [id]="user.userId" [value]="user.userId"
+              checked>{{user.firstName}} {{user.lastName}}
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">

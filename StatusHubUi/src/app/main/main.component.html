@@ -101,10 +101,11 @@
     </div>
   </div>
   <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
-  <app-custom-report *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-custom-report>
+  <app-custom-report *ngIf="user" [user]="user" [userList]="userList" (alertEmitter)="alertHandler($event)">
+  </app-custom-report>
   <app-add-user *ngIf="user && user.role === 'ADMIN'" (alertEmitter)="alertHandler($event)"></app-add-user>
   <app-defaulter-list [defaulterList]="defaulterList"></app-defaulter-list>
-  <app-delete-user *ngIf="user && user.role === 'ADMIN'"></app-delete-user>
+  <app-delete-user *ngIf="user && user.role === 'ADMIN'" [userList]="userList"></app-delete-user>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: Pranay Kohad

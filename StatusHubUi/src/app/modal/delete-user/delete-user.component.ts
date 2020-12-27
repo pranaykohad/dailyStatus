@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Alert } from 'src/app/model/alert';
 import { User } from 'src/app/model/user';
 
 @Component({
@@ -7,6 +8,9 @@ import { User } from 'src/app/model/user';
   styleUrls: ['./delete-user.component.scss'],
 })
 export class DeleteUserComponent implements OnInit {
+  @Input() userList: User[];
+  @Output() alertEmitter = new EventEmitter<Alert>();
+
   constructor() {}
 
   ngOnInit(): void {}

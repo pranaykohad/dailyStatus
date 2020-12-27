@@ -27,6 +27,7 @@ export class MainComponent implements OnInit {
   alertTimeout: any;
   today: DatePicker;
   defaulterList: User[];
+  userList: User[];
 
   constructor(
     private statusService: StatusService,
@@ -54,6 +55,7 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
+      this.getAllUser();
     }
   }
 
@@ -138,6 +140,17 @@ export class MainComponent implements OnInit {
         const alert = this.downloadReport(res);
         this.alertHandler(alert);
       });
+  }
+
+  getAllUser() {
+    this.userService.gteAllUser().subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        const alert = { message: res['description'], type: res['status'] };
+        this.alertHandler(alert);
+      } else {
+        this.userList = res['data'];
+      }
+    });
   }
 
   private setRecentDate() {
