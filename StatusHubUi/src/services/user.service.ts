@@ -20,7 +20,7 @@ export class UserService {
     return this.httpClient.post<User>(`${BASE_URL}user`, user);
   }
 
-  gteAllUser(): Observable<User> {
+  getAllUser(): Observable<User> {
     return this.httpClient.get<User>(`${BASE_URL}user`);
   }
 
@@ -30,6 +30,10 @@ export class UserService {
 
   authenticateUser(user: User): Observable<User> {
     return this.httpClient.post<User>(`${BASE_URL}authenticate`, user);
+  }
+
+  deleteUser(userId: string) {
+    return this.httpClient.delete<User>(`${BASE_URL}user?userId=${userId}`);
   }
 
   getLocalUserName() {

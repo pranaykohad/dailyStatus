@@ -8,15 +8,15 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="form-check hand-pointer" *ngFor="let user of userList">
-          <label class="form-check-label" for="{{user.userId}}">
-            <input type="radio" class="form-check-input" name="optradio" [id]="user.userId" [value]="user.userId"
-              checked>{{user.firstName}} {{user.lastName}}
+        <div class="form-check hand-pointer" *ngFor="let usr of userList">
+          <label class="form-check-label" for="{{usr.userId}}">
+            <input type="radio" class="form-check-input" name="optradio" [id]="usr.userId" [value]="usr.userId"
+              [(ngModel)]="selectedUserId" #deleteUser>{{usr.firstName}} {{usr.lastName}}
           </label>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="deleteUser()">
           Delete User
         </button>
       </div>

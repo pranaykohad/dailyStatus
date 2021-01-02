@@ -41,7 +41,7 @@ export class UserDetailComponent {
         this.user.moduleName = res['data']['moduleName'];
         this.localStoreService.setUser(this.user);
         alert = {
-          message: 'User Details updated successfully.',
+          message: 'User Details updated successfully',
           type: 'success',
         };
       } else {

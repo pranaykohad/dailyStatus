@@ -143,7 +143,8 @@ export class MainComponent implements OnInit {
   }
 
   getAllUser() {
-    this.userService.gteAllUser().subscribe((res) => {
+    this.userList = [];
+    this.userService.getAllUser().subscribe((res) => {
       if (res['status'] === 'FAILURE') {
         const alert = { message: res['description'], type: res['status'] };
         this.alertHandler(alert);

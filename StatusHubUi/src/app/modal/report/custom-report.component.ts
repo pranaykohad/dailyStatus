@@ -1,47 +1,31 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
 import { StatusService } from 'src/services/status.service';
-import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 
 @Component({
   selector: 'app-custom-report',
   templateUrl: './custom-report.component.html',
 })
-export class CustomReportComponent implements OnInit {
+export class CustomReportComponent {
   @Input() user: User;
+  @Input() userList: User[];
   @Output() alertEmitter = new EventEmitter<Alert>();
-  userList: User[];
   today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
+  selectedUser = [];
 
   constructor(
     private statusService: StatusService,
-    private userService: UserService,
     private utilService: UtilService
   ) {
     this.initDates();
-  }
-
-  ngOnInit(): void {
-    this.getAllUser();
-  }
-
-  getAllUser() {
-    this.userService.gteAllUser().subscribe((res) => {
-      if (res['status'] === 'FAILURE') {
-        const alert = { message: res['description'], type: res['status'] };
-        this.alertEmitter.emit(alert);
-      } else {
-        this.userList = res['data'];
-      }
-    });
   }
 
   thisWeekReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
@@ -99,6 +83,13 @@ export class CustomReportComponent implements OnInit {
     return endDate1.getTime() - startDate1.getTime() < 0;
   }
 
+  onMultiSelect(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
+    this.selectedUser = [];
+    Array.from(selectedUsrList).forEach((element) => {
+      this.selectedUser.push(element.label);
+    });
+  }
+
   private getStatus(
     userIdList: string[],
     startDate: DatePicker,
@@ -154,7 +145,7 @@ export class CustomReportComponent implements OnInit {
       );
       this.utilService.downloadFile(attachment);
       alert = {
-        message: 'Status is downloaded successfully.',
+        message: 'Status is downloaded successfully',
         type: 'success',
       };
     } else {

@@ -42,7 +42,7 @@ export class AddUserComponent {
       this.userService.addUser(this.user).subscribe((res) => {
         if (res['data']) {
           alert = {
-            message: 'User is added successfullly.',
+            message: 'User is added successfully',
             type: res['status'],
           };
           this.resetAllFields();

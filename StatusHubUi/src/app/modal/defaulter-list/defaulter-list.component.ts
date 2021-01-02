@@ -9,18 +9,6 @@ import { User } from 'src/app/model/user';
 })
 export class DefaulterListComponent {
   today: DatePicker;
-  message: string = '';
-  private _defaulterList: User[];
-
-  @Input()
-  set defaulterList(defaulterList: User[]) {
-    this._defaulterList = defaulterList;
-    if (this._defaulterList && !this._defaulterList.length) {
-      this.message = 'No Defaulter Today';
-    }
-  }
-
-  get defaulterList() {
-    return this._defaulterList;
-  }
+  message: string = 'No Defaulter Today';
+  @Input() defaulterList: User[];
 }
