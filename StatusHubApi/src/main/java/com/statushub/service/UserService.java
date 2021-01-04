@@ -15,4 +15,5 @@ public interface UserService {
 	public List<User> getAllUser();
 	public Result getDefaultersList(final String date);
 	public Result deleteUser(final String userId);
+	public Long userCount();
 }

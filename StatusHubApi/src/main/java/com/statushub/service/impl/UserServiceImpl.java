@@ -79,6 +79,11 @@ public class UserServiceImpl implements UserService {
 			result.setDescription("Failed to delete user");
 		}
 		return result;
+	}
+
+	@Override
+	public Long userCount() {
+		return userRepo.count();
 	}	
 	
 }
