@@ -9,6 +9,7 @@ import { UserService } from 'src/services/user.service';
   styleUrls: ['./delete-user.component.scss'],
 })
 export class DeleteUserComponent {
+  message: string = 'No user found';
   selectedUserId: string;
   @Input() userList: User[];
   @Input() user: User;
