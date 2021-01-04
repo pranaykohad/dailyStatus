@@ -63,8 +63,8 @@ public class UserController {
 		final List<User> userList = userService.getAllUser();
 		if(userList.isEmpty()) {
 			result.setStatus(ResStatus.FAILURE);
-			result.setDescription("Failed to get User List. Please contact Admnistrator");
-			LOG.error("Failed to get User List. Please contact Admnistrator.");
+			result.setDescription("Failed to get User List. Please contact Admnistrator. Or add user");
+			LOG.error("Failed to get User List. Please contact Admnistratoror add user");
 		} else {
 			result.setData(userList);
 		}
