@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getAllUser() {
 		final List<User> finalUserList = new ArrayList<>();
-		final List<User> userList = userRepo.findAll();
+		final List<User> userList = userRepo.getUserAllButAdmin();
 		if(!userList.isEmpty()) {
 			userList.forEach(user-> {
 				final User tempUser = new User();
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Result getDefaultersList(final String date) {
 		final Result result = new Result();
-		final List<User> allUserList = userRepo.findAll();
+		final List<User> allUserList = userRepo.getUserAllButAdmin();
 		final  List<User> validUserList = userRepo.getValidUserList(date);
 		allUserList.removeAll(validUserList);
 		if (allUserList.isEmpty()) {
