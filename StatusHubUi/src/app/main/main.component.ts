@@ -71,7 +71,7 @@ export class MainComponent implements OnInit {
       return;
     } else if (statusList.length) {
       this.statusService.saveStatus(statusList).subscribe((res) => {
-        if (res['description'] === 'Status is saved successfully.') {
+        if (res['description'] === 'Status is saved successfully') {
           this.resetStatusList();
         }
         this.alertHandler({ message: res['description'], type: res['status'] });
