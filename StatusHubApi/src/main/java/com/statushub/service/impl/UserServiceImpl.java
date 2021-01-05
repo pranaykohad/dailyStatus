@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		final  List<User> validUserList = userRepo.getValidUserList(date);
 		allUserList.removeAll(validUserList);
 		if (allUserList.isEmpty()) {
-			result.setDescription("No Defaulters for Today");
+			result.setDescription("No Defaulter Today");
 		} else {
 			result.setData(allUserList);
 		}
