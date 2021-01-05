@@ -62,7 +62,7 @@ public class StatusServiceImpl implements StatusService {
 		final byte[] byteConent = dailyStatusFileContent.toString().getBytes();
 		final Attachment attachment = new Attachment();
 		attachment.setFileContent(byteConent);
-		attachment.setFilename(LocalDate.now()+".txt");
+		attachment.setFilename(reportType+" Report.txt");
 		attachment.setMimeType("text/plain");
 		result.setData(attachment);
 		return result;

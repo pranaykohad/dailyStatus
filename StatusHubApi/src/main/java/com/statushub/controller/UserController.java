@@ -64,7 +64,7 @@ public class UserController {
 		if(userList.isEmpty()) {
 			result.setStatus(ResStatus.FAILURE);
 			result.setDescription("Failed to get User List. Please contact Admnistrator. Or add user");
-			LOG.error("Failed to get User List. Please contact Admnistratoror add user");
+			LOG.error("Failed to get User List. Please contact Admnistrator add user");
 		} else {
 			result.setData(userList);
 		}
