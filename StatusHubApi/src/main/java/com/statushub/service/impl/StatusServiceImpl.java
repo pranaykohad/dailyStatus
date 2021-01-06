@@ -62,7 +62,7 @@ public class StatusServiceImpl implements StatusService {
 		final byte[] byteConent = dailyStatusFileContent.toString().getBytes();
 		final Attachment attachment = new Attachment();
 		attachment.setFileContent(byteConent);
-		attachment.setFilename(reportType+" Report.txt");
+		attachment.setFilename(reportType+" Report.csv");
 		attachment.setMimeType("text/plain");
 		result.setData(attachment);
 		return result;
@@ -109,7 +109,6 @@ public class StatusServiceImpl implements StatusService {
 			reportUtil.addName(content, userId);
 			final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
 			reportUtil.addCustomStatus(content, statusList);
-			content.append("-------------------------------------------------------");
 			content.append(ReportConstant.ONE_LINE);
 		});
 		return content;

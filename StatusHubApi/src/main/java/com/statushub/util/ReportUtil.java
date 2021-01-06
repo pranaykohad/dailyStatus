@@ -42,7 +42,7 @@ public class ReportUtil {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
-		content.append(ReportConstant.TWO_LINE);
+		content.append(ReportConstant.ONE_LINE);
 	}
 
 	public void addModuleName(final StringBuilder content, final String module) {
@@ -61,18 +61,20 @@ public class ReportUtil {
 	}
 
 	public void addCustomStatus(final StringBuilder content, final List<Status> todayStsList) {
-		for(int i = 0; i < todayStsList.size(); i++) {
-			if((i > 0) && (!todayStsList.get(i).getdDate().equals(todayStsList.get(i-1).getdDate()))) {
+		if (!todayStsList.isEmpty()) {
+			addCustomHeading(content);
+			for(int i = 0; i < todayStsList.size(); i++) {
+//				if((i > 0) && (!todayStsList.get(i).getdDate().equals(todayStsList.get(i-1).getdDate()))) {
+//					content.append(ReportConstant.ONE_LINE);
+//				}
+				content.append(i+1+",");
+				content.append(todayStsList.get(i).getdDate()+",");
+				content.append(todayStsList.get(i).getTicketId()+",");
+				content.append(todayStsList.get(i).getDescription() + ",");
+				content.append(todayStsList.get(i).getState()+",");
 				content.append(ReportConstant.ONE_LINE);
 			}
-			content.append(i+1+".     ");
-			content.append(todayStsList.get(i).getdDate()+" ");
-			content.append(todayStsList.get(i).getTicketId()+" ");
-			content.append(todayStsList.get(i).getDescription() + " ");
-			content.append("- "+todayStsList.get(i).getState()+" ");
-			content.append(ReportConstant.ONE_LINE);
-		}
-		if (todayStsList.isEmpty()) {
+		} else {
 			content.append("No record found");
 			content.append(ReportConstant.ONE_LINE);
 		}
@@ -149,6 +151,15 @@ public class ReportUtil {
 		month = month.length() == 1 ? "0"+month : month;
 		day = day.length() == 1 ? "0"+day : day;
 		return month+"/"+day+"/"+year;
+	}
+	
+	private void addCustomHeading(final StringBuilder content) {
+		content.append("Sr. No.,");
+		content.append("Date,");
+		content.append("Ticket Id,");
+		content.append("Description,");
+		content.append("Status,");
+		content.append(ReportConstant.ONE_LINE);
 	}
 
 }
