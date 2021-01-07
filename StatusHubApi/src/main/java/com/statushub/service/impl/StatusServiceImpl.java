@@ -95,7 +95,7 @@ public class StatusServiceImpl implements StatusService {
 		final List<Status> statusList = getStatusByDate(date, module, userType, state);
 		if(!statusList.isEmpty()) {
 			subHeadCntr = subHeadCntr+1;
-			content.append(subHeadCntr+"."+ReportConstant.TAB);
+			content.append(subHeadCntr+")"+ReportConstant.TAB);
 			reportUtil.createSubHeading(content, userType, state);
 			reportUtil.addStatus(content, statusList);
 			content.append(ReportConstant.ONE_LINE);

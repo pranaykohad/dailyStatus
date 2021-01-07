@@ -7,7 +7,7 @@
           &times;
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body high">
         <div *ngIf="userList && userList.length; else noUserFound">
           <div class="form-check hand-pointer" *ngFor="let usr of userList">
             <label class="form-check-label" for="{{usr.userId}}">
