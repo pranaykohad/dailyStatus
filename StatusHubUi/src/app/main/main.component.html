@@ -37,7 +37,7 @@
       <div class="mr-2 p-1">
         <span class="bold-txt">Module Name: </span>{{ user ? user.moduleName:'' }}
       </div>
-      <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm">
+      <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-info btn-sm" (click)="getAllUser()">
         Update
       </button>
     </div>
@@ -101,7 +101,8 @@
       </button>
     </div>
   </div>
-  <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
+  <app-update-userdetail *ngIf="user" [userList]="userList" (alertEmitter)="alertHandler($event)">
+  </app-update-userdetail>
   <app-custom-report *ngIf="user" [user]="user" [userList]="userList" (alertEmitter)="alertHandler($event)">
   </app-custom-report>
   <app-add-user *ngIf="user && user.role === 'ADMIN'" (alertEmitter)="alertHandler($event)"></app-add-user>
