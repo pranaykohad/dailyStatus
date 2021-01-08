@@ -78,7 +78,7 @@ export class MainComponent implements OnInit {
       });
     } else {
       this.alertHandler({
-        message: 'You cannot submit status with empty description',
+        message: 'You cannot submit status with empty Ticket Id.',
         type: 'fail',
       });
     }
@@ -187,12 +187,12 @@ export class MainComponent implements OnInit {
     statusList: Status[]
   ): boolean {
     this.statusList.forEach((status) => {
-      if (status.description.trim().length) {
+      if (status.ticketId.trim().length) {
         status.description = status.description.trim();
         status.ticketId = status.ticketId.trim();
         if (status.description.length > 250) {
           this.alertHandler({
-            message: 'Description cannot be more than 250 characters',
+            message: 'Description cannot be more than 250 characters.',
             type: 'fail',
           });
           isStsLenCorrect = false;
@@ -214,7 +214,7 @@ export class MainComponent implements OnInit {
       );
       this.utilService.downloadFile(attachment);
       alert = {
-        message: 'Status is downloaded successfully',
+        message: 'Status is downloaded successfully.',
         type: 'success',
       };
     } else {
