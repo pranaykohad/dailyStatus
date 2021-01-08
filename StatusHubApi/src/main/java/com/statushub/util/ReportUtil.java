@@ -54,7 +54,10 @@ public class ReportUtil {
 		for(int i=0; i<todayStsList.size(); i++) {
 			final Status sts = todayStsList.get(i);
 			content.append((char)(i+SMALL_A)+".     ");
-			content.append(sts.getTicketId() + ": " + formatDescription(todayStsList, i) + " ");
+			if(!sts.getTicketId().isEmpty()) {
+				content.append(sts.getTicketId() + ": ");
+			}
+			content.append(formatDescription(todayStsList, i) + " ");
 			content.append("("+sts.getUser().getFirstName()+" "+sts.getUser().getLastName()+")");
 			content.append(ReportConstant.ONE_LINE);
 		}
