@@ -54,10 +54,10 @@ public class ReportUtil {
 		for(int i=0; i<todayStsList.size(); i++) {
 			final Status sts = todayStsList.get(i);
 			content.append((char)(i+SMALL_A)+".     ");
-			if(!sts.getTicketId().isEmpty()) {
+			if(isTicketIdBlank(sts.getTicketId())) {
 				content.append(sts.getTicketId() + ": ");
 			}
-			content.append(formatDescription(todayStsList, i) + " ");
+			content.append(sts.getDescription() + " ");
 			content.append("("+sts.getUser().getFirstName()+" "+sts.getUser().getLastName()+")");
 			content.append(ReportConstant.ONE_LINE);
 		}
@@ -67,12 +67,13 @@ public class ReportUtil {
 		if (!todayStsList.isEmpty()) {
 			addCustomHeading(content);
 			for(int i = 0; i < todayStsList.size(); i++) {
-//				if((i > 0) && (!todayStsList.get(i).getdDate().equals(todayStsList.get(i-1).getdDate()))) {
-//					content.append(ReportConstant.ONE_LINE);
-//				}
 				content.append(i+1+",");
 				content.append(todayStsList.get(i).getdDate()+",");
-				content.append(todayStsList.get(i).getTicketId()+",");
+				if(isTicketIdBlank(todayStsList.get(i).getTicketId())) {
+					content.append(todayStsList.get(i).getTicketId()+",");
+				} else {
+					content.append(" ,");
+				}
 				content.append(todayStsList.get(i).getDescription() + ",");
 				content.append(todayStsList.get(i).getState()+",");
 				content.append(ReportConstant.ONE_LINE);
@@ -163,6 +164,10 @@ public class ReportUtil {
 		content.append("Description,");
 		content.append("Status,");
 		content.append(ReportConstant.ONE_LINE);
+	}
+	
+	private boolean isTicketIdBlank(final String description) {
+		return description != null && !description.isEmpty();
 	}
 
 }

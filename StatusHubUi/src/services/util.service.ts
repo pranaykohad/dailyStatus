@@ -31,6 +31,10 @@ export class UtilService {
     }`;
   }
 
+  removeComma(description: string): string {
+    return description.replace(/,/g, '.');
+  }
+
   private formatDate(value: string): string {
     return value.length === 1 ? '0' + value : value;
   }

@@ -189,6 +189,7 @@ export class MainComponent implements OnInit {
     this.statusList.forEach((status) => {
       if (status.description.trim().length) {
         status.description = status.description.trim();
+        status.description = this.utilService.removeComma(status.description);
         status.ticketId = status.ticketId.trim();
         if (status.description.length > 250) {
           this.alertHandler({
