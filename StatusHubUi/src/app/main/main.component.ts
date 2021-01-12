@@ -28,6 +28,8 @@ export class MainComponent implements OnInit {
   today: DatePicker;
   defaulterList: User[];
   userList: User[];
+  todaysStatus: Status[];
+  message: string;
 
   constructor(
     private statusService: StatusService,
@@ -86,6 +88,7 @@ export class MainComponent implements OnInit {
 
   resetStatusList() {
     this.statusList = [];
+    this.message = null;
     const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
@@ -154,6 +157,21 @@ export class MainComponent implements OnInit {
     });
   }
 
+  getTodaysStatus() {
+    this.statusList = [];
+    const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
+    this.statusService
+      .statusByDateAndUserId(today, this.user.userId)
+      .subscribe((res) => {
+        if (res['data']) {
+          this.statusList = res['data'];
+          this.message = null;
+        } else {
+          this.message = 'No Status Found';
+        }
+      });
+  }
+
   private setRecentDate() {
     const recentDate = new Date();
     const todaysDay = new Date().getDay();
@@ -174,7 +192,7 @@ export class MainComponent implements OnInit {
   private getRecentStatus() {
     const yesterday: string = `${this.recentDate.month}/${this.recentDate.day}/${this.recentDate.year}`;
     this.statusService
-      .getRecentStatus(yesterday, this.user.userId)
+      .statusByDateAndUserId(yesterday, this.user.userId)
       .subscribe((res) => {
         if (res['data']) {
           this.recentStatus = res['data'];

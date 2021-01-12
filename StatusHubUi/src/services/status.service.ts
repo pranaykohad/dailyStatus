@@ -20,10 +20,10 @@ export class StatusService {
     return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
   }
 
-  getRecentStatus(date: string, userId: number): Observable<any> {
+  statusByDateAndUserId(date: string, userId: number): Observable<any> {
     date = this.utilService.formatToTwoDigit(date);
     return this.httpClient.get<any>(
-      `${BASE_URL}recentStatus?date=${date}&&userId=${userId}`
+      `${BASE_URL}statusByDateAndUserId?date=${date}&&userId=${userId}`
     );
   }
 
