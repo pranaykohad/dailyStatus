@@ -35,7 +35,7 @@ public class StatusServiceImpl implements StatusService {
 		List<Status> list = new ArrayList<>();
 		if(statusList != null) {
 			statusList.forEach(status->{
-				Status st = stsRepo.save(status);
+				Status st = stsRepo.saveAndFlush(status);
 				list.add(st);
 			});
 			LOG.debug("Status is saved for {}",statusList.get(0).getUser().getUserId());

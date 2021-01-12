@@ -220,7 +220,7 @@ export class MainComponent implements OnInit {
           isStsLenCorrect = false;
         }
         statusList.push(status);
-      } else if (this.editMode) {
+      } else if (!status.description.trim().length && this.editMode) {
         statusList = [];
         isStsLenCorrect = true;
       }
