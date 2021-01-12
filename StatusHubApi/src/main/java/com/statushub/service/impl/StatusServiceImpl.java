@@ -34,10 +34,14 @@ public class StatusServiceImpl implements StatusService {
 	public List<Status> saveStatus(final List<Status> statusList) {
 		List<Status> list = new ArrayList<>();
 		if(statusList != null) {
-			statusList.forEach(status->{
-				Status st = stsRepo.saveAndFlush(status);
-				list.add(st);
-			});
+			try {
+				list = stsRepo.saveAll(statusList);
+				if(!list.isEmpty()) {
+					stsRepo.flush();
+				}
+			} catch (Exception e) {
+				LOG.debug("Error while saving, Error: ",e);
+			}
 			LOG.debug("Status is saved for {}",statusList.get(0).getUser().getUserId());
 		} else {
 			LOG.debug("Cannot save {}",statusList);
