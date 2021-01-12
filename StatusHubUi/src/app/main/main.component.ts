@@ -208,7 +208,9 @@ export class MainComponent implements OnInit {
       if (status.description.trim().length) {
         status.description = status.description.trim();
         status.description = this.utilService.removeComma(status.description);
-        status.ticketId = status.ticketId.trim();
+        status.ticketId = status.ticketId
+          ? status.ticketId.trim()
+          : status.ticketId;
         if (status.description.length > 250) {
           this.alertHandler({
             message: 'Description cannot be more than 250 characters',
