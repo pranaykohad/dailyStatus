@@ -30,6 +30,7 @@ export class MainComponent implements OnInit {
   userList: User[];
   todaysStatus: Status[];
   message: string;
+  editMode = false;
 
   constructor(
     private statusService: StatusService,
@@ -89,6 +90,7 @@ export class MainComponent implements OnInit {
   resetStatusList() {
     this.statusList = [];
     this.message = null;
+    this.editMode = false;
     const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
@@ -159,6 +161,7 @@ export class MainComponent implements OnInit {
 
   getTodaysStatus() {
     this.statusList = [];
+    this.editMode = true;
     const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
     this.statusService
       .statusByDateAndUserId(today, this.user.userId)
@@ -217,6 +220,9 @@ export class MainComponent implements OnInit {
           isStsLenCorrect = false;
         }
         statusList.push(status);
+      } else if (this.editMode) {
+        statusList = [];
+        isStsLenCorrect = true;
       }
     });
     return isStsLenCorrect;
