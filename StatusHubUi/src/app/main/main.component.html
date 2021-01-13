@@ -40,7 +40,7 @@
       <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-success btn-sm mr-2">
         Update
       </button>
-      <button data-toggle="modal" data-target="#editStatus" class="btn btn-outline-info btn-sm"
+      <button data-toggle="modal" data-target="#editStatus" class="btn btn-outline-info btn-sm" [disabled]="editMode"
         (click)="getTodaysStatus()">
         Edit Status
       </button>
@@ -74,7 +74,7 @@
       </ng-template>
     </div>
     <div class="col-md-4 p-0 rt-pane-contr">
-      <div class="recent-update-lbl">Your Recent Statuses</div>
+      <div class="recent-update-lbl">Last Day's Updates</div>
       <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
         <table class="table" aria-label="table">
           <thead>
@@ -106,7 +106,7 @@
       </button>
       <button class="btn btn-outline-danger btn-sm"
         (click)="resetStatusList();alertHandler({message: 'Status has been reset.',type:'success'})">
-        Reset Status
+        {{editMode ? 'Cancel' : 'Reset Status'}}
       </button>
     </div>
   </div>
