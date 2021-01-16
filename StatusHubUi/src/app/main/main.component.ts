@@ -67,6 +67,9 @@ export class MainComponent implements OnInit {
   }
 
   submitStatus() {
+    if (!this.statusList.length) {
+      return;
+    }
     const statusList: Status[] = [];
     let isStsLenCorrect = true;
     isStsLenCorrect = this.buildStatusList(isStsLenCorrect, statusList);
@@ -160,6 +163,9 @@ export class MainComponent implements OnInit {
   }
 
   getTodaysStatus() {
+    if (this.editMode) {
+      return;
+    }
     this.statusList = [];
     this.editMode = true;
     const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
