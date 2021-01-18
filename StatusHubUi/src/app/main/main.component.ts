@@ -77,14 +77,14 @@ export class MainComponent implements OnInit {
       return;
     } else if (statusList.length) {
       this.statusService.saveStatus(statusList).subscribe((res) => {
-        if (res['description'] === 'Status is saved successfully') {
+        if (res['description'] === 'Status saved successfully') {
           this.resetStatusList();
         }
         this.alertHandler({ message: res['description'], type: res['status'] });
       });
     } else {
       this.alertHandler({
-        message: 'You cannot submit status with empty description',
+        message: 'Cannot submit. Empty description',
         type: 'fail',
       });
     }
@@ -245,7 +245,7 @@ export class MainComponent implements OnInit {
       );
       this.utilService.downloadFile(attachment);
       alert = {
-        message: 'Status is downloaded successfully',
+        message: 'Report downloaded successfully',
         type: 'success',
       };
     } else {

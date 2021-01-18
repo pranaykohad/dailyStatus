@@ -58,7 +58,7 @@ public class StatusController {
 		final Result result = new Result();
 		final List<Status> ressultList = stsService.saveStatus(statusList);
 		if (!ressultList.isEmpty()) {
-			result.setDescription("Status is saved successfully");
+			result.setDescription("Status saved successfully");
 		} else {
 			result.setDescription("Some error while saving status. Please contact Administratator.");
 			result.setStatus(ResStatus.FAILURE);

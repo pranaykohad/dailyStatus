@@ -145,7 +145,7 @@ export class CustomReportComponent {
       );
       this.utilService.downloadFile(attachment);
       alert = {
-        message: 'Status is downloaded successfully',
+        message: 'Report downloaded successfully',
         type: 'success',
       };
     } else {
