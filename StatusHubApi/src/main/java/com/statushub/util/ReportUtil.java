@@ -115,6 +115,9 @@ public class ReportUtil {
 			case "Workbench 9.2":
 				userTypes = ReportConstant.getWbUserTypeList();
 				break;
+			case "Portal":
+				userTypes = ReportConstant.getPortTypeList();
+				break;	
 			case "Automation":
 				userTypes = ReportConstant.getAutoUserTypeList();
 				break;	

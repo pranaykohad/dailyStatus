@@ -15,9 +15,9 @@ import { MainComponent } from './main/main.component';
 import { AddUserComponent } from './modal/add-user/add-user.component';
 import { AlertComponent } from './modal/alert/alert.component';
 import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.component';
+import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
 import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
-import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },

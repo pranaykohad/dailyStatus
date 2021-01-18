@@ -17,13 +17,15 @@ public class ReportConstant {
 	
 	private static final String GREETING= "Hello,"+ONE_LINE+ONE_LINE+"Please find below today’s update:";
 	
-	private static final List<String> MODULE_LIST = Arrays.asList("OCR", "Connector", "Workbench 9.2", "Automation");
+	private static final List<String> MODULE_LIST = Arrays.asList("OCR", "Connector", "Workbench 9.2", "Portal", "Automation");
 	
 	private static final List<String> OCR_USER_TYPE_LIST = Arrays.asList("DEV", "QA");
 	
 	private static final List<String> CONN_USER_TYPE_LIST = Arrays.asList("DEV", "QA");
 	
 	private static final List<String> WB_USER_TYPE_LIST = Arrays.asList("DEV", "QA", "PQA");
+	
+	private static final List<String> PORT_TYPE_LIST = Arrays.asList("DEV", "QA");
 	
 	private static final List<String> AUTO_USER_TYPE_LIST = Arrays.asList("AQA");
 	
@@ -47,6 +49,10 @@ public class ReportConstant {
 
 	public static List<String> getWbUserTypeList() {
 		return WB_USER_TYPE_LIST;
+	}
+	
+	public static List<String> getPortTypeList() {
+		return PORT_TYPE_LIST;
 	}
 
 	public static List<String> getAutoUserTypeList() {

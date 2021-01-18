@@ -37,7 +37,7 @@ public class StatusController {
 		return stsService.createReport(date);
 	}
 
-	@GetMapping("/recentStatus")
+	@GetMapping("/statusByDateAndUserId")
 	public Result getYesterdayUpdate(@RequestParam
 		final String date, @RequestParam
 		final String userId) {

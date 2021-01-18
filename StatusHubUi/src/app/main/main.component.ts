@@ -28,6 +28,9 @@ export class MainComponent implements OnInit {
   today: DatePicker;
   defaulterList: User[];
   userList: User[];
+  todaysStatus: Status[];
+  message: string;
+  editMode = false;
 
   constructor(
     private statusService: StatusService,
@@ -64,6 +67,9 @@ export class MainComponent implements OnInit {
   }
 
   submitStatus() {
+    if (!this.statusList.length) {
+      return;
+    }
     const statusList: Status[] = [];
     let isStsLenCorrect = true;
     isStsLenCorrect = this.buildStatusList(isStsLenCorrect, statusList);
@@ -86,6 +92,8 @@ export class MainComponent implements OnInit {
 
   resetStatusList() {
     this.statusList = [];
+    this.message = null;
+    this.editMode = false;
     const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
@@ -154,6 +162,25 @@ export class MainComponent implements OnInit {
     });
   }
 
+  getTodaysStatus() {
+    if (this.editMode) {
+      return;
+    }
+    this.statusList = [];
+    this.editMode = true;
+    const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
+    this.statusService
+      .statusByDateAndUserId(today, this.user.userId)
+      .subscribe((res) => {
+        if (res['data']) {
+          this.statusList = res['data'];
+          this.message = null;
+        } else {
+          this.message = 'No Status Found';
+        }
+      });
+  }
+
   private setRecentDate() {
     const recentDate = new Date();
     const todaysDay = new Date().getDay();
@@ -174,7 +201,7 @@ export class MainComponent implements OnInit {
   private getRecentStatus() {
     const yesterday: string = `${this.recentDate.month}/${this.recentDate.day}/${this.recentDate.year}`;
     this.statusService
-      .getRecentStatus(yesterday, this.user.userId)
+      .statusByDateAndUserId(yesterday, this.user.userId)
       .subscribe((res) => {
         if (res['data']) {
           this.recentStatus = res['data'];
@@ -190,7 +217,7 @@ export class MainComponent implements OnInit {
       if (status.description.trim().length) {
         status.description = status.description.trim();
         status.description = this.utilService.removeComma(status.description);
-        status.ticketId = status.ticketId.trim();
+        status.ticketId = status.ticketId ? status.ticketId.trim() : null;
         if (status.description.length > 250) {
           this.alertHandler({
             message: 'Description cannot be more than 250 characters',
@@ -199,6 +226,9 @@ export class MainComponent implements OnInit {
           isStsLenCorrect = false;
         }
         statusList.push(status);
+      } else if (!status.description.trim().length && this.editMode) {
+        statusList = [];
+        isStsLenCorrect = true;
       }
     });
     return isStsLenCorrect;

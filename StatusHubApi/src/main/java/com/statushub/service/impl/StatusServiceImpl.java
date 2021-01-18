@@ -34,7 +34,11 @@ public class StatusServiceImpl implements StatusService {
 	public List<Status> saveStatus(final List<Status> statusList) {
 		List<Status> list = new ArrayList<>();
 		if(statusList != null) {
-			list = stsRepo.saveAll(statusList);
+			try {
+				list = stsRepo.saveAll(statusList);
+			} catch (final Exception e) {
+				LOG.debug("Error while saving, Error: ",e);
+			}
 			LOG.debug("Status is saved for {}",statusList.get(0).getUser().getUserId());
 		} else {
 			LOG.debug("Cannot save {}",statusList);
@@ -81,12 +85,12 @@ public class StatusServiceImpl implements StatusService {
 		LOG.debug("Content {}", content);
 		return content;
 	}
-	
+
 	private void createContent(final String date, final StringBuilder content, final String module, final List<String> userTypeList) {
 		userTypeList.forEach(usertype->{
 			ReportConstant.getStateList().forEach(state->
-				addStsToContent(date, content, module, usertype, state)
-			);
+			addStsToContent(date, content, module, usertype, state)
+					);
 			content.append(ReportConstant.ONE_LINE);
 		});
 	}
@@ -130,6 +134,6 @@ public class StatusServiceImpl implements StatusService {
 		return result;
 	}
 
-	
+
 
 }

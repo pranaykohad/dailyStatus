@@ -1,6 +1,7 @@
 import { User } from './user';
 
 export interface Status {
+  statusId: number;
   ticketId: string;
   description: string;
   state: string;
