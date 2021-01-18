@@ -76,7 +76,7 @@ export class MainComponent implements OnInit {
     if (!isStsLenCorrect) {
       return;
     } else if (statusList.length) {
-      this.statusService.saveStatus(statusList).subscribe((res) => {
+      this.statusService.updateStatus(statusList).subscribe((res) => {
         if (res['description'] === 'Status saved successfully') {
           this.resetStatusList();
         }

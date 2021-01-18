@@ -19,7 +19,7 @@ import com.statushub.entity.User;
 import com.statushub.entity.Result.ResStatus;
 import com.statushub.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {

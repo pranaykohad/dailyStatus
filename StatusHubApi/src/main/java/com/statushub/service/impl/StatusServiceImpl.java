@@ -31,19 +31,20 @@ public class StatusServiceImpl implements StatusService {
 	ReportUtil reportUtil;
 
 	@Override
-	public List<Status> saveStatus(final List<Status> statusList) {
-		List<Status> list = new ArrayList<>();
+	public void updateStatus(final List<Status> statusList) {
 		if(statusList != null) {
-			try {
-				list = stsRepo.saveAll(statusList);
-			} catch (final Exception e) {
-				LOG.debug("Error while saving, Error: ",e);
-			}
-			LOG.debug("Status is saved for {}",statusList.get(0).getUser().getUserId());
+			final List<Status> saveList = new ArrayList<>();
+			final List<Status> deleteList = new ArrayList<>();
+			statusList.forEach(status -> {
+				if(status.isDelete()) 
+					deleteList.add(status);
+				else
+					saveList.add(status);
+			});
+			updateQuery(saveList, deleteList);
 		} else {
 			LOG.debug("Cannot save {}",statusList);
 		}
-		return list;
 	}
 
 	@Override
@@ -70,6 +71,30 @@ public class StatusServiceImpl implements StatusService {
 		attachment.setMimeType("text/plain");
 		result.setData(attachment);
 		return result;
+	}
+	
+	@Override
+	public Result createReportByDateAndUserId(final String date, final String userId) {
+		final Result result = new Result();
+		final List<Status> statusList = stsRepo.getStatusByDateAndUserId(date, userId);
+		if (statusList == null || statusList.isEmpty()) {
+			result.setDescription("No record found");
+		} else {
+			result.setData(statusList);
+		}
+		return result;
+	}
+	
+	private void updateQuery(final List<Status> saveList, final List<Status> deleteList) {
+		try {
+			if(!saveList.isEmpty())
+				stsRepo.saveAll(saveList);
+			if(!deleteList.isEmpty())
+				stsRepo.deleteInBatch(deleteList);
+		} catch (final Exception e) {
+			LOG.debug("Error while saving, Error: ",e);
+		}
+		LOG.debug("Status is updated");
 	}
 
 	private StringBuilder createDailyReport(final String date) {
@@ -121,19 +146,5 @@ public class StatusServiceImpl implements StatusService {
 	private List<Status> getStatusByDate(final String date, final String module, final String type, final String state) {
 		return stsRepo.getStatusByDateModuleTypeAndState(date, module, type, state);
 	}
-
-	@Override
-	public Result createReportByDateAndUserId(final String date, final String userId) {
-		final Result result = new Result();
-		final List<Status> statusList = stsRepo.getStatusByDateAndUserId(date, userId);
-		if (statusList == null || statusList.isEmpty()) {
-			result.setDescription("No record found");
-		} else {
-			result.setData(statusList);
-		}
-		return result;
-	}
-
-
-
+	
 }
