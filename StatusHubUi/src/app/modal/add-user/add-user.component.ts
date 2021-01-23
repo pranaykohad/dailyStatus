@@ -26,7 +26,7 @@ export class AddUserComponent {
     userSelIndex: number,
     roleSelIndex: number
   ) {
-    this.user = new User(null, '', '', '', '', 'Workbench 9.2', 'ADMIN', 'DEV');
+    this.user = new User();
     if (this.validate(firstName, lastName, userName, password)) {
       const alert = { message: 'All fields are compulsory.', type: 'fail' };
       this.alertEmitter.emit(alert);

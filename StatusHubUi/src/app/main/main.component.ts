@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DatePicker } from 'src/app/model/datePicker';
 import { LocalStorageService } from 'src/services/local-storage.service';
@@ -6,6 +6,7 @@ import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 import { stateList } from '../app.constant';
+import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -26,11 +27,11 @@ export class MainComponent implements OnInit {
   recentStatus: Status[];
   alertTimeout: any;
   today: DatePicker;
-  defaulterList: User[];
   userList: User[];
   todaysStatus: Status[];
   message: string;
   editMode = false;
+  @ViewChild('defComp') defComp: DefaulterListComponent;
 
   constructor(
     private statusService: StatusService,
@@ -126,19 +127,6 @@ export class MainComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  getDefaulterList() {
-    this.defaulterList = [];
-    this.userService
-      .defaultersList(
-        `${this.today.month}/${this.today.day}/${this.today.year}`
-      )
-      .subscribe((res) => {
-        if (res['data']) {
-          this.defaulterList = res['data'];
-        }
-      });
-  }
-
   todaysReport() {
     this.statusService
       .getTodaysReport(
@@ -179,6 +167,11 @@ export class MainComponent implements OnInit {
           this.message = 'No Status Found';
         }
       });
+  }
+
+  initDefList() {
+    this.defComp.defaulterList = [];
+    this.defComp.message = '';
   }
 
   private setRecentDate() {

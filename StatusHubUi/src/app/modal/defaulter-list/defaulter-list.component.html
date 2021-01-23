@@ -2,16 +2,34 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Today's Defaulters List</h4>
+        <h4 class="modal-title">Defaulters List</h4>
         <button type="button" class="close" data-dismiss="modal">
           &times;
         </button>
       </div>
       <div class="modal-body high">
+        <button class="btn btn-outline-info btn-sm mr-2" (click)="getDefaulterList()">
+          Today's Defaulters
+        </button>
+        <button class="btn btn-outline-info btn-sm" (click)="getDefaultersListOfWeek()">
+          This Week's Defaulters
+        </button><br><br>
         <div *ngIf="defaulterList && defaulterList.length; else noDefauters">
-          <div *ngFor="let user of defaulterList">
-            {{user.firstName}} {{user.lastName}}
-          </div>
+          <table>
+            <thead>
+              <tr>
+                <th id="name">Name</th>
+                <th *ngIf="callForWeek" id="count">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of defaulterList; let index = index"
+                [ngClass]="[callForWeek && index <= TOP_DEF_COUNT ? 'red-color' : '']">
+                <td>{{user.firstName}} {{user.lastName}}</td>
+                <td>{{user.defCount !== 0 ? user.defCount : ''}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <ng-template #noDefauters>
           {{this.message}}

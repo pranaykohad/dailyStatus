@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SATURDAY, SUNDAY } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -30,12 +31,9 @@ export class CustomReportComponent {
 
   thisWeekReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
     const userIdList = this.buildSelectedUserList(selectedUsrList);
-    if (new Date().getDay() === 0 || this.currentMondayDate.day <= 0) {
-      const alert = {
-        message: 'Invalid option. Please try custom dates',
-        type: 'fail',
-      };
-      this.alertEmitter.emit(alert);
+    if (this.isSatOrSun() || this.currentMondayDate.day <= 0) {
+      alert('Invalid Operation!');
+      return;
     } else {
       this.getStatus(userIdList, this.currentMondayDate, this.today, 'Weekly');
     }
@@ -69,6 +67,13 @@ export class CustomReportComponent {
     );
   }
 
+  onMultiSelect(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
+    this.selectedUser = [];
+    Array.from(selectedUsrList).forEach((element) => {
+      this.selectedUser.push(element.label);
+    });
+  }
+
   private isStartDateGreater() {
     const endDate1 = new Date(
       this.customEndDate.month,
@@ -81,13 +86,6 @@ export class CustomReportComponent {
       this.customStartDate.year
     );
     return endDate1.getTime() - startDate1.getTime() < 0;
-  }
-
-  onMultiSelect(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
-    this.selectedUser = [];
-    Array.from(selectedUsrList).forEach((element) => {
-      this.selectedUser.push(element.label);
-    });
   }
 
   private getStatus(
@@ -165,5 +163,10 @@ export class CustomReportComponent {
       userIdList.push(element.value);
     });
     return userIdList;
+  }
+
+  private isSatOrSun(): boolean {
+    const today = new Date();
+    return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
   }
 }

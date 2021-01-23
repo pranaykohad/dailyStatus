@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,8 +30,16 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Status> statusList;
+	@Transient 
+	private int defCount;
 	
 	
+	public int getDefCount() {
+		return defCount;
+	}
+	public void setDefCount(int defCount) {
+		this.defCount = defCount;
+	}
 	public String getFirstName() {
 		return firstName;
 	}

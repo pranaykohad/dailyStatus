@@ -46,6 +46,16 @@ export class UserService {
     return this.httpClient.get<any>(`${BASE_URL}defaultersList?date=${date}`);
   }
 
+  getDefaultersListOfWeek(datesOfWeek: string[]): Observable<any> {
+    const dates = [];
+    datesOfWeek.forEach((date) => {
+      dates.push(this.formatToTwoDigit(date));
+    });
+    return this.httpClient.get<any>(
+      `${BASE_URL}defaultersListOfWeek?datesOfWeek=${dates}`
+    );
+  }
+
   formatToTwoDigit(date: string): string {
     const tokens: string[] = date.split('/');
     return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
