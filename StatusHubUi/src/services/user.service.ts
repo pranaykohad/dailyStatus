@@ -9,7 +9,6 @@ import { LocalStorageService } from './local-storage.service';
   providedIn: 'root',
 })
 export class UserService {
-  user: User;
 
   constructor(
     private httpClient: HttpClient,
