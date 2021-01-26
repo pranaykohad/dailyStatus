@@ -19,14 +19,14 @@
             <thead>
               <tr>
                 <th id="name">Name</th>
-                <th *ngIf="callForWeek" id="count">Count</th>
+                <th *ngIf="callForWeek" id="count" class="pl-3">Count</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let user of defaulterList; let index = index"
                 [ngClass]="[callForWeek && index <= TOP_DEF_COUNT ? 'red-color' : '']">
                 <td>{{user.firstName}} {{user.lastName}}</td>
-                <td>{{user.defCount !== 0 ? user.defCount : ''}}</td>
+                <td class="pl-3">{{user.defCount !== 0 ? user.defCount : ''}}</td>
               </tr>
             </tbody>
           </table>
