@@ -40,7 +40,7 @@ export class StatusService {
     );
   }
 
-  saveStatus(statusList: Status[]): Observable<any> {
+  updateStatus(statusList: Status[]): Observable<any> {
     return this.httpClient.post<any>(`${BASE_URL}status`, statusList);
   }
 }

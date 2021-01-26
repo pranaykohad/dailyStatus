@@ -7,16 +7,16 @@ export interface User {
   lastName: string;
   role: string;
   type: string;
+  defCount: number;
 }
 export class User {
-  constructor(
-    public userId: number,
-    public userName: string,
-    public password: string,
-    public moduleName: string,
-    public firstName: string,
-    public lastName: string,
-    public role: string,
-    public type: string
-  ) {}
+  public userId: number;
+  public userName: string;
+  public password: string;
+  public moduleName: string;
+  public firstName: string;
+  public lastName: string;
+  public role: string;
+  public type: string;
+  public defCount: number;
 }

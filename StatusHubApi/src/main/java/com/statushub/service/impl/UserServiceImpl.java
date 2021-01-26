@@ -1,7 +1,9 @@
 package com.statushub.service.impl;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,28 +43,22 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUser() {
 		final List<User> finalUserList = new ArrayList<>();
 		final List<User> userList = userRepo.getUserAllButAdmin();
-		if(!userList.isEmpty()) {
-			userList.forEach(user-> {
-				final User tempUser = new User();
-				tempUser.setFirstName(user.getFirstName());
-				tempUser.setLastName(user.getLastName());
-				tempUser.setUserId(user.getUserId());
-				finalUserList.add(tempUser);
-			});
-		}
+		bulidUserList(finalUserList, userList);
 		return finalUserList;
 	}
 
 	@Override
 	public Result getDefaultersList(final String date) {
 		final Result result = new Result();
+		final List<User> finalUserList = new ArrayList<>();
 		final List<User> allUserList = userRepo.getUserAllButAdmin();
 		final  List<User> validUserList = userRepo.getValidUserList(date);
 		allUserList.removeAll(validUserList);
-		if (allUserList.isEmpty()) {
+		bulidUserList(finalUserList, allUserList);
+		if (finalUserList.isEmpty()) {
 			result.setDescription("No Defaulter Today");
 		} else {
-			result.setData(allUserList);
+			result.setData(finalUserList);
 		}
 		return result;
 	}
@@ -84,6 +80,44 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Long userCount() {
 		return userRepo.count();
-	}	
+	}
+
+	@Override
+	public Result getTopDefaultersOfWeek(List<String> datesOfWeek) {
+		final Result result = new Result();
+		final List<User> userList = userRepo.getUserAllButAdmin();
+		userList.forEach(user -> user.setDefCount(0));
+		datesOfWeek.forEach(date -> {
+			List<User> defList =  userRepo.getUserAllButAdmin();
+			final  List<User> validUserList = userRepo.getValidUserList(date);
+			defList.removeAll(validUserList);
+			userList.forEach(user -> {
+				defList.forEach(defUser -> {
+					if(user.getUserId() == defUser.getUserId()) {
+						user.setDefCount(user.getDefCount()+1);
+					}
+				});
+			});
+			
+		});
+		List<User> sortedList = userList.stream().sorted(
+				Comparator.comparingInt(User::getDefCount)
+						  .reversed()).collect(Collectors.toList());
+		
+		result.setData(sortedList);
+		return result;
+	}
 	
+	private void bulidUserList(final List<User> finalUserList, final List<User> userList) {
+		if(!userList.isEmpty()) {
+			userList.forEach(user-> {
+				final User tempUser = new User();
+				tempUser.setFirstName(user.getFirstName());
+				tempUser.setLastName(user.getLastName());
+				tempUser.setUserId(user.getUserId());
+				finalUserList.add(tempUser);
+			});
+		}
+	}
+
 }

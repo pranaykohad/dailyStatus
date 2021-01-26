@@ -20,7 +20,7 @@ export class LoginComponent {
     private userService: UserService,
     private localStoreService: LocalStorageService
   ) {
-    this.user = new User(null, null, null, null, null, null, null, null);
+    this.user = new User();
     this.localStoreService.resetLocalStorage();
   }
 

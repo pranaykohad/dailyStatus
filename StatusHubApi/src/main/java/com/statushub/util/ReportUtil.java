@@ -155,8 +155,8 @@ public class ReportUtil {
 		String month = tokens[0];
 		String day = tokens[1];
 		final String year = tokens[2];
-		month = month.length() == 1 ? "0"+month : month;
-		day = day.length() == 1 ? "0"+day : day;
+		month = month.length() == 1 ? "0" + month : month;
+		day = day.length() == 1 ? "0" + day : day;
 		return month+"/"+day+"/"+year;
 	}
 	
@@ -172,5 +172,5 @@ public class ReportUtil {
 	private boolean isTicketIdBlank(final String description) {
 		return description != null && !description.isEmpty();
 	}
-
+	
 }

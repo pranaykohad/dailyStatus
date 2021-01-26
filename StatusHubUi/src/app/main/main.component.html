@@ -14,11 +14,9 @@
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Download Today's Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);"
-          (click)="getAllUser()">Custom
-          Report</a>
+          (click)="getAllUser()">Custom Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
-          (click)="getDefaulterList()">Today's
-          Defaulters</a>
+          (click)="initDefList()">Defaulters List</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add User</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
@@ -48,27 +46,33 @@
   </div>
   <hr />
   <div class="main-content col-md-12 p-0">
-    <div class="col-md-8 main-content-left pt-1">
+    <div class="col-md-8 main-content-left pt-1 pl-0">
       <div class="no-sts" *ngIf="message; else statusLst">
         {{this.message}}
       </div>
       <ng-template #statusLst>
         <div class="row ml-2" *ngFor="let row of statusList; let index = index">
-          <div class="form-group row">
+          <div class="form-group row pl-0" style="justify-content: space-evenly;">
             <label [for]="'tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
             <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1" [(ngModel)]="row.ticketId"
-              placeholder="Ticket Id" [name]="'tkt-id-' + index + 1" />
+              placeholder="Ticket Id" [name]="'tkt-id-' + index + 1" [disabled]="row.delete" />
           </div>
-          <div class="form-group mr-3 col-md-8">
+          <div class="form-group col-md-7">
             <textarea class="form-control txt-bx p-0 pl-2" [id]="'tkt-desc-' + index + 1" [(ngModel)]="row.description"
-              placeholder="Description"></textarea>
+              placeholder="Description" [disabled]="row.delete"></textarea>
           </div>
           <div class="form-group">
-            <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)">
+            <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)"
+              [disabled]="row.delete">
               <option *ngFor="let state of stateList" [selected]="row.state === state">
                 {{ state }}
               </option>
             </select>
+          </div>
+          <div *ngIf="editMode" class="form-group pl-2">
+            <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record">
+              Delete
+            </button>
           </div>
         </div>
       </ng-template>
@@ -94,7 +98,7 @@
         </table>
       </div>
       <ng-template #noRecordFound>
-        <div class="pt-2">No record found</div>
+        <div class="pt-2">No Record Found</div>
       </ng-template>
     </div>
   </div>
@@ -114,7 +118,7 @@
   <app-custom-report *ngIf="user" [user]="user" [userList]="userList" (alertEmitter)="alertHandler($event)">
   </app-custom-report>
   <app-add-user *ngIf="user && user.role === 'ADMIN'" (alertEmitter)="alertHandler($event)"></app-add-user>
-  <app-defaulter-list [defaulterList]="defaulterList"></app-defaulter-list>
+  <app-defaulter-list #defComp></app-defaulter-list>
   <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
     (alertEmitter)="alertHandler($event)"></app-delete-user>
   <div class="footer">

@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="Dstatus")
@@ -18,7 +19,9 @@ public class Status {
 	private String description;
 	private String state;
 	private String dDate;
-
+	@Transient 
+	private boolean isDelete;
+	
 	@ManyToOne
 	private User user;
 
@@ -58,5 +61,11 @@ public class Status {
 	public void setUser(final User user) {
 		this.user = user;
 	}
-
+	public boolean isDelete() {
+		return isDelete;
+	}
+	public void setDelete(boolean isDelete) {
+		this.isDelete = isDelete;
+	}
+	
 }

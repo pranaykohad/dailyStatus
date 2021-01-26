@@ -7,6 +7,7 @@ export interface Status {
   state: string;
   dDate: string;
   user: User;
+  delete: boolean;
 }
 export class Status {
   constructor(
