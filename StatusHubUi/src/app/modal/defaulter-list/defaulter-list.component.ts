@@ -1,14 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  FRIDAY,
-  MONDAY,
-  SATURDAY,
-  SUNDAY,
-  THRUSDAY,
-  TOP_DEF_COUNT,
-  TUESDAY,
-  WEDNESDAY,
-} from 'src/app/app.constant';
+import { TOP_DEF_COUNT } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
