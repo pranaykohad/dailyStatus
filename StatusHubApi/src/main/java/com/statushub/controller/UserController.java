@@ -82,10 +82,10 @@ public class UserController {
 		return userService.getDefaultersList(date);
 	}
 	
-	@GetMapping("/defaultersListOfWeek")
-	public Result getDefaultersListOfWeek(@RequestParam
-	final List<String> datesOfWeek) {
-		return userService.getTopDefaultersOfWeek(datesOfWeek);
+	@GetMapping("/customDefaulters")
+	public Result getCustomDefaulters(@RequestParam
+	final List<String> datesList) {
+		return userService.getCustomDefaulters(datesList);
 	}
 
 }
