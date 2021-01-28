@@ -14,7 +14,7 @@ public interface UserService {
 	public User addUser(final User user);
 	public List<User> getAllUser();
 	public Result getDefaultersList(final String date);
-	public Result getTopDefaultersOfWeek(final List<String> datesOfWeek);
+	public Result getCustomDefaulters(final List<String> dateList);
 	public Result deleteUser(final String userId);
 	public Long userCount();
 }

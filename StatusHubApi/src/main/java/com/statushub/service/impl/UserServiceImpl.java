@@ -83,11 +83,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Result getTopDefaultersOfWeek(List<String> datesOfWeek) {
+	public Result getCustomDefaulters(List<String> dateList) {
 		final Result result = new Result();
 		final List<User> userList = userRepo.getUserAllButAdmin();
 		userList.forEach(user -> user.setDefCount(0));
-		datesOfWeek.forEach(date -> {
+		dateList.forEach(date -> {
 			List<User> defList =  userRepo.getUserAllButAdmin();
 			final  List<User> validUserList = userRepo.getValidUserList(date);
 			defList.removeAll(validUserList);
@@ -98,16 +98,26 @@ public class UserServiceImpl implements UserService {
 					}
 				});
 			});
-			
 		});
+		final List<User> zeroCntList = getZeroCountList(userList);
+		userList.removeAll(zeroCntList);
 		List<User> sortedList = userList.stream().sorted(
-				Comparator.comparingInt(User::getDefCount)
-						  .reversed()).collect(Collectors.toList());
-		
+									Comparator.comparingInt(User::getDefCount)
+											  .reversed()).collect(Collectors.toList());
 		result.setData(sortedList);
 		return result;
 	}
-	
+
+	private List<User> getZeroCountList(List<User> userList) {
+		final List<User> zeroCntList = new ArrayList<>();
+		userList.forEach(user -> {
+			if(user.getDefCount() == 0) {
+				zeroCntList.add(user);
+			}
+		});
+		return zeroCntList;
+	}
+
 	private void bulidUserList(final List<User> finalUserList, final List<User> userList) {
 		if(!userList.isEmpty()) {
 			userList.forEach(user-> {

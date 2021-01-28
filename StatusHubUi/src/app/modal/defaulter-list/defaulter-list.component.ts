@@ -87,7 +87,7 @@ export class DefaulterListComponent {
       };
       return;
     }
-    this.userService.getDefaultersListOfWeek(dateList).subscribe((res) => {
+    this.userService.getCustomDefaulters(dateList).subscribe((res) => {
       if (res['data']) {
         this.defaulterList = res['data'];
         this.callForWeek = true;

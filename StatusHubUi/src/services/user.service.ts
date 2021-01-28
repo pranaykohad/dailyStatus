@@ -9,7 +9,6 @@ import { LocalStorageService } from './local-storage.service';
   providedIn: 'root',
 })
 export class UserService {
-
   constructor(
     private httpClient: HttpClient,
     private localStoreService: LocalStorageService
@@ -45,13 +44,13 @@ export class UserService {
     return this.httpClient.get<any>(`${BASE_URL}defaultersList?date=${date}`);
   }
 
-  getDefaultersListOfWeek(datesOfWeek: string[]): Observable<any> {
+  getCustomDefaulters(datesList: string[]): Observable<any> {
     const dates = [];
-    datesOfWeek.forEach((date) => {
+    datesList.forEach((date) => {
       dates.push(this.formatToTwoDigit(date));
     });
     return this.httpClient.get<any>(
-      `${BASE_URL}defaultersListOfWeek?datesOfWeek=${dates}`
+      `${BASE_URL}customDefaulters?datesList=${dates}`
     );
   }
 
