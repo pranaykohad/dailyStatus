@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SATURDAY, SUNDAY } from 'src/app/app.constant';
 import { Attachment } from 'src/app/model/attachment';
 
 @Injectable({
@@ -33,6 +34,23 @@ export class UtilService {
 
   removeComma(description: string): string {
     return description.replace(/,/g, '.');
+  }
+
+  buildCustomDates(start: Date, end: Date): string[] {
+    const dateList = [];
+    if (end.getTime() - start.getTime() < 0) {
+      return;
+    }
+    while (start.getTime() - end.getTime() <= 0) {
+      if (start.getDay() !== SUNDAY && start.getDay() !== SATURDAY) {
+        const tempDate = `${
+          start.getMonth() + 1
+        }/${start.getDate()}/${start.getFullYear()}`;
+        dateList.push(this.formatToTwoDigit(tempDate));
+      }
+      start.setDate(start.getDate() + 1);
+    }
+    return dateList;
   }
 
   private formatDate(value: string): string {
