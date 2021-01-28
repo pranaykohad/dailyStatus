@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Alert } from 'src/app/model/alert';
+import { SATURDAY, SUNDAY } from 'src/app/app.constant';
 import { Attachment } from 'src/app/model/attachment';
 
 @Injectable({
@@ -42,10 +42,12 @@ export class UtilService {
       return;
     }
     while (start.getTime() - end.getTime() <= 0) {
-      const tempDate = `${
-        start.getMonth() + 1
-      }/${start.getDate()}/${start.getFullYear()}`;
-      dateList.push(this.formatToTwoDigit(tempDate));
+      if (start.getDay() !== SUNDAY && start.getDay() !== SATURDAY) {
+        const tempDate = `${
+          start.getMonth() + 1
+        }/${start.getDate()}/${start.getFullYear()}`;
+        dateList.push(this.formatToTwoDigit(tempDate));
+      }
       start.setDate(start.getDate() + 1);
     }
     return dateList;
