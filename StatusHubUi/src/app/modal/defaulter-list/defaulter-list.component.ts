@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
   FRIDAY,
   MONDAY,
@@ -9,9 +9,11 @@ import {
   TUESDAY,
   WEDNESDAY,
 } from 'src/app/app.constant';
+import { Alert } from 'src/app/model/alert';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
 import { UserService } from 'src/services/user.service';
+import { UtilService } from 'src/services/util.service';
 
 @Component({
   selector: 'app-defaulter-list',
@@ -20,21 +22,37 @@ import { UserService } from 'src/services/user.service';
 })
 export class DefaulterListComponent {
   today: DatePicker;
+  customStartDate: DatePicker;
+  customEndDate: DatePicker;
   message: string = '';
   defaulterList: User[];
-  datesOfWeek: DatePicker[];
   callForWeek = false;
   TOP_DEF_COUNT = TOP_DEF_COUNT;
+  dateList = [];
+  alert: Alert;
+  @Output() alertEmitter = new EventEmitter<Alert>();
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private utilService: UtilService
+  ) {
+    this.alert = new Alert(null, null);
+    this.initDates();
+  }
+
+  private initDates() {
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
       today.getDate(),
       today.getFullYear()
     );
-    this.datesOfWeek = [];
-    this.setCurrentWeeksDate();
+    this.customStartDate = new DatePicker(
+      today.getMonth() + 1,
+      today.getDate(),
+      today.getFullYear()
+    );
+    this.customEndDate = this.customStartDate;
   }
 
   getDefaulterList() {
@@ -53,12 +71,22 @@ export class DefaulterListComponent {
       });
   }
 
-  getDefaultersListOfWeek() {
+  getCustomDefaultersList() {
     this.defaulterList = [];
-    const dateList = [];
-    this.datesOfWeek.forEach((date) => {
-      dateList.push(`${date.month}/${date.day}/${date.year}`);
-    });
+    const start = new Date(
+      `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`
+    );
+    const end = new Date(
+      `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`
+    );
+    const dateList = this.utilService.buildCustomDates(start, end);
+    if (!dateList) {
+      this.alert = {
+        message: 'Start Date cannot be greater than End Date',
+        type: 'fail',
+      };
+      return;
+    }
     this.userService.getDefaultersListOfWeek(dateList).subscribe((res) => {
       if (res['data']) {
         this.defaulterList = res['data'];
@@ -67,36 +95,5 @@ export class DefaulterListComponent {
         this.message = 'No Defaulter for this Week';
       }
     });
-  }
-
-  private setCurrentWeeksDate() {
-    const today = new Date();
-    if (today.getDay() >= MONDAY) {
-      this.addDate(MONDAY);
-    }
-    if (today.getDay() >= TUESDAY) {
-      this.addDate(TUESDAY);
-    }
-    if (today.getDay() >= WEDNESDAY) {
-      this.addDate(WEDNESDAY);
-    }
-    if (today.getDay() >= THRUSDAY) {
-      this.addDate(THRUSDAY);
-    }
-    if (today.getDay() >= FRIDAY) {
-      this.addDate(FRIDAY);
-    }
-  }
-
-  private addDate(day: number) {
-    const today = new Date();
-    const counterDate = new Date();
-    counterDate.setDate(today.getDate() - (today.getDay() - day));
-    const currentTuesdayDate: DatePicker = new DatePicker(
-      counterDate.getMonth() + 1,
-      counterDate.getDate(),
-      counterDate.getFullYear()
-    );
-    this.datesOfWeek.push(currentTuesdayDate);
   }
 }

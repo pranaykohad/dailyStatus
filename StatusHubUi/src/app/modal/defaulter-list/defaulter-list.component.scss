@@ -7,4 +7,20 @@
     height: 300px;
     overflow-y: auto;
   }
+  .date-width {
+    width: 120px;
+  }
+  .btn-height {
+    height: 31px;
+  }
+  .hidden-ofy {
+    overflow-y: hidden;
+  }
+  .brd-right {
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .cntr {
+    display: flex;
+    align-items: center;
+  }
 }
