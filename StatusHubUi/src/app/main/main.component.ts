@@ -7,6 +7,7 @@ import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 import { stateList } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
+import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -32,6 +33,7 @@ export class MainComponent implements OnInit {
   message: string;
   editMode = false;
   @ViewChild('defComp') defComp: DefaulterListComponent;
+  @ViewChild('wsrReportComp') wsrReportComp: WsrReportComponent;
 
   constructor(
     private statusService: StatusService,
@@ -172,6 +174,15 @@ export class MainComponent implements OnInit {
   initDefList() {
     this.defComp.defaulterList = [];
     this.defComp.message = '';
+  }
+
+  clearLeaveReport() {
+    const a: HTMLInputElement = document.querySelector('#leaveReport');
+    if (a) {
+      a.value = null;
+    }
+    this.wsrReportComp.selectedSheetName = null;
+    this.wsrReportComp.sheetNames = [];
   }
 
   private setRecentDate() {

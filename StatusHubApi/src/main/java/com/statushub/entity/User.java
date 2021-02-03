@@ -27,6 +27,8 @@ public class User {
 	private String role;
 	private String firstName;
 	private String lastName;
+	private String roleLabel;
+	private boolean isBillable;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Status> statusList;
@@ -93,6 +95,18 @@ public class User {
 	}
 	public void setStatusList(List<Status> statusList) {
 		this.statusList = statusList;
+	}
+	public String getRoleLabel() {
+		return roleLabel;
+	}
+	public void setRoleLabel(String roleLabel) {
+		this.roleLabel = roleLabel;
+	}
+	public boolean isBillable() {
+		return isBillable;
+	}
+	public void setBillable(boolean isBillable) {
+		this.isBillable = isBillable;
 	}
 	
 }

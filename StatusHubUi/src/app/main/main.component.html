@@ -17,6 +17,8 @@
           (click)="getAllUser()">Custom Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
           (click)="initDefList()">Defaulters List</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#wsrReport" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="clearLeaveReport()">WSR Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add User</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
@@ -121,6 +123,7 @@
   <app-defaulter-list #defComp></app-defaulter-list>
   <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
     (alertEmitter)="alertHandler($event)"></app-delete-user>
+  <app-wsr-report #wsrReportComp></app-wsr-report>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: PRANAY KOHAD
