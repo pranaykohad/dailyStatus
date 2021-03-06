@@ -1,6 +1,6 @@
 g:
 
-cd G:\DailyStatusSystem New\StatusHubUi
+cd D:\PersonnalSpringBoot\DailyStatus\dailyStatus\StatusHubUi
 
 call ng build --prod
 
