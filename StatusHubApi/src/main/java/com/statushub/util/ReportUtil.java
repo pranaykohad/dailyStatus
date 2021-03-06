@@ -30,13 +30,13 @@ public class ReportUtil {
 		content.append(ReportConstant.getGreeting());
 		content.append(ReportConstant.THREE_LINE);
 	}
-	
+
 	public void addHeading(final StringBuilder content, final String reportType, final String startDate, final String endDate) {
 		content.append(reportType+" Report from "+startDate+" to "+endDate+" :");
 		content.append(ReportConstant.TWO_LINE);
 	}
-	
-	
+
+
 
 	public void addName(final StringBuilder content, final String userId) {
 		final User user = userRepository.getUserByUserId(userId);
@@ -62,7 +62,7 @@ public class ReportUtil {
 			content.append(ReportConstant.ONE_LINE);
 		}
 	}
-	
+
 	public void addCustomStatus(final StringBuilder content, final List<Status> todayStsList) {
 		if (!todayStsList.isEmpty()) {
 			addCustomHeading(content);
@@ -87,7 +87,7 @@ public class ReportUtil {
 	public void createSubHeading(final StringBuilder content, final String userType, final String state) {
 		switch (userType.toUpperCase().trim()) {
 			case "DEV":
-				addSubHeading(content, "Developement", state);
+				addSubHeading(content, "Development", state);
 				break;
 			case "QA":
 				addSubHeading(content, "Testing", state);
@@ -159,7 +159,7 @@ public class ReportUtil {
 		day = day.length() == 1 ? "0" + day : day;
 		return month+"/"+day+"/"+year;
 	}
-	
+
 	private void addCustomHeading(final StringBuilder content) {
 		content.append("Sr. No.,");
 		content.append("Date,");
@@ -168,9 +168,9 @@ public class ReportUtil {
 		content.append("Status,");
 		content.append(ReportConstant.ONE_LINE);
 	}
-	
+
 	private boolean isTicketIdBlank(final String description) {
 		return description != null && !description.isEmpty();
 	}
-	
+
 }
