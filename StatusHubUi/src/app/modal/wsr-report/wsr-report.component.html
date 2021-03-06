@@ -55,7 +55,11 @@
             </div>
           </div>
           <div>
-            <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal" (click)="createWSRReport()">
+            <button type="button" class="btn btn-outline-info btn-sm mr-2" (click)="uploadLeaveReport()">
+              Upload Leave Report
+            </button>
+            <button *ngIf="enableWSRButton" type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal"
+              (click)="createWSRReport()">
               Get WSR Report
             </button>
           </div>

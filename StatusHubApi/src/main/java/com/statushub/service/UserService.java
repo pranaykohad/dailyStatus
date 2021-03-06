@@ -17,4 +17,5 @@ public interface UserService {
 	public Result getCustomDefaulters(final List<String> dateList);
 	public Result deleteUser(final String userId);
 	public Long userCount();
+	public User findByFirstnameAndLastname(final String firstName, final String lastName);
 }

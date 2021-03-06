@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	@Query(value = "SELECT u.* FROM  duser u JOIN dstatus s ON u.user_id = s.user_user_id WHERE s.d_date = ?1", nativeQuery = true)
 	public List<User> getValidUserList(String date);
 
+	@Query(value = "SELECT u.* FROM  duser u WHERE u.first_name = UPPER(?1) and u.last_name = UPPER(?2)", nativeQuery = true)
+	public User findByFirstnameAndLastname(String firstName, String lastName);
 }

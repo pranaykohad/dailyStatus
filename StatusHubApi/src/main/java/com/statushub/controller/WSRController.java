@@ -1,12 +1,8 @@
 package com.statushub.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +16,6 @@ import com.statushub.service.WSRService;
 @RequestMapping("/api")
 public class WSRController {
 
-
 	@Autowired
 	WSRService wsrService;
 
@@ -30,9 +25,9 @@ public class WSRController {
 	}
 	
 	@PostMapping("/wsrReport")
-	public Result cerateWSRReport(@RequestParam final MultipartFile file, @RequestParam final String sheetName) {
- 		return wsrService.getWSRReport(file, sheetName);
+	public Result uploadLeaveReport(@RequestParam final MultipartFile file, @RequestParam final String sheetName, 
+			@RequestParam final int start, @RequestParam final int end) {
+ 		return wsrService.uploadLeaveReport(file, sheetName, start, end);
 	}
-
 
 }

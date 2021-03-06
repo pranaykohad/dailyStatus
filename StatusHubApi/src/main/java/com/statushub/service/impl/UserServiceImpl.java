@@ -130,4 +130,9 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public User findByFirstnameAndLastname(String firstName, String lastName) {
+		return userRepo.findByFirstnameAndLastname(firstName, lastName);
+	}
+
 }

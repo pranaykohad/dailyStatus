@@ -1,5 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ICalEvent } from './../model/cal-event';
+import {
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/timegrid';
 import { DatePicker } from 'src/app/model/datePicker';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
@@ -31,7 +43,10 @@ export class MainComponent implements OnInit {
   userList: User[];
   todaysStatus: Status[];
   message: string;
-  editMode = false;
+  editStatus = false;
+  editLeavePlan = false;
+  events: ICalEvent[];
+  calendarOptions: CalendarOptions;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('wsrReportComp') wsrReportComp: WsrReportComponent;
 
@@ -56,6 +71,20 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.calendarOptions = {
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+      },
+      initialView: 'dayGridMonth',
+      weekends: false,
+      editable: true,
+      selectable: true,
+      selectMirror: true,
+      dayMaxEvents: true,
+    };
+
     if (!this.userService.getLocalUserName()) {
       this.router.navigateByUrl('/');
     } else {
@@ -63,6 +92,149 @@ export class MainComponent implements OnInit {
       this.getRecentStatus();
       this.getAllUser();
     }
+  }
+
+  editLeavePlan1() {
+    this.editStatus = false;
+    this.editLeavePlan = true;
+    this.calendarOptions = {
+      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
+      headerToolbar: {
+        left: 'dayGridMonth,timeGridWeek,timeGridDay',
+        center: 'title',
+        right: 'prev,next today',
+      },
+      initialView: 'dayGridMonth',
+      weekends: false,
+      editable: true,
+      selectable: true,
+      selectMirror: true,
+      dayMaxEvents: true,
+    };
+    this.events = [
+      {
+        eventId: 1,
+        title: 'All Day Event1',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 2,
+        title: 'All Day Event2',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 3,
+        title: 'All Day Event3',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 4,
+        title: 'All Day Event4',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 5,
+        title: 'All Day Event5',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 6,
+        title: 'All Day Event6',
+        start: '2021-03-01',
+        end: null,
+      },
+      { eventId: 7, title: 'All Day Event7', start: '2021-03-01', end: null },
+      {
+        eventId: 8,
+        title: 'All Day Event8',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 9,
+        title: 'All Day Event9',
+        start: '2021-03-01',
+        end: null,
+      },
+      { eventId: 10, title: 'All Day Event10', start: '2021-03-01', end: null },
+      {
+        eventId: 11,
+        title: 'All Day Event11',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 11,
+        title: 'All Day Event12',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 13,
+        title: 'All Day Event13',
+        start: '2021-03-01',
+        end: null,
+      },
+      {
+        eventId: 14,
+        title: 'All Day Event11',
+        start: '2021-03-02',
+        end: null,
+      },
+      {
+        eventId: 15,
+        title: 'All Day Event12',
+        start: '2021-03-02',
+        end: null,
+      },
+      {
+        eventId: 16,
+        title: 'All Day Event13',
+        start: '2021-03-02',
+        end: null,
+      },
+      {
+        eventId: 17,
+        title: 'All Day Event14',
+        start: '2021-03-02',
+        end: null,
+      },
+      {
+        eventId: 18,
+        title: 'All Day Event15',
+        start: '2021-03-02',
+        end: null,
+      },
+      {
+        eventId: 19,
+        title: 'Long Event',
+        start: '2021-01-07',
+        end: null,
+      },
+      {
+        eventId: 20,
+        title: 'Repeating Event',
+        start: '2021-01-09',
+        end: null,
+      },
+      {
+        eventId: 21,
+        title: 'Repeating Event',
+        start: '2021-01-16',
+        end: null,
+      },
+      {
+        eventId: 22,
+        title: 'Conference',
+        start: '2021-01-11',
+        end: null,
+      },
+    ];
   }
 
   changeState(index: number, row: Status) {
@@ -96,7 +268,8 @@ export class MainComponent implements OnInit {
   resetStatusList() {
     this.statusList = [];
     this.message = null;
-    this.editMode = false;
+    this.editStatus = false;
+    this.editLeavePlan = false;
     const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
       this.statusList.push(
@@ -153,11 +326,12 @@ export class MainComponent implements OnInit {
   }
 
   getTodaysStatus() {
-    if (this.editMode) {
+    if (this.editStatus) {
       return;
     }
     this.statusList = [];
-    this.editMode = true;
+    this.editStatus = true;
+    this.editLeavePlan = false;
     const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
     this.statusService
       .statusByDateAndUserId(today, this.user.userId)
@@ -230,7 +404,7 @@ export class MainComponent implements OnInit {
           isStsLenCorrect = false;
         }
         statusList.push(status);
-      } else if (!status.description.trim().length && this.editMode) {
+      } else if (!status.description.trim().length && this.editStatus) {
         statusList = [];
         isStsLenCorrect = true;
       }

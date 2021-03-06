@@ -8,43 +8,35 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Leave")
+@Table(name="DLeave")
 public class Leave {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int leaveId;
-	private String date;
-	private String pLeave;
-	private String hLeave;
+	private int date;
+	private String type;
 	private String day;
-	
 	@OneToOne
 	private User user;
-
+	
 	public int getLeaveId() {
 		return leaveId;
 	}
 	public void setLeaveId(int leaveId) {
 		this.leaveId = leaveId;
 	}
-	public String getDate() {
+	public int getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(int date) {
 		this.date = date;
 	}
-	public String getpLeave() {
-		return pLeave;
+	public String getType() {
+		return type;
 	}
-	public void setpLeave(String pLeave) {
-		this.pLeave = pLeave;
-	}
-	public String gethLeave() {
-		return hLeave;
-	}
-	public void sethLeave(String hLeave) {
-		this.hLeave = hLeave;
+	public void setType(String type) {
+		this.type = type;
 	}
 	public String getDay() {
 		return day;

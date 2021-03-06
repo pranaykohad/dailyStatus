@@ -133,7 +133,6 @@
     text-align: center;
   }
 }
-
 select {
   border-radius: 3px;
 }
@@ -141,3 +140,11 @@ select {
 .dropdown-menu {
   font-size: 15px;
 }
+.leave-type-cntr {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  justify-content: space-evenly;
+}
+

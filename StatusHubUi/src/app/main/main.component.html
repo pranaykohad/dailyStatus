@@ -40,18 +40,27 @@
       <button data-toggle="modal" data-target="#userDetail" class="btn btn-outline-success btn-sm mr-2">
         Update
       </button>
-      <button data-toggle="modal" data-target="#editStatus" class="btn btn-outline-info btn-sm" [disabled]="editMode"
-        (click)="getTodaysStatus()">
+      <button class="btn btn-outline-info btn-sm mr-2" [disabled]="editStatus" (click)="getTodaysStatus()">
         Edit Today's Status
+      </button>
+      <button class="btn btn-outline-info btn-sm" [disabled]="editLeavePlan" (click)="editLeavePlan1()">
+        Leave Plan
       </button>
     </div>
   </div>
   <hr />
   <div class="main-content col-md-12 p-0">
-    <div class="col-md-8 main-content-left pt-1 pl-0">
-      <div class="no-sts" *ngIf="message; else statusLst">
-        {{this.message}}
-      </div>
+    <div class="main-content-left pt-1 pl-0" [ngClass]="editLeavePlan? 'col-md-10':'col-md-8'">
+      <ng-container *ngIf="editStatus; else editLeavePlanView">
+        <div class="no-sts">
+          {{message}}
+        </div>
+      </ng-container>
+      <ng-template #editLeavePlanView>
+        <ng-container *ngIf="editLeavePlan; else statusLst">
+          <p-fullCalendar [events]="events" [options]="calendarOptions"></p-fullCalendar>
+        </ng-container>
+      </ng-template>
       <ng-template #statusLst>
         <div class="row ml-2" *ngFor="let row of statusList; let index = index">
           <div class="form-group row pl-0" style="justify-content: space-evenly;">
@@ -79,28 +88,36 @@
         </div>
       </ng-template>
     </div>
-    <div class="col-md-4 p-0 rt-pane-contr">
-      <div class="recent-update-lbl">Last Day's Updates</div>
-      <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
-        <table class="table" aria-label="table">
-          <thead>
-            <tr>
-              <th id="ticket-id" class="tab-head tab-head-middle">Ticket Id</th>
-              <th id="description" class="tab-head">Description</th>
-              <th id="date" class="tab-head" style="width: 100px">State</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let status of recentStatus">
-              <td class="tab-head tab-body-align">{{status.ticketId}}</td>
-              <td class="tab-head tab-body-align">{{status.description}}</td>
-              <td class="tab-head tab-body-align">{{status.state}}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="p-0 rt-pane-contr" [ngClass]="editLeavePlan? 'col-md-2':'col-md-4'">
+      <div *ngIf="editLeavePlan; else recentStatus" class="leave-type-cntr">
+        <div style="flex-grow: 1;padding-top: 40%;
+        text-align: center;background-color: green;">Add Full Day Leave</div>
+        <div style="flex-grow: 1;padding-top: 40%;
+        text-align: center; background-color: red;">Add Half Day Leave</div>
       </div>
-      <ng-template #noRecordFound>
-        <div class="pt-2">No Record Found</div>
+      <ng-template #recentStatus>
+        <div class="recent-update-lbl">Last Day's Updates</div>
+        <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
+          <table class="table" aria-label="table">
+            <thead>
+              <tr>
+                <th id="ticket-id" class="tab-head tab-head-middle">Ticket Id</th>
+                <th id="description" class="tab-head">Description</th>
+                <th id="date" class="tab-head" style="width: 100px">State</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let status of recentStatus">
+                <td class="tab-head tab-body-align">{{status.ticketId}}</td>
+                <td class="tab-head tab-body-align">{{status.description}}</td>
+                <td class="tab-head tab-body-align">{{status.state}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noRecordFound>
+          <div class="pt-2">No Record Found</div>
+        </ng-template>
       </ng-template>
     </div>
   </div>
@@ -108,11 +125,11 @@
   <div>
     <div class="row ml-2">
       <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()" [disabled]="!statusList.length">
-        Sumbit Status
+        {{editLeavePlan ? 'Sumbit Leave Plan' : 'Sumbit Status'}}
       </button>
       <button class="btn btn-outline-danger btn-sm"
         (click)="resetStatusList();alertHandler({message: 'Status has been reset.',type:'success'})">
-        {{editMode ? 'Back' : 'Reset Status'}}
+        {{editStatus || editLeavePlan ? 'Back' : 'Reset Status'}}
       </button>
     </div>
   </div>

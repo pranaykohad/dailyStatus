@@ -19,12 +19,15 @@ import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
 import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 import { WsrReportComponent } from './modal/wsr-report/wsr-report.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FullCalendarModule } from 'primeng/fullcalendar';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'main', component: MainComponent },
   { path: '', redirectTo: 'index', pathMatch: 'full' },
 ];
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +43,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
@@ -47,6 +51,7 @@ const routes: Routes = [
     NgbAlertModule,
     RouterModule.forRoot(routes, { useHash: true }),
     NgbModule,
+    FullCalendarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
