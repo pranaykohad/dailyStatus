@@ -125,7 +125,11 @@
   <div>
     <div class="row ml-2">
       <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()" [disabled]="!statusList.length">
+<<<<<<< HEAD
         {{editLeavePlan ? 'Sumbit Leave Plan' : 'Sumbit Status'}}
+=======
+        Submit Status
+>>>>>>> 1803cced421d69602c829344c1f6517b266232d7
       </button>
       <button class="btn btn-outline-danger btn-sm"
         (click)="resetStatusList();alertHandler({message: 'Status has been reset.',type:'success'})">
