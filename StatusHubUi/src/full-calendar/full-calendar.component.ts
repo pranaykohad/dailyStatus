@@ -5,6 +5,7 @@ import {
   Output,
   ViewChild,
   EventEmitter,
+  Input,
 } from '@angular/core';
 import { CalendarOptions, EventApi } from '@fullcalendar/angular';
 import { FullCalendar } from 'primeng/fullcalendar';
@@ -22,17 +23,15 @@ import { UtilService } from 'src/services/util.service';
 })
 export class FullCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions;
-  addedItems: ILeave[];
-  removedItems: ILeave[];
-  updatedItems: ILeave[];
-  selectedItem: EventApi;
   fullDayLeaves: ILeave[];
   halfDayLeaves: ILeave[];
+  selectedItem: EventApi;
   loggedUserName: string;
-  user: User;
+  @Input() addedItems: ILeave[];
+  @Input() removedItems: ILeave[];
+  @Input() updatedItems: ILeave[];
   @ViewChild('fullCalendar') fullCalendar: FullCalendar;
   @Output() addedItemsEmitter = new EventEmitter<ILeave[]>();
-  @Output() removedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() updatedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
 
@@ -41,11 +40,8 @@ export class FullCalendarComponent implements OnInit {
     private cdrf: ChangeDetectorRef,
     private utilService: UtilService
   ) {
-    this.user = this.localStoreService.getUser();
-    this.loggedUserName = this.user.firstName + ' ' + this.user.lastName;
-    this.addedItems = [];
-    this.removedItems = [];
-    this.updatedItems = [];
+    const user: User = this.localStoreService.getUser();
+    this.loggedUserName = `${user.firstName} ${user.lastName}`;
     this.fullDayLeaves = [];
     this.halfDayLeaves = [];
   }
@@ -107,51 +103,25 @@ export class FullCalendarComponent implements OnInit {
     };
   }
 
-  private eventClick(info) {
-    this.selectedItem = null;
-    if (this.isValidUser(info.event)) {
-      this.selectedItem = info.event;
-    }
-    this.selectedItemEmitter.emit(this.selectedItem);
-  }
-
-  private eventAllow(draggedEvent: EventApi): boolean {
-    // if (draggedEvent._def.extendedProps.leaveId) {
-    //   draggedEvent.remove();
-    // }
-    return (
-      this.isValidUser(draggedEvent) && !draggedEvent._def.extendedProps.leaveId
-    );
-  }
-
-  private internalDrop(info: any) {
-    if (!info.oldEvent._def.extendedProps.leaveId) {
-      info.event.remove();
-      this.removeAddedLeave(info.oldEvent._instance.range.start);
-    }
-    // this.internalDrop(info);
-  }
-
-  private isInRemovedLeaves(leaveDate: string): boolean {
-    return this.removedItems.some((item) => {
-      const date = new Date(item.start);
-      const formattedDate = this.utilService.formatToTwoDigit2(
-        `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-      );
-      if (JSON.stringify(formattedDate) === JSON.stringify(leaveDate)) {
-        return true;
-      }
-    });
-  }
-
   private externalDrop(info: any) {
     const leave: ILeave = {
       leaveId: null,
       title: info.draggedEl.id,
-      start: info.date,
+      start: info.date.toString(),
       updatedStart: null,
     };
-    if (this.isInNewLeaves(leave)) {
+    const date = new Date(leave.start);
+    const formattedDate1 = this.utilService.formatToTwoDigit(
+      `${date.getMonth() - 1}/${date.getDate()}/${date.getFullYear()}`
+    );
+    const formattedDate2 = this.utilService.formatToTwoDigit2(
+      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+    );
+    if (
+      this.isInNewLeaves(formattedDate1) ||
+      (this.isInExistingLeaves(formattedDate2) &&
+        !this.isInRemovedLeaves(formattedDate2))
+    ) {
       // this.removeAddedLeave(new Date(info.start));
       info.remove();
     } else {
@@ -160,19 +130,14 @@ export class FullCalendarComponent implements OnInit {
     }
   }
 
-  private isInExistingLeaves(leave: ILeave): boolean {
-    const date = new Date(leave.start);
-    const formattedDate = this.utilService.formatToTwoDigit2(
-      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-    );
+  private isInExistingLeaves(formattedDate: string): boolean {
     let isExists = false;
     this.calendarOptions.eventSources.forEach((event) => {
       event['events'].forEach((item) => {
         if (
           JSON.stringify(formattedDate) === JSON.stringify(item.start) &&
           this.loggedUserName.toUpperCase() ===
-            item.title.split(':')[0].toUpperCase() &&
-          !this.isInRemovedLeaves(formattedDate)
+            item.title.split(':')[0].toUpperCase()
         ) {
           isExists = true;
         }
@@ -181,25 +146,29 @@ export class FullCalendarComponent implements OnInit {
     return isExists;
   }
 
-  private isInNewLeaves(info: ILeave): boolean {
-    const date = new Date(info.start);
-    const formattedDate = this.utilService.formatToTwoDigit(
-      `${date.getMonth() - 1}/${date.getDate()}/${date.getFullYear()}`
-    );
+  private isInNewLeaves(formattedDate: string): boolean {
     return this.addedItems.some((item) => {
-      const d1 = new Date(item.start);
-      const d2 = this.utilService.formatToTwoDigit(
-        `${d1.getMonth() - 1}/${d1.getDate()}/${d1.getFullYear()}`
+      const date1 = new Date(item.start);
+      const date2 = this.utilService.formatToTwoDigit(
+        `${date1.getMonth() - 1}/${date1.getDate()}/${date1.getFullYear()}`
       );
-      return JSON.stringify(formattedDate) === JSON.stringify(d2);
+      return JSON.stringify(formattedDate) === JSON.stringify(date2);
+    });
+  }
+
+  private isInRemovedLeaves(leaveDate: string): boolean {
+    return this.removedItems.some((item) => {
+      const date = new Date(item.start);
+      const formattedDate = this.utilService.formatToTwoDigit2(
+        `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+      );
+      return JSON.stringify(formattedDate) === JSON.stringify(leaveDate);
     });
   }
 
   private isValidUser(draggedEvent: any): boolean {
-    const draggedUser = draggedEvent._def.title.split(':')[0];
-    const isValid =
-      draggedUser.toUpperCase() === this.loggedUserName.toUpperCase();
-    return isValid;
+    const draggedUserName = draggedEvent._def.title.split(':')[0];
+    return draggedUserName.toUpperCase() === this.loggedUserName.toUpperCase();
   }
 
   removeAddedLeave(date) {
@@ -235,6 +204,28 @@ export class FullCalendarComponent implements OnInit {
   //     this.updatedItems.push(leave);
   //   }
   // }
+
+  private eventClick(info) {
+    this.selectedItem = null;
+    if (this.isValidUser(info.event)) {
+      this.selectedItem = info.event;
+    }
+    this.selectedItemEmitter.emit(this.selectedItem);
+  }
+
+  private eventAllow(draggedEvent: EventApi): boolean {
+    return (
+      this.isValidUser(draggedEvent) && !draggedEvent._def.extendedProps.leaveId
+    );
+  }
+
+  private internalDrop(info: any) {
+    if (!info.oldEvent._def.extendedProps.leaveId) {
+      info.event.remove();
+      this.removeAddedLeave(info.oldEvent._instance.range.start);
+    }
+    // this.internalDrop(info);
+  }
 
   private registerExternalDragEvent() {
     this.cdrf.detectChanges();

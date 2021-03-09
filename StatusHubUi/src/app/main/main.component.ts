@@ -254,10 +254,6 @@ export class MainComponent implements OnInit {
     this.addedItems = leaves;
   }
 
-  removedItemsHandler(leaves: ILeave[]) {
-    this.removedItems = leaves;
-  }
-
   updatedItemsHandler(leaves: ILeave[]) {
     this.updatedItems = leaves;
   }
@@ -310,7 +306,6 @@ export class MainComponent implements OnInit {
       // this.removeAddedLeave(new Date(info.start));
       info.remove();
     } else {
-      console.log(leave);
       this.addedItems.push(leave);
     }
   }
