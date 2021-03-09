@@ -100,6 +100,10 @@ export class FullCalendarComponent implements OnInit {
       eventClick: (info) => {
         this.eventClick(info);
       },
+      dateClick: () => {
+        this.selectedItem = null;
+        this.selectedItemEmitter.emit(this.selectedItem);
+      },
     };
   }
 
