@@ -87,7 +87,7 @@
   .main-content {
     display: flex;
     justify-content: space-between;
-    min-height: 400px;
+    min-height: 500px;
   }
   .rt-pane-contr {
     display: flex;
@@ -126,7 +126,7 @@
     color: grey;
   }
   .main-content-left {
-    height: 400px;
+    height: 500px;
     overflow: auto;
   }
   .no-sts {
@@ -147,4 +147,18 @@ select {
   width: 100%;
   justify-content: space-evenly;
 }
+.text-center {
+  text-align: center;
+}
+#external {
+  display: flex;
+  flex-direction: column;
+}
 
+.fc-daygrid .fc-dayGridMonth-view .fc-view {
+  background-color: red !important;
+}
+
+.fc .fc-media-screen .fc-direction-ltr .fc-theme-standard {
+  background-color: red !important;
+}

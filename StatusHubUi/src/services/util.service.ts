@@ -32,6 +32,15 @@ export class UtilService {
     }`;
   }
 
+  formatToTwoDigit2(date: string): string {
+    const tokens: string[] = date.split('/');
+    const date1 = `${this.formatDate(tokens[0])}-${this.formatDate(
+      tokens[1]
+    )}-${tokens[2]}`;
+    const tns: string[] = date1.split('-');
+    return `${tns[2]}-${tns[0]}-${tns[1]}`;
+  }
+
   removeComma(description: string): string {
     return description.replace(/,/g, '.');
   }

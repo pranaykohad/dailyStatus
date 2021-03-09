@@ -2,12 +2,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import {
   NgbAlertModule,
   NgbModule,
   NgbPaginationModule,
 } from '@ng-bootstrap/ng-bootstrap';
+import { DragDropModule } from 'primeng/dragdrop';
+import { FullCalendarModule } from 'primeng/fullcalendar';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -19,9 +23,8 @@ import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
 import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 import { WsrReportComponent } from './modal/wsr-report/wsr-report.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FullCalendarModule } from 'primeng/fullcalendar';
-
+import { DateFormatPipe } from './pipe/date-format.pipe';
+import { FullCalendarComponent } from '../full-calendar/full-calendar.component';
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'main', component: MainComponent },
@@ -40,6 +43,8 @@ const routes: Routes = [
     DefaulterListComponent,
     DeleteUserComponent,
     WsrReportComponent,
+    DateFormatPipe,
+    FullCalendarComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, { useHash: true }),
     NgbModule,
     FullCalendarModule,
+    DragDropModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

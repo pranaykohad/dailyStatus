@@ -43,7 +43,7 @@
       <button class="btn btn-outline-info btn-sm mr-2" [disabled]="editStatus" (click)="getTodaysStatus()">
         Edit Today's Status
       </button>
-      <button class="btn btn-outline-info btn-sm" [disabled]="editLeavePlan" (click)="editLeavePlan1()">
+      <button class="btn btn-outline-info btn-sm" [disabled]="editLeavePlan" (click)="showLeavePlan()">
         Leave Plan
       </button>
     </div>
@@ -58,7 +58,10 @@
       </ng-container>
       <ng-template #editLeavePlanView>
         <ng-container *ngIf="editLeavePlan; else statusLst">
-          <p-fullCalendar [events]="events" [options]="calendarOptions"></p-fullCalendar>
+          <app-full-calendar #fullCalendar (addedItemsEmitter)="addedItemsHandler($event)"
+            (removedItemsEmitter)="removedItemsHandler($event)" (updatedItemsEmitter)="updatedItemsHandler($event)"
+            (selectedItemEmitter)="selectedItemHandler($event)">
+          </app-full-calendar>
         </ng-container>
       </ng-template>
       <ng-template #statusLst>
@@ -80,7 +83,7 @@
               </option>
             </select>
           </div>
-          <div *ngIf="editMode" class="form-group pl-2">
+          <div *ngIf="editStatus" class="form-group pl-2">
             <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record">
               Delete
             </button>
@@ -88,14 +91,51 @@
         </div>
       </ng-template>
     </div>
-    <div class="p-0 rt-pane-contr" [ngClass]="editLeavePlan? 'col-md-2':'col-md-4'">
-      <div *ngIf="editLeavePlan; else recentStatus" class="leave-type-cntr">
-        <div style="flex-grow: 1;padding-top: 40%;
-        text-align: center;background-color: green;">Add Full Day Leave</div>
-        <div style="flex-grow: 1;padding-top: 40%;
-        text-align: center; background-color: red;">Add Half Day Leave</div>
+    <div class=" p-0 rt-pane-contr" [ngClass]="editLeavePlan? 'col-md-2':'col-md-4'">
+      <div *ngIf="editLeavePlan; else recentStatusView" class="column col-md-12 p-0">
+        <div class="recent-update-lbl text-center ">Leave Options:</div>
+        <div id="external" class="col-md-12 pt-2">
+          <button id="draggable" class="btn btn btn-success btn-md mb-2 draggable"
+            [id]="user.firstName+' '+user.lastName+':full-day'">
+            Drag Full Day Leave
+          </button>
+          <button class="btn btn btn-info btn-md mb-2 draggable" [id]="user.firstName+' '+user.lastName+':half-day'">
+            Drag Half Day Leave
+          </button>
+          <button class="btn btn-danger" [id]="user.firstName+' '+user.lastName+':half-day'" [disabled]="!selectedItem"
+            (click)="deleteLeave()">
+            Add to Delete
+          </button>
+        </div>
+        <hr>
+        <div class="col-md-12">
+          <span style="font-weight: 500">Your Changes:</span>
+          <div *ngIf="!addedItems.length && !updatedItems.length && !removedItems.length; else leaveList">
+            No Changes
+          </div>
+          <ng-template #leaveList>
+            <div *ngIf="updatedItems.length">
+              <span style="font-weight: 400">Update Leaves:</span>
+              <div *ngFor="let item of updatedItems" class="col-md-12">
+                {{item.start | dateFormat}} => {{item.updatedStart | dateFormat}}
+              </div>
+            </div>
+            <div *ngIf="removedItems.length">
+              <span style="font-weight: 400">Remove Leaves:</span>
+              <div *ngFor="let item of removedItems" class="col-md-12">
+                {{item.start | dateFormat}} ({{item.title.split(':')[1]}})
+              </div>
+            </div>
+            <div *ngIf="addedItems.length">
+              <span style="font-weight: 400">Added Leaves:</span>
+              <div *ngFor="let item of addedItems" class="col-md-12">
+                {{item.start | dateFormat}} ({{item.title.split(':')[1]}})
+              </div>
+            </div>
+          </ng-template>
+        </div>
       </div>
-      <ng-template #recentStatus>
+      <ng-template #recentStatusView>
         <div class="recent-update-lbl">Last Day's Updates</div>
         <div *ngIf="recentStatus.length; else noRecordFound" class="tab-contr">
           <table class="table" aria-label="table">
@@ -124,16 +164,13 @@
   <hr />
   <div>
     <div class="row ml-2">
-      <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()" [disabled]="!statusList.length">
-<<<<<<< HEAD
-        {{editLeavePlan ? 'Sumbit Leave Plan' : 'Sumbit Status'}}
-=======
-        Submit Status
->>>>>>> 1803cced421d69602c829344c1f6517b266232d7
+      <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()"
+        [disabled]="!statusList.length && !editLeavePlan">
+        {{editLeavePlan ? 'Submit Leave Plan' : 'Submit Status' }}
       </button>
       <button class="btn btn-outline-danger btn-sm"
-        (click)="resetStatusList();alertHandler({message: 'Status has been reset.',type:'success'})">
-        {{editStatus || editLeavePlan ? 'Back' : 'Reset Status'}}
+        (click)="resetStatusList();alertHandler({message: 'Your changes has been Reset',type:'success'})">
+        Reset
       </button>
     </div>
   </div>
