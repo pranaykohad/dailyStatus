@@ -12,10 +12,13 @@ public class MailConfig {
 	@Value("${spring.mail.port}")
 	private int port;
 
-	@Value("${spring.mail.username}")
+	@Value("statushub1000@gmail.com")
+	private String from;
+
+	@Value("statushub1000")
 	private String userName;
 
-	@Value("${spring.mail.password}")
+	@Value("Statushub0000!")
 	private String password;
 
 	@Value("${spring.mail.properties.mail.smtp.auth}")
@@ -23,9 +26,6 @@ public class MailConfig {
 
 	@Value("${spring.mail.properties.mail.smtp.ssl.enable}")
 	private boolean smtpSSLEnable;
-
-	@Value("${from}")
-	private String from;
 
 	public String getFrom() {
 		return from;
