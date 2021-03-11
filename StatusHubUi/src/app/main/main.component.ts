@@ -6,6 +6,7 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { FullCalendar } from 'primeng/fullcalendar';
 import { DatePicker } from 'src/app/model/datePicker';
 import { FullCalendarComponent } from 'src/full-calendar/full-calendar.component';
+import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
@@ -57,7 +58,8 @@ export class MainComponent implements OnInit {
     private localStoreService: LocalStorageService,
     private router: Router,
     private utilService: UtilService,
-    private cdrf: ChangeDetectorRef
+    private cdrf: ChangeDetectorRef,
+    private leaveService: LeaveService
   ) {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
@@ -95,8 +97,25 @@ export class MainComponent implements OnInit {
   submitStatus() {
     if (this.editLeavePlan) {
       console.log(this.addedItems);
-      console.log(this.updatedItems);
       console.log(this.removedItems);
+      if (this.addedItems.length) {
+        this.leaveService.addLeaves(this.addedItems).subscribe((res) => {
+          console.log(res);
+          this.addedItems.length = 0;
+        });
+      }
+
+      const leavesIds: number[] = [];
+      this.removedItems.forEach((item) => {
+        leavesIds.push(item.leaveId);
+      });
+      if (leavesIds.length) {
+        this.leaveService.deleteLeaves(leavesIds).subscribe((res) => {
+          console.log(res);
+          this.removedItems.length = 0;
+        });
+      }
+
       return;
     }
     if (!this.statusList.length) {
