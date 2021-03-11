@@ -125,6 +125,7 @@ public class UserServiceImpl implements UserService {
 				tempUser.setFirstName(user.getFirstName());
 				tempUser.setLastName(user.getLastName());
 				tempUser.setUserId(user.getUserId());
+				tempUser.setEmail(user.getEmail());
 				finalUserList.add(tempUser);
 			});
 		}

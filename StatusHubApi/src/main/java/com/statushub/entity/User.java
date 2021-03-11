@@ -27,13 +27,19 @@ public class User {
 	private String role;
 	private String firstName;
 	private String lastName;
+	private String email;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Status> statusList;
 	@Transient 
 	private int defCount;
 	
-	
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public int getDefCount() {
 		return defCount;
 	}

@@ -9,29 +9,31 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.statushub.entity.User;
 import com.statushub.service.UserService;
 
-@SpringBootApplication(scanBasePackages="com")
+@EnableScheduling
+@SpringBootApplication(scanBasePackages = "com")
 @EntityScan("com.statushub.entity")
 @EnableJpaRepositories("com.statushub.repository")
 public class MainComponent {
-	
+
 	@Autowired
 	UserService userService;
-	
-	private static final Logger LOG = LoggerFactory.getLogger("controller.class");
+
+	private static final Logger LOG = LoggerFactory.getLogger("MainComponent.class");
 
 	public static void main(String[] args) {
 		SpringApplication.run(MainComponent.class, args);
 		LOG.debug("StatusHub has started..........");
 	}
-	
+
 	@PostConstruct
-    public void init(){
-		if(userService.userCount() == 0) {
-			final User adminUser = new User(); 
+	public void init() {
+		if (userService.userCount() == 0) {
+			final User adminUser = new User();
 			adminUser.setFirstName("admin");
 			adminUser.setLastName("admin");
 			adminUser.setModuleName("Workbench 9.2");
@@ -41,6 +43,6 @@ public class MainComponent {
 			adminUser.setType("DEV");
 			userService.addUser(adminUser);
 		}
-    }
+	}
 
 }
