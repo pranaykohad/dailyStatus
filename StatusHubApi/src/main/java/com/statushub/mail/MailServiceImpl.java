@@ -44,6 +44,7 @@ public class MailServiceImpl {
 	public void cronJobSch() {
 		final LocalDate dateObj = LocalDate.now();
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
+		@SuppressWarnings("unchecked")
 		final List<User> userList = (List<User>) userService.getDefaultersList(formatter.format(dateObj)).getData();
 		final StringBuilder emails = new StringBuilder();
 		userList.forEach(user -> {
@@ -51,9 +52,10 @@ public class MailServiceImpl {
 				emails.append(user.getEmail() + ",");
 			}
 		});
-		LOG.debug("Send Mails to: {}", emails);
-		sendNotification(emails.toString());
-		
+		if(emails.length() > 1){
+			LOG.debug("Send Mails to: {}", emails);
+			sendNotification(emails.toString());	
+		}
 	}
 	
 	public void sendNotification(final String emailList) {
@@ -77,10 +79,7 @@ public class MailServiceImpl {
 			final InternetAddress[] address = InternetAddress.parse(emailList);
 			message.setRecipients(Message.RecipientType.TO, address);
 			message.setSubject("StatusHub Reminder");
-			final String content = "Hi NAME,"
-					 + "You have not submitted your status on StatusHub today."
-					 + "Please submit it before 5:00 pm."
-					 + "Link: <a href='172.18.0.6:8000' target='_blank'>Status Hub</a>";
+			final String content = getContent();
 			message.setContent(content, "text/html");
 			javaMailSender.send(message);
 			LOG.debug("Mails send Successfully.");
@@ -89,6 +88,11 @@ public class MailServiceImpl {
 		}
 	}
 
+	private String getContent() {
+		return "<html><body> Hi,<br> You have not submitted your status for Today. "
+				+ "Please submit it on <a href='172.18.0.6:8000' target='_blank'>Status Hub</a> before 5:00 pm."
+				+ "<br><br> Regards,<br> <b>StatusHub Admin</b> </body></html>";
+	}
 
 	private Properties setMailProperties() {
 		final Properties props = new Properties(); 
