@@ -28,12 +28,12 @@ public class MailServiceImpl {
 	
 	private static final Logger LOG = LoggerFactory.getLogger("MailServiceImpl.class");
 	
-	MailConfig mailConfig;
-	
 	@Autowired
-	UserService userService;
+	private UserService userService;
 	
-	private Properties properties = new Properties(); 
+	private MailConfig mailConfig;
+	
+	private Properties properties; 
 	
 	MailServiceImpl(MailConfig mailConfig) {
 		this.mailConfig = mailConfig;
