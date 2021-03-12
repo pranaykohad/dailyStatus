@@ -1,7 +1,6 @@
 import { User } from './user';
 
-export interface Status {
-  statusId: number;
+export interface IStatus {
   ticketId: string;
   description: string;
   state: string;
@@ -9,12 +8,11 @@ export interface Status {
   user: User;
   delete: boolean;
 }
-export class Status {
-  constructor(
-    public ticketId: string,
-    public description: string,
-    public state: string,
-    public dDate: string,
-    public user: User
-  ) {}
+export class Status implements IStatus {
+  ticketId: string;
+  description: string;
+  state: string;
+  dDate: string;
+  user: User;
+  delete: boolean;
 }
