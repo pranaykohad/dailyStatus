@@ -29,10 +29,16 @@ export class UserDetailComponent {
     this.initModuleList();
   }
 
-  updateUserDetails(userName: string, password: string, moduleName: string) {
+  updateUserDetails(
+    userName: string,
+    password: string,
+    email: string,
+    moduleName: string
+  ) {
     this.user.userName = userName;
     this.user.password = password;
     this.user.moduleName = moduleName;
+    this.user.email = email;
     let alert = null;
     this.userService.updateUserDetails(this.user).subscribe((res) => {
       if (res['data']) {

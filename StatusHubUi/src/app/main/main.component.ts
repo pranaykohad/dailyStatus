@@ -97,15 +97,15 @@ export class MainComponent implements OnInit {
     this.editMode = false;
     const date = new Date().toLocaleDateString();
     for (let row = 1; row <= numOfStatus; row++) {
-      this.statusList.push(
-        new Status(
-          '',
-          '',
-          'In progress',
-          this.utilService.formatToTwoDigit(date),
-          this.user
-        )
-      );
+      const sts: Status = {
+        ticketId: '',
+        description: '',
+        state: 'In progress',
+        dDate: this.utilService.formatToTwoDigit(date),
+        user: this.user,
+        delete: false,
+      };
+      this.statusList.push(sts);
     }
   }
 
