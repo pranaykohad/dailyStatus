@@ -25,23 +25,24 @@ import com.statushub.service.UserService;
 
 @Service
 public class MailServiceImpl {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger("MailServiceImpl.class");
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	private MailConfig mailConfig;
-	
+
 	private Properties properties; 
-	
-	MailServiceImpl(MailConfig mailConfig) {
+
+	MailServiceImpl(final MailConfig mailConfig) {
 		this.mailConfig = mailConfig;
 		this.properties = setMailProperties();
 	}
 	
 	@Scheduled(cron = "${mail.shedule}")  
 	public void cronJobSch() {
+		LOG.debug("Cron job started: >>>>>>>>>>>{}", LocalDate.now());
 		final LocalDate dateObj = LocalDate.now();
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
 		@SuppressWarnings("unchecked")
@@ -56,8 +57,9 @@ public class MailServiceImpl {
 			LOG.debug("Send Mails to: {}", emails);
 			sendNotification(emails.toString());	
 		}
+		LOG.debug("Cron job ended: >>>>>>>>>>>{}", LocalDate.now());
 	}
-	
+
 	public void sendNotification(final String emailList) {
 		final JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 		javaMailSender.setJavaMailProperties(properties);
@@ -83,13 +85,14 @@ public class MailServiceImpl {
 			message.setContent(content, "text/html");
 			javaMailSender.send(message);
 			LOG.debug("Mails send Successfully.");
-		} catch (MessagingException e) {
+		} catch (final MessagingException e) {
 			LOG.error("Error while Sending Mail to: {}",e.getLocalizedMessage());
 		}
 	}
 
 	private String getContent() {
-		return "<html><body> Hi,<br> You have not submitted your status for Today. "
+		return "<html><body> Hi " + LocalDate.now()
+				+ ",<br> You have not submitted your status for Today. "
 				+ "Please submit it on <a href='172.18.0.6:8000' target='_blank'>Status Hub</a> before 5:00 pm."
 				+ "<br><br> Regards,<br> <b>StatusHub Admin</b> </body></html>";
 	}
@@ -107,7 +110,7 @@ public class MailServiceImpl {
 		props.put("mail.smtp.starttls.enable", mailConfig.isSmtpSSLEnable());
 		return props;
 	}
-	
-	
+
+
 
 }
