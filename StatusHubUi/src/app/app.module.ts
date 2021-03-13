@@ -24,7 +24,8 @@ import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 import { WsrReportComponent } from './modal/wsr-report/wsr-report.component';
 import { DateFormatPipe } from './pipe/date-format.pipe';
-import { FullCalendarComponent } from '../full-calendar/full-calendar.component';
+import { FullCalendarComponent } from './full-calendar/full-calendar.component';
+
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'main', component: MainComponent },

@@ -43,7 +43,8 @@
       <button class="btn btn-outline-info btn-sm mr-2" [disabled]="editStatus" (click)="getTodaysStatus()">
         Edit Today's Status
       </button>
-      <button class="btn btn-outline-info btn-sm" [disabled]="editLeavePlan" (click)="showLeavePlan()">
+      <button class="btn btn-outline-info btn-sm" [disabled]="editLeavePlan" (click)="showLeavePlan()"
+        id="btn-leave-plan">
         Leave Plan
       </button>
     </div>
@@ -51,44 +52,46 @@
   <hr />
   <div class="main-content col-md-12 p-0">
     <div class="main-content-left pt-1 pl-0" [ngClass]="editLeavePlan? 'col-md-10':'col-md-8'">
-      <ng-container *ngIf="editStatus; else editLeavePlanView">
-        <div class="no-sts">
-          {{message}}
-        </div>
+      <ng-container *ngIf="editLeavePlan; else statusView">
+        <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems"
+          [updatedItems]="updatedItems" (addedItemsEmitter)="addedItemsHandler($event)"
+          (updatedItemsEmitter)="updatedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)"
+          (alertEmitter)="alertHandler($event)">
+        </app-full-calendar>
       </ng-container>
-      <ng-template #editLeavePlanView>
-        <ng-container *ngIf="editLeavePlan; else statusLst">
-          <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems"
-            [updatedItems]="updatedItems" (addedItemsEmitter)="addedItemsHandler($event)"
-            (updatedItemsEmitter)="updatedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)">
-          </app-full-calendar>
+      <ng-template #statusView>
+        <ng-container *ngIf="message; else statusListView">
+          <div class="no-sts">
+            {{message}}
+          </div>
         </ng-container>
-      </ng-template>
-      <ng-template #statusLst>
-        <div class="row ml-2" *ngFor="let row of statusList; let index = index">
-          <div class="form-group row pl-0" style="justify-content: space-evenly;">
-            <label [for]="'tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
-            <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1" [(ngModel)]="row.ticketId"
-              placeholder="Ticket Id" [name]="'tkt-id-' + index + 1" [disabled]="row.delete" />
+        <ng-template #statusListView>
+          <div class="row ml-2" *ngFor="let row of statusList; let index = index">
+            <div class="form-group row pl-0" style="justify-content: space-evenly;">
+              <label [for]="'tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
+              <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1"
+                [(ngModel)]="row.ticketId" placeholder="Ticket Id" [name]="'tkt-id-' + index + 1"
+                [disabled]="row.delete" />
+            </div>
+            <div class="form-group col-md-7">
+              <textarea class="form-control txt-bx p-0 pl-2" [id]="'tkt-desc-' + index + 1"
+                [(ngModel)]="row.description" placeholder="Description" [disabled]="row.delete"></textarea>
+            </div>
+            <div class="form-group">
+              <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)"
+                [disabled]="row.delete">
+                <option *ngFor="let state of stateList" [selected]="row.state === state">
+                  {{ state }}
+                </option>
+              </select>
+            </div>
+            <div *ngIf="editStatus" class="form-group pl-2">
+              <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record">
+                Delete
+              </button>
+            </div>
           </div>
-          <div class="form-group col-md-7">
-            <textarea class="form-control txt-bx p-0 pl-2" [id]="'tkt-desc-' + index + 1" [(ngModel)]="row.description"
-              placeholder="Description" [disabled]="row.delete"></textarea>
-          </div>
-          <div class="form-group">
-            <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)"
-              [disabled]="row.delete">
-              <option *ngFor="let state of stateList" [selected]="row.state === state">
-                {{ state }}
-              </option>
-            </select>
-          </div>
-          <div *ngIf="editStatus" class="form-group pl-2">
-            <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record">
-              Delete
-            </button>
-          </div>
-        </div>
+        </ng-template>
       </ng-template>
     </div>
     <div class=" p-0 rt-pane-contr" [ngClass]="editLeavePlan? 'col-md-2':'col-md-4'">

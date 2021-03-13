@@ -1,11 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CalendarOptions, EventApi } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import { FullCalendar } from 'primeng/fullcalendar';
+import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
-import { FullCalendarComponent } from 'src/full-calendar/full-calendar.component';
 import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
@@ -58,7 +55,6 @@ export class MainComponent implements OnInit {
     private localStoreService: LocalStorageService,
     private router: Router,
     private utilService: UtilService,
-    private cdrf: ChangeDetectorRef,
     private leaveService: LeaveService
   ) {
     this.alert = new Alert(null, null);
@@ -96,27 +92,7 @@ export class MainComponent implements OnInit {
 
   submitStatus() {
     if (this.editLeavePlan) {
-      console.log(this.addedItems);
-      console.log(this.removedItems);
-      if (this.addedItems.length) {
-        this.leaveService.addLeaves(this.addedItems).subscribe((res) => {
-          console.log(res);
-          this.addedItems.length = 0;
-        });
-      }
-
-      const leavesIds: number[] = [];
-      this.removedItems.forEach((item) => {
-        leavesIds.push(item.leaveId);
-      });
-      if (leavesIds.length) {
-        this.leaveService.deleteLeaves(leavesIds).subscribe((res) => {
-          console.log(res);
-          this.removedItems.length = 0;
-        });
-      }
-
-      return;
+      return this.submitLeaves();
     }
     if (!this.statusList.length) {
       return;
@@ -135,7 +111,7 @@ export class MainComponent implements OnInit {
       });
     } else {
       this.alertHandler({
-        message: 'Cannot submit. Empty description',
+        message: 'Cannot submit with empty description',
         type: 'fail',
       });
     }
@@ -281,118 +257,22 @@ export class MainComponent implements OnInit {
     this.selectedItem = selectedItem;
   }
 
-  // removeAddedLeave(date) {
-  //   const date1 = new Date(date);
-  //   const date2 = this.utilService.formatToTwoDigit(
-  //     `${date1.getMonth() - 1}/${date1.getDate()}/${date1.getFullYear()}`
-  //   );
-  //   this.addedItems = this.addedItems.filter((item) => {
-  //     const d1 = new Date(item.start);
-  //     const d2 = this.utilService.formatToTwoDigit(
-  //       `${d1.getMonth() - 1}/${d1.getDate()}/${d1.getFullYear()}`
-  //     );
-  //     if (JSON.stringify(date2) !== JSON.stringify(d2)) {
-  //       return true;
-  //     }
-  //   });
-  // }
-
-  // private internalDrop(info: any) {
-  //   const leave: ILeave = {
-  //     leaveId: info.oldEvent._def.extendedProps.leaveId,
-  //     title: info.oldEvent._def.title,
-  //     start: info.oldEvent._instance.range.start,
-  //     updatedStart: info.event._instance.range.start,
-  //   };
-  //   const existingIndex = this.updatedItems.findIndex(
-  //     (item) => item.leaveId === leave.leaveId
-  //   );
-  //   if (existingIndex !== -1) {
-  //     this.updatedItems[existingIndex].updatedStart = leave.updatedStart;
-  //   } else {
-  //     this.updatedItems.push(leave);
-  //   }
-  // }
-
-  private externalDrop(info: any) {
-    const leave: ILeave = {
-      leaveId: null,
-      title: info.draggedEl.id,
-      start: info.date,
-      updatedStart: null,
-    };
-    if (this.isInNewLeaves(leave) || this.isInExistingLeaves(leave)) {
-      // this.removeAddedLeave(new Date(info.start));
-      info.remove();
-    } else {
-      this.addedItems.push(leave);
-    }
-  }
-
-  private isInNewLeaves(info: ILeave): boolean {
-    const date1 = new Date(info.start);
-    const date2 = this.utilService.formatToTwoDigit(
-      `${date1.getMonth() - 1}/${date1.getDate()}/${date1.getFullYear()}`
-    );
-    return this.addedItems.some((item) => {
-      const d1 = new Date(item.start);
-      const d2 = this.utilService.formatToTwoDigit(
-        `${d1.getMonth() - 1}/${d1.getDate()}/${d1.getFullYear()}`
-      );
-      return JSON.stringify(date2) === JSON.stringify(d2);
-    });
-  }
-
-  private isInExistingLeaves(leave: ILeave): boolean {
-    const date = new Date(leave.start);
-    const formattedDate = this.utilService.formatToTwoDigit2(
-      `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-    );
-    let isExists = false;
-    this.calendarOptions.eventSources.forEach((event) => {
-      event['events'].forEach((item) => {
-        if (
-          JSON.stringify(formattedDate) === JSON.stringify(item.start) &&
-          this.loggedUserName.toUpperCase() ===
-            item.title.split(':')[0].toUpperCase() &&
-          !this.isInRemovedLeaves(formattedDate)
-        ) {
-          isExists = true;
-        }
+  private submitLeaves() {
+    if (this.addedItems.length) {
+      this.leaveService.addLeaves(this.addedItems).subscribe((res) => {
+        this.addedItems.length = 0;
       });
+    }
+    const leavesIds: number[] = [];
+    this.removedItems.forEach((item) => {
+      leavesIds.push(item.leaveId);
     });
-    return isExists;
-  }
-
-  private isInRemovedLeaves(leaveDate: string): boolean {
-    return this.removedItems.some((item) => {
-      const date = new Date(item.start);
-      const formattedDate = this.utilService.formatToTwoDigit2(
-        `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-      );
-      if (JSON.stringify(formattedDate) === JSON.stringify(leaveDate)) {
-        return true;
-      }
-    });
-  }
-
-  private isValidUser(draggedEvent: any): boolean {
-    const draggedUser = draggedEvent._def.title.split(':')[0];
-    const isValid =
-      draggedUser.toUpperCase() === this.loggedUserName.toUpperCase();
-    return isValid;
-  }
-
-  private registerExternalDragEvent() {
-    var containerEl = document.getElementById('external');
-    new Draggable(containerEl, {
-      itemSelector: '.draggable',
-      eventData: (event) => {
-        return {
-          title: event.id,
-        };
-      },
-    });
+    if (leavesIds.length) {
+      this.leaveService.deleteLeaves(leavesIds).subscribe((res) => {
+        this.removedItems.length = 0;
+      });
+    }
+    return;
   }
 
   private setRecentDate() {
@@ -469,63 +349,5 @@ export class MainComponent implements OnInit {
       };
     }
     return alert;
-  }
-
-  private initFullLeaves(): ILeave[] {
-    return [
-      {
-        leaveId: 1,
-        title: 'Pranay Kohad:full-day',
-        start: '2021-03-01',
-        updatedStart: null,
-      },
-      {
-        leaveId: 2,
-        title: 'Bhushan Patil:full-day',
-        start: '2021-03-07',
-        updatedStart: null,
-      },
-      {
-        leaveId: 3,
-        title: 'Anuj Kumar:full-day',
-        start: '2021-03-09',
-        updatedStart: null,
-      },
-      {
-        leaveId: 4,
-        title: 'Pallavi Vehale:full-day',
-        start: '2021-03-16',
-        updatedStart: null,
-      },
-      {
-        leaveId: 5,
-        title: 'Pranay Kohad:full-day',
-        start: '2021-03-11',
-        updatedStart: null,
-      },
-    ];
-  }
-
-  private initHalfLeaves(): ILeave[] {
-    return [
-      {
-        leaveId: 6,
-        title: 'Pranay Kohad:half-day',
-        start: '2021-03-02',
-        updatedStart: null,
-      },
-      {
-        leaveId: 7,
-        title: 'Bhushan Patil:half-day',
-        start: '2021-03-25',
-        updatedStart: null,
-      },
-      {
-        leaveId: 8,
-        title: 'Anuj Kumar:half-day',
-        start: '2021-03-12',
-        updatedStart: null,
-      },
-    ];
   }
 }

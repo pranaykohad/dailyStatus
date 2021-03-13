@@ -20,3 +20,6 @@ export const THRUSDAY = 4;
 export const FRIDAY = 5;
 export const SATURDAY = 6;
 export const TOP_DEF_COUNT = 4;
+export const FULLDAY_LIST = 0;
+export const HALFDAY_LIST = 1;
+export const HOLIDAY_LIST = 2;

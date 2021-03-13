@@ -7,14 +7,16 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-import { CalendarOptions, EventApi } from '@fullcalendar/angular';
+import { CalendarOptions, DateSpanApi, EventApi } from '@fullcalendar/angular';
 import { FullCalendar } from 'primeng/fullcalendar';
-import { ILeave } from 'src/app/model/leave';
+import { IHoliday, ILeave } from 'src/app/model/leave';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { UtilService } from 'src/services/util.service';
+import { FULLDAY_LIST, HALFDAY_LIST, HOLIDAY_LIST } from 'src/app/app.constant';
+import { Alert } from '../model/alert';
 
 @Component({
   selector: 'app-full-calendar',
@@ -25,6 +27,7 @@ export class FullCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions;
   fullDayLeaves: ILeave[];
   halfDayLeaves: ILeave[];
+  holidays: IHoliday[];
   selectedItem: EventApi;
   loggedUserName: string;
   @Input() addedItems: ILeave[];
@@ -34,6 +37,7 @@ export class FullCalendarComponent implements OnInit {
   @Output() addedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() updatedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
+  @Output() alertEmitter = new EventEmitter<Alert>();
 
   constructor(
     private localStoreService: LocalStorageService,
@@ -44,11 +48,13 @@ export class FullCalendarComponent implements OnInit {
     this.loggedUserName = `${user.firstName} ${user.lastName}`;
     this.fullDayLeaves = [];
     this.halfDayLeaves = [];
+    this.holidays = [];
   }
 
   ngOnInit(): void {
     this.fullDayLeaves = this.initFullLeaves();
     this.halfDayLeaves = this.initHalfLeaves();
+    this.holidays = this.initHolidays();
     this.initCalendar();
     this.registerExternalDragEvent();
   }
@@ -83,9 +89,13 @@ export class FullCalendarComponent implements OnInit {
           events: this.halfDayLeaves,
           color: '#17a2b8',
         },
+        {
+          events: this.holidays,
+          color: '#f48b29',
+        },
       ],
       eventAllow: (dropInfo, draggedEvent) => {
-        return this.eventAllow(draggedEvent);
+        return this.eventAllow(dropInfo, draggedEvent);
       },
       eventDrop: (info) => {
         this.internalDrop(info);
@@ -110,6 +120,7 @@ export class FullCalendarComponent implements OnInit {
       start: info.date.toString(),
       updatedStart: null,
     };
+
     const date = new Date(leave.start);
     const formattedDate1 = this.utilService.formatToTwoDigit(
       `${date.getMonth() - 1}/${date.getDate()}/${date.getFullYear()}`
@@ -117,10 +128,12 @@ export class FullCalendarComponent implements OnInit {
     const formattedDate2 = this.utilService.formatToTwoDigit2(
       `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
     );
+
     if (
       this.isInNewLeaves(formattedDate1) ||
       (this.isInExistingLeaves(formattedDate2) &&
-        !this.isInRemovedLeaves(formattedDate2))
+        !this.isInRemovedLeaves(formattedDate2)) ||
+      this.isInHolidays(formattedDate2, HOLIDAY_LIST)
     ) {
       // this.removeAddedLeave(new Date(info.start));
       info.remove();
@@ -130,18 +143,47 @@ export class FullCalendarComponent implements OnInit {
     }
   }
 
-  private isInExistingLeaves(formattedDate: string): boolean {
+  private isInHolidays(formattedDate: string, leaveType: number): boolean {
     let isExists = false;
-    this.calendarOptions.eventSources.forEach((event) => {
-      event['events'].forEach((item) => {
-        if (
-          JSON.stringify(formattedDate) === JSON.stringify(item.start) &&
-          this.loggedUserName.toUpperCase() ===
-            item.title.split(':')[0].toUpperCase()
-        ) {
-          isExists = true;
-        }
-      });
+    this.calendarOptions.eventSources[leaveType]['events'].forEach((item) => {
+      if (JSON.stringify(formattedDate) === JSON.stringify(item.start)) {
+        isExists = true;
+      }
+    });
+    if (isExists) {
+      const alert: Alert = {
+        message: 'You cannot add leave on holiday',
+        type: 'FAILURE',
+      };
+      this.alertEmitter.emit(alert);
+    }
+    return isExists;
+  }
+
+  private isInExistingLeaves(formattedDate: string): boolean {
+    const isExists: boolean =
+      this.isInExistingList(formattedDate, FULLDAY_LIST) ||
+      this.isInExistingList(formattedDate, HALFDAY_LIST);
+    if (isExists) {
+      const alert: Alert = {
+        message: 'Leave Already Added',
+        type: 'FAILURE',
+      };
+      this.alertEmitter.emit(alert);
+    }
+    return isExists;
+  }
+
+  private isInExistingList(formattedDate: string, leaveType: number) {
+    let isExists = false;
+    this.calendarOptions.eventSources[leaveType]['events'].forEach((item) => {
+      if (
+        JSON.stringify(formattedDate) === JSON.stringify(item.start) &&
+        this.loggedUserName.toUpperCase() ===
+          item.title.split(':')[0].toUpperCase()
+      ) {
+        isExists = true;
+      }
     });
     return isExists;
   }
@@ -152,7 +194,16 @@ export class FullCalendarComponent implements OnInit {
       const date2 = this.utilService.formatToTwoDigit(
         `${date1.getMonth() - 1}/${date1.getDate()}/${date1.getFullYear()}`
       );
-      return JSON.stringify(formattedDate) === JSON.stringify(date2);
+      const isExists: boolean =
+        JSON.stringify(formattedDate) === JSON.stringify(date2);
+      if (isExists) {
+        const alert: Alert = {
+          message: 'Leave Already Added',
+          type: 'FAILURE',
+        };
+        this.alertEmitter.emit(alert);
+      }
+      return isExists;
     });
   }
 
@@ -213,7 +264,7 @@ export class FullCalendarComponent implements OnInit {
     this.selectedItemEmitter.emit(this.selectedItem);
   }
 
-  private eventAllow(draggedEvent: EventApi): boolean {
+  private eventAllow(dropInfo: DateSpanApi, draggedEvent: EventApi): boolean {
     return (
       this.isValidUser(draggedEvent) && !draggedEvent._def.extendedProps.leaveId
     );
@@ -294,6 +345,43 @@ export class FullCalendarComponent implements OnInit {
         title: 'Anuj Kumar:half-day',
         start: '2021-03-12',
         updatedStart: null,
+      },
+    ];
+  }
+
+  private initHolidays(): IHoliday[] {
+    return [
+      {
+        title: 'New half-day:holiday',
+        start: '2021-01-01',
+      },
+      {
+        title: 'Republic Day:holiday',
+        start: '2021-01-25',
+      },
+      {
+        title: 'Holi:holiday',
+        start: '2021-03-29',
+      },
+      {
+        title: 'Gudi Padwa:holiday',
+        start: '2021-04-13',
+      },
+      {
+        title: 'Ganesh Chaturti:holiday',
+        start: '2021-09-10',
+      },
+      {
+        title: 'Dussehra:holiday',
+        start: '2021-10-15',
+      },
+      {
+        title: 'Diwali:holiday',
+        start: '2021-11-04',
+      },
+      {
+        title: 'New half-day',
+        start: '2021-11-05',
       },
     ];
   }
