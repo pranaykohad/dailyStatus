@@ -75,17 +75,17 @@ export class CustomReportComponent {
   }
 
   private isStartDateGreater() {
-    const endDate1 = new Date(
-      this.customEndDate.month,
-      this.customEndDate.day,
-      this.customEndDate.year
+    const endDate = new Date(
+      this.customEndDate.year,
+      this.customEndDate.month - 1,
+      this.customEndDate.day
     );
-    const startDate1 = new Date(
-      this.customStartDate.month,
-      this.customStartDate.day,
-      this.customStartDate.year
+    const startDate = new Date(
+      this.customStartDate.year,
+      this.customStartDate.month - 1,
+      this.customStartDate.day
     );
-    return endDate1.getTime() - startDate1.getTime() < 0;
+    return endDate.getTime() - startDate.getTime() < 0;
   }
 
   private getStatus(
