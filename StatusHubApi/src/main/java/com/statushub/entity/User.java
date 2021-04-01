@@ -29,6 +29,7 @@ public class User {
 	private String lastName;
 	private String roleLabel;
 	private Boolean billable;
+	private Long baseHours;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -37,6 +38,13 @@ public class User {
 	private int defCount;
 
 
+	public Long getBaseHours() {
+		return baseHours;
+	}
+
+	public void setBaseHours(final Long baseHours) {
+		this.baseHours = baseHours;
+	}
 	public int getDefCount() {
 		return defCount;
 	}
