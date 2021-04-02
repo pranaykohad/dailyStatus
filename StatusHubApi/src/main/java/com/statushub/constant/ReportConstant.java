@@ -29,6 +29,8 @@ public class ReportConstant {
 	
 	private static final List<String> AUTO_USER_TYPE_LIST = Arrays.asList("AQA");
 	
+	private static final List<String> ALL_USER_TYPE_LIST = Arrays.asList("DEV", "QA", "AQA", "PQA");
+	
 	private static final List<String> STATE_LIST = Arrays.asList("In progress", "Completed");
 
 	public static String getGreeting() {
@@ -61,6 +63,10 @@ public class ReportConstant {
 
 	public static List<String> getStateList() {
 		return STATE_LIST;
+	}
+
+	public static List<String> getAllUserTypeList() {
+		return ALL_USER_TYPE_LIST;
 	}
 	
 }

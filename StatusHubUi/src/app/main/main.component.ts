@@ -5,8 +5,9 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { stateList } from '../app.constant';
+import { DEFAULT_USER_TYPE, stateList } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
+import { CustomReportComponent } from '../modal/report/custom-report.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -31,7 +32,9 @@ export class MainComponent implements OnInit {
   todaysStatus: Status[];
   message: string;
   editMode = false;
+  DEFAULT_USER_TYPE = DEFAULT_USER_TYPE;
   @ViewChild('defComp') defComp: DefaulterListComponent;
+  @ViewChild('customReportComp') customReportComp: CustomReportComponent;
 
   constructor(
     private statusService: StatusService,
@@ -59,7 +62,7 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
-      this.getAllUser();
+      this.getUsersByUserType(this.DEFAULT_USER_TYPE);
     }
   }
 
@@ -138,9 +141,12 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getAllUser() {
+  getUsersByUserType(userType) {
+    if (this.customReportComp) {
+      this.customReportComp.selUserType = userType;
+    }
     this.userList = [];
-    this.userService.getAllUser().subscribe((res) => {
+    this.userService.getUsersByUserType(userType).subscribe((res) => {
       if (res['status'] === 'FAILURE') {
         const alert = { message: res['description'], type: res['status'] };
         this.alertHandler(alert);
@@ -172,6 +178,10 @@ export class MainComponent implements OnInit {
   initDefList() {
     this.defComp.defaulterList = [];
     this.defComp.message = '';
+  }
+
+  userTypeHandler(userType: string) {
+    this.getUsersByUserType(userType);
   }
 
   private setRecentDate() {

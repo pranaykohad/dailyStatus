@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.statushub.constant.ReportConstant;
 import com.statushub.entity.Result;
 import com.statushub.entity.Result.ResStatus;
 import com.statushub.entity.User;
@@ -40,9 +41,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<User> getAllUser() {
+	public List<User> getUsersByUserType(final String userType) {
 		final List<User> finalUserList = new ArrayList<>();
-		final List<User> userList = userRepo.getUserAllButAdmin();
+		final List<String> userTypes = new ArrayList<>();
+		if(userType.equalsIgnoreCase("All")) {
+			userTypes.addAll(ReportConstant.getAllUserTypeList());
+		} else {
+			userTypes.add(userType);
+		}
+		final List<User> userList = userRepo.getUserAllButAdmin(userTypes);
 		bulidUserList(finalUserList, userList);
 		return finalUserList;
 	}
@@ -51,7 +58,9 @@ public class UserServiceImpl implements UserService {
 	public Result getDefaultersList(final String date) {
 		final Result result = new Result();
 		final List<User> finalUserList = new ArrayList<>();
-		final List<User> allUserList = userRepo.getUserAllButAdmin();
+		final List<String> userTypes = new ArrayList<>();
+		userTypes.addAll(ReportConstant.getAllUserTypeList());
+		final List<User> allUserList = userRepo.getUserAllButAdmin(userTypes);
 		final  List<User> validUserList = userRepo.getValidUserList(date);
 		allUserList.removeAll(validUserList);
 		bulidUserList(finalUserList, allUserList);
@@ -85,10 +94,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Result getCustomDefaulters(List<String> dateList) {
 		final Result result = new Result();
-		final List<User> userList = userRepo.getUserAllButAdmin();
+		final List<String> userTypes = new ArrayList<>();
+		userTypes.addAll(ReportConstant.getAllUserTypeList());
+		final List<User> userList = userRepo.getUserAllButAdmin(userTypes);
 		userList.forEach(user -> user.setDefCount(0));
 		dateList.forEach(date -> {
-			List<User> defList =  userRepo.getUserAllButAdmin();
+			List<User> defList =  userRepo.getUserAllButAdmin(userTypes);
 			final  List<User> validUserList = userRepo.getValidUserList(date);
 			defList.removeAll(validUserList);
 			userList.forEach(user -> {

@@ -18,8 +18,8 @@ export class UserService {
     return this.httpClient.post<User>(`${BASE_URL}user`, user);
   }
 
-  getAllUser(): Observable<User> {
-    return this.httpClient.get<User>(`${BASE_URL}user`);
+  getUsersByUserType(userType: string): Observable<User> {
+    return this.httpClient.get<User>(`${BASE_URL}user?userType=${userType}`);
   }
 
   updateUserDetails(user: User): Observable<User> {

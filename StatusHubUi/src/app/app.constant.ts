@@ -19,3 +19,4 @@ export const THRUSDAY = 4;
 export const FRIDAY = 5;
 export const SATURDAY = 6;
 export const TOP_DEF_COUNT = 4;
+export const DEFAULT_USER_TYPE = 'All';
