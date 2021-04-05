@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.statushub.entity.User;
@@ -13,8 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 	
 	public User getUserByUserNameAndPassword(String userName, String password);
 	
-	@Query(value="SELECT * FROM Duser u where u.user_id != 1 order by u.first_name, u.last_name", nativeQuery = true)
-	public List<User> getUserAllButAdmin();
+	@Query(value="SELECT * FROM Duser u where u.user_id != 1 and u.type IN (:names) order by u.first_name, u.last_name", nativeQuery = true)
+	public List<User> getUserAllButAdmin(@Param("names")List<String> names);
 	
 	@Query(value="SELECT * FROM Duser u where u.user_id = ?1 order by u.first_name, u.last_name", nativeQuery = true)
 	public User getUserByUserId(String userId);

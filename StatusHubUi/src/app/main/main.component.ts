@@ -1,17 +1,18 @@
+import { HolidayService } from 'src/services/holiday.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventApi } from '@fullcalendar/core';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
-import { HolidayService } from 'src/services/holiday.service';
 import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { stateList } from '../app.constant';
+import { DEFAULT_USER_TYPE, stateList } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
+import { CustomReportComponent } from '../modal/report/custom-report.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -44,11 +45,15 @@ export class MainComponent implements OnInit {
   removedItems: ILeave[];
   updatedItems: ILeave[];
   selectedItem: EventApi;
+  loggedUserName: string;
+  editMode = false;
+  DEFAULT_USER_TYPE = DEFAULT_USER_TYPE;
   holidays: IHoliday[];
   currrentMonth: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('wsrReportComp') wsrReportComp: WsrReportComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
+  @ViewChild('customReportComp') customReportComp: CustomReportComponent;
 
   constructor(
     private statusService: StatusService,
@@ -82,7 +87,7 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
-      this.getAllUser();
+      this.getUsersByUserType(this.DEFAULT_USER_TYPE);
       this.initHolidays();
       this.initHalfDayLeaves();
       this.initFullDayLeaves();
@@ -174,9 +179,12 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getAllUser() {
+  getUsersByUserType(userType) {
+    if (this.customReportComp) {
+      this.customReportComp.selUserType = userType;
+    }
     this.userList = [];
-    this.userService.getAllUser().subscribe((res) => {
+    this.userService.getUsersByUserType(userType).subscribe((res) => {
       if (res['status'] === 'FAILURE') {
         const alert = { message: res['description'], type: res['status'] };
         this.alertHandler(alert);
@@ -277,6 +285,9 @@ export class MainComponent implements OnInit {
     }
     return;
   }
+  userTypeHandler(userType: string) {
+    this.getUsersByUserType(userType);
+  }
 
   private setRecentDate() {
     const recentDate = new Date();
@@ -363,16 +374,20 @@ export class MainComponent implements OnInit {
 
   private initHalfDayLeaves(): void {
     this.halfDayLeaves = [];
-    this.leaveService.getLeaves('half-day', this.currrentMonth).subscribe((res) => {
-      this.halfDayLeaves = res['data'];
-    });
+    this.leaveService
+      .getLeaves('half-day', this.currrentMonth)
+      .subscribe((res) => {
+        this.halfDayLeaves = res['data'];
+      });
   }
 
   private initFullDayLeaves(): void {
     this.fullDayLeaves = [];
-    this.leaveService.getLeaves('full-day', this.currrentMonth).subscribe((res) => {
-      this.fullDayLeaves = res['data'];
-    });
+    this.leaveService
+      .getLeaves('full-day', this.currrentMonth)
+      .subscribe((res) => {
+        this.fullDayLeaves = res['data'];
+      });
   }
 
   private setCurrentMonth() {
