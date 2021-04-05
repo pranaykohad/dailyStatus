@@ -12,10 +12,12 @@ export class Leave implements ILeave {
 }
 
 export interface IHoliday {
+  holidayId: number;
   title: string;
   start: string;
 }
 export class Holiday implements IHoliday {
+  holidayId: number;
   title: string;
   start: string;
 }

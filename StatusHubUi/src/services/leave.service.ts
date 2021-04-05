@@ -10,6 +10,12 @@ import { BASE_URL } from 'src/app/app.constant';
 export class LeaveService {
   constructor(private httpClient: HttpClient) {}
 
+  getLeaves(type: string, month: string): Observable<any> {
+    return this.httpClient.get<any>(
+      `${BASE_URL}leaves?type=${type}&month=${month}`
+    );
+  }
+
   addLeaves(leaves: ILeave[]): Observable<any> {
     return this.httpClient.post<any>(`${BASE_URL}leaves`, leaves);
   }

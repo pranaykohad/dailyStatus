@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { CalendarOptions, EventApi } from '@fullcalendar/core';
+import { EventApi } from '@fullcalendar/core';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
+import { HolidayService } from 'src/services/holiday.service';
 import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
@@ -15,7 +16,7 @@ import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
-import { ILeave } from './../model/leave';
+import { IHoliday, ILeave } from './../model/leave';
 import { Status } from './../model/status';
 
 @Component({
@@ -39,12 +40,12 @@ export class MainComponent implements OnInit {
   editLeavePlan = false;
   fullDayLeaves: ILeave[];
   halfDayLeaves: ILeave[];
-  calendarOptions: CalendarOptions;
   addedItems: ILeave[];
   removedItems: ILeave[];
   updatedItems: ILeave[];
   selectedItem: EventApi;
-  loggedUserName: string;
+  holidays: IHoliday[];
+  currrentMonth: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('wsrReportComp') wsrReportComp: WsrReportComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
@@ -55,7 +56,8 @@ export class MainComponent implements OnInit {
     private localStoreService: LocalStorageService,
     private router: Router,
     private utilService: UtilService,
-    private leaveService: LeaveService
+    private leaveService: LeaveService,
+    private holidayService: HolidayService
   ) {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
@@ -68,12 +70,10 @@ export class MainComponent implements OnInit {
       today.getDate(),
       today.getFullYear()
     );
-    this.loggedUserName = this.user.firstName + ' ' + this.user.lastName;
+    this.setCurrentMonth();
     this.addedItems = [];
     this.removedItems = [];
     this.updatedItems = [];
-    this.fullDayLeaves = [];
-    this.halfDayLeaves = [];
   }
 
   ngOnInit(): void {
@@ -83,6 +83,9 @@ export class MainComponent implements OnInit {
       this.setRecentDate();
       this.getRecentStatus();
       this.getAllUser();
+      this.initHolidays();
+      this.initHalfDayLeaves();
+      this.initFullDayLeaves();
     }
   }
 
@@ -349,5 +352,33 @@ export class MainComponent implements OnInit {
       };
     }
     return alert;
+  }
+
+  private initHolidays(): void {
+    this.holidays = [];
+    this.holidayService.getAllHolidays().subscribe((res) => {
+      this.holidays = res['data'];
+    });
+  }
+
+  private initHalfDayLeaves(): void {
+    this.halfDayLeaves = [];
+    this.leaveService.getLeaves('half-day', this.currrentMonth).subscribe((res) => {
+      this.halfDayLeaves = res['data'];
+    });
+  }
+
+  private initFullDayLeaves(): void {
+    this.fullDayLeaves = [];
+    this.leaveService.getLeaves('full-day', this.currrentMonth).subscribe((res) => {
+      this.fullDayLeaves = res['data'];
+    });
+  }
+
+  private setCurrentMonth() {
+    const date = new Date();
+    this.currrentMonth = this.utilService.formatToTwoDigit3(
+      date.getFullYear() + '-' + (date.getMonth() + 1)
+    );
   }
 }
