@@ -18,7 +18,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private LeaveRepository leaveRepo;
 
 	@Override
-	public void addLeaves(List<Leave> leaves) {
+	public void addLeaves(final List<Leave> leaves) {
 		leaveRepo.saveAll(leaves);
 	}
 
@@ -28,7 +28,7 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public void addLeave(Leave leave) {
+	public void addLeave(final Leave leave) {
 		leaveRepo.saveAndFlush(leave);
 	}
 
@@ -36,7 +36,7 @@ public class LeaveServiceImpl implements LeaveService {
 	public Result getHalfdayLeavesByMonth(final String type, final String month) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
-		List<Leave> leaves = leaveRepo.getHalfdayLeavesByMonth(type, month + '%');
+		final List<Leave> leaves = leaveRepo.getHalfdayLeavesByMonth(type, month + '%');
 		if (!leaves.isEmpty()) {
 			buildTitle(leaves);
 			result.setData(leaves);
@@ -45,12 +45,11 @@ public class LeaveServiceImpl implements LeaveService {
 		return result;
 	}
 
-	private void buildTitle(List<Leave> leaves) {
+	private void buildTitle(final List<Leave> leaves) {
 		leaves.forEach(leave -> {
 			leave.setTitle(
-					leave.getType() + ":" + leave.getUser().getFirstName() + " " + leave.getUser().getLastName());
+				leave.getUser().getFirstName() + " " + leave.getUser().getLastName() + ":" + leave.getType());
 		});
-
 	}
 
 }

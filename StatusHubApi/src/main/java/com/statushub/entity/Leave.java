@@ -1,5 +1,6 @@
 package com.statushub.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,54 +18,56 @@ public class Leave {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int leaveId;
+
+	@Column(name = "startDate")
 	private String start;
 	@JsonIgnore
 	private String type;
-	
+
 	@Transient
 	private String updatedStart;
-	
+
 	@Transient
 	private String title;
-	
+
 	@ManyToOne
 	@JsonIgnore
 	private User user;
-	
+
 	public int getLeaveId() {
 		return leaveId;
 	}
-	public void setLeaveId(int leaveId) {
+	public void setLeaveId(final int leaveId) {
 		this.leaveId = leaveId;
 	}
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 	public String getStart() {
 		return start;
 	}
-	public void setStart(String start) {
+	public void setStart(final String start) {
 		this.start = start;
 	}
 	public String getUpdatedStart() {
 		return updatedStart;
 	}
-	public void setUpdatedStart(String updatedStart) {
+	public void setUpdatedStart(final String updatedStart) {
 		this.updatedStart = updatedStart;
 	}
 	public String getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 	public User getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(final User user) {
 		this.user = user;
 	}
 

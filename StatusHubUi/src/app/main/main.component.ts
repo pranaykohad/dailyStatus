@@ -368,7 +368,9 @@ export class MainComponent implements OnInit {
   private initHolidays(): void {
     this.holidays = [];
     this.holidayService.getAllHolidays().subscribe((res) => {
-      this.holidays = res['data'];
+      if (res['status'] === 'SUCCESS') {
+        this.holidays = res['data'];
+      }
     });
   }
 
@@ -377,7 +379,9 @@ export class MainComponent implements OnInit {
     this.leaveService
       .getLeaves('half-day', this.currrentMonth)
       .subscribe((res) => {
-        this.halfDayLeaves = res['data'];
+        if (res['status'] === 'SUCCESS') {
+          this.halfDayLeaves = res['data'];
+        }
       });
   }
 
@@ -386,7 +390,9 @@ export class MainComponent implements OnInit {
     this.leaveService
       .getLeaves('full-day', this.currrentMonth)
       .subscribe((res) => {
-        this.fullDayLeaves = res['data'];
+        if (res['status'] === 'SUCCESS') {
+          this.fullDayLeaves = res['data'];
+        }
       });
   }
 
