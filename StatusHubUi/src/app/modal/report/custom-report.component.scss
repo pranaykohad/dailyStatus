@@ -1,0 +1,40 @@
+#userReport {
+  #user-type {
+    width: 150px;
+    height: 30px;
+  }
+  #body-content {
+    min-height: 160px;
+  }
+  .brd-rd-3 {
+    border-radius: 3px;
+  }
+  .middle-brd {
+    border-right: 1px solid grey;
+  }
+  .multi-sel {
+    width: 295px;
+  }
+  .sel-user {
+    max-height: 162px;
+    min-height: 162px;
+    overflow-y: auto;
+    font-size: 14px;
+    background-color: bisque;
+    border-radius: 3px;
+  }
+  #start-date-label,
+  #end-date-label {
+    display: flex;
+    align-items: center;
+  }
+  .date-width {
+    width: 120px;
+  }
+  .cust-btn {
+    display: flex;
+    height: 30px;
+    align-self: center;
+    align-items: center;
+  }
+}

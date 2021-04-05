@@ -14,7 +14,7 @@
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Download Today's Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);"
-          (click)="getAllUser()">Custom Report</a>
+          (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Custom Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
           (click)="initDefList()">Defaulters List</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#wsrReport" href="javascript:void(0);"
@@ -22,7 +22,8 @@
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add User</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
-          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="getAllUser()">Delete User</a>
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' "
+          (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Delete User</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>
@@ -178,7 +179,8 @@
     </div>
   </div>
   <app-update-userdetail *ngIf="user" [user]="user" (alertEmitter)="alertHandler($event)"></app-update-userdetail>
-  <app-custom-report *ngIf="user" [user]="user" [userList]="userList" (alertEmitter)="alertHandler($event)">
+  <app-custom-report #customReportComp *ngIf="user" [user]="user" [userList]="userList"
+    (alertEmitter)="alertHandler($event)" (userTypeEmitter)="userTypeHandler($event)">
   </app-custom-report>
   <app-add-user *ngIf="user && user.role === 'ADMIN'" (alertEmitter)="alertHandler($event)"></app-add-user>
   <app-defaulter-list #defComp></app-defaulter-list>

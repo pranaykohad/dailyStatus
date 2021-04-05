@@ -64,8 +64,7 @@ public class Status {
 	public boolean isDelete() {
 		return isDelete;
 	}
-	public void setDelete(boolean isDelete) {
+	public void setDelete(final boolean isDelete) {
 		this.isDelete = isDelete;
 	}
-	
 }

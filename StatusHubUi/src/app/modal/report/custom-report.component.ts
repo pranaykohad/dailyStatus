@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SATURDAY, SUNDAY } from 'src/app/app.constant';
+import { DEFAULT_USER_TYPE, userTypeList } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -10,47 +10,91 @@ import { UtilService } from 'src/services/util.service';
 @Component({
   selector: 'app-custom-report',
   templateUrl: './custom-report.component.html',
+  styleUrls: ['./custom-report.component.scss'],
 })
 export class CustomReportComponent {
   @Input() user: User;
-  @Input() userList: User[];
+  private _userList: User[];
   @Output() alertEmitter = new EventEmitter<Alert>();
+  @Output() userTypeEmitter = new EventEmitter<string>();
   today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
   selectedUser = [];
+  userTypes = [];
+  selUserType: string;
+  isUserSelected = false;
+  selUserList = [];
+  userIdList = [];
+  userMessage = 'Loading...';
 
   constructor(
     private statusService: StatusService,
     private utilService: UtilService
   ) {
+    this.initUserTypes();
     this.initDates();
   }
 
-  thisWeekReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
-    const userIdList = this.buildSelectedUserList(selectedUsrList);
-    if (this.isSatOrSun() || this.currentMondayDate.day <= 0) {
-      alert('Invalid Operation!');
-      return;
-    } else {
-      this.getStatus(userIdList, this.currentMondayDate, this.today, 'Weekly');
+  @Input()
+  set userList(userList: User[]) {
+    this._userList = userList;
+    this.setInitialSelectedUser();
+  }
+
+  get userList() {
+    return this._userList;
+  }
+
+  userTypeChange(userType: string) {
+    this.userTypeEmitter.emit(userType);
+  }
+
+  usersChange(selectedList: HTMLOptionElement[]) {
+    this.selUserList = [];
+    this.userIdList = [];
+    this.isUserSelected = true;
+    for (let i = 0; i < selectedList.length; i++) {
+      this.selUserList.push(selectedList[i].text);
+      this.userIdList.push(selectedList[i].value);
     }
   }
 
-  thisMonthReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
-    const userIdList = this.buildSelectedUserList(selectedUsrList);
+  thisWeekReport() {
+    if (!this.isUserSelected) {
+      return;
+    }
+    if (this.utilService.isSatOrSun() || this.currentMondayDate.day <= 0) {
+      alert('Invalid Operation!');
+      return;
+    } else {
+      this.getStatus(
+        this.userIdList,
+        this.currentMondayDate,
+        this.today,
+        'Weekly'
+      );
+    }
+  }
+
+  thisMonthReport() {
+    if (!this.isUserSelected) {
+      return;
+    }
     this.getStatus(
-      userIdList,
+      this.userIdList,
       this.currentMonthFirstDate,
       this.today,
       'Monthly'
     );
   }
 
-  customReport(selectedUsrList: HTMLCollectionOf<HTMLOptionElement>) {
-    const userIdList = this.buildSelectedUserList(selectedUsrList);
+  customReport() {
+    if (!this.isUserSelected) {
+      return;
+    }
     if (this.isStartDateGreater()) {
       const alert = {
         message: 'Start Date cannot be greater than End Date',
@@ -60,7 +104,7 @@ export class CustomReportComponent {
       return;
     }
     this.getStatus(
-      userIdList,
+      this.userIdList,
       this.customStartDate,
       this.customEndDate,
       'Custom'
@@ -75,17 +119,17 @@ export class CustomReportComponent {
   }
 
   private isStartDateGreater() {
-    const endDate1 = new Date(
-      this.customEndDate.month,
-      this.customEndDate.day,
-      this.customEndDate.year
+    const endDate = new Date(
+      this.customEndDate.year,
+      this.customEndDate.month - 1,
+      this.customEndDate.day
     );
-    const startDate1 = new Date(
-      this.customStartDate.month,
-      this.customStartDate.day,
-      this.customStartDate.year
+    const startDate = new Date(
+      this.customStartDate.year,
+      this.customStartDate.month - 1,
+      this.customStartDate.day
     );
-    return endDate1.getTime() - startDate1.getTime() < 0;
+    return endDate.getTime() - startDate.getTime() < 0;
   }
 
   private getStatus(
@@ -155,18 +199,26 @@ export class CustomReportComponent {
     return alert;
   }
 
-  private buildSelectedUserList(
-    selectedUsrList: HTMLCollectionOf<HTMLOptionElement>
-  ) {
-    const userIdList = [];
-    Array.from(selectedUsrList).forEach((element) => {
-      userIdList.push(element.value);
+  private initUserTypes() {
+    this.userTypes.push(DEFAULT_USER_TYPE);
+    userTypeList.forEach((module) => {
+      this.userTypes.push(module);
     });
-    return userIdList;
   }
 
-  private isSatOrSun(): boolean {
-    const today = new Date();
-    return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
+  private setInitialSelectedUser() {
+    this.isUserSelected = false;
+    this.selUserList = [];
+    this.userIdList = [];
+    const user: User = this.userList.find((usr) => {
+      if (usr.userId === this.user.userId) {
+        return usr;
+      }
+    });
+    if (user) {
+      this.selUserList.push(user.firstName + ' ' + user.lastName);
+      this.userIdList.push(user.userId);
+      this.isUserSelected = true;
+    }
   }
 }
