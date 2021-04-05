@@ -33,6 +33,7 @@ export class CustomReportComponent {
   isUserSelected = false;
   selUserList = [];
   userIdList = [];
+  userMessage = 'Loading...';
 
   constructor(
     private statusService: StatusService,
@@ -70,7 +71,7 @@ export class CustomReportComponent {
     if (!this.isUserSelected) {
       return;
     }
-    if (this.isSatOrSun() || this.currentMondayDate.day <= 0) {
+    if (this.utilService.isSatOrSun() || this.currentMondayDate.day <= 0) {
       alert('Invalid Operation!');
       return;
     } else {
@@ -201,11 +202,6 @@ export class CustomReportComponent {
       };
     }
     return alert;
-  }
-
-  private isSatOrSun(): boolean {
-    const today = new Date();
-    return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
   }
 
   private initUserTypes() {

@@ -28,7 +28,7 @@
                   </option>
                 </select>
               </div>
-              <div class="mt-2">
+              <div class="pt-3">
                 <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
                   (click)="thisWeekReport()" [disabled]="!isUserSelected">
                   Get Weekly Report
@@ -42,11 +42,11 @@
             <div class="col-md-7 pl-3">
               <label>Selected Users:</label>
               <br>
-              <div class="sel-user">
-                <span *ngFor="let u of selUserList; let last = last;let first = first">
-                  <span *ngIf="!first">&nbsp;</span>
-                  {{u}}
-                  <span *ngIf="!last">,</span>
+              <div class="sel-user p-1">
+                <span *ngFor="let usr of selUserList; let last = last; let first = first">
+                  <span *ngIf="!first">&nbsp;&nbsp;</span>
+                  <span *ngIf="!last; else notLastUsr">{{usr}},</span>
+                  <ng-template #notLastUsr>{{usr}}</ng-template>
                 </span>
               </div>
             </div>
@@ -59,8 +59,8 @@
                 <form class="form-inline mb-1 mr-2">
                   <div class="form-group">
                     <div class="input-group">
-                      <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customStartDate"
-                        ngbDatepicker #d1="ngbDatepicker" />
+                      <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
                           +
@@ -73,8 +73,8 @@
                 <form class="form-inline mb-1 mr-2">
                   <div class="form-group">
                     <div class="input-group">
-                      <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customEndDate"
-                        ngbDatepicker #d2="ngbDatepicker" />
+                      <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
                           +
@@ -83,12 +83,12 @@
                     </div>
                   </div>
                 </form>
-              </div>
-              <div class="ml-4">
-                <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-                  (click)="customReport()" [disabled]="!isUserSelected">
-                  Get Custom Report
-                </button>
+                <div class="ml-4 cust-btn">
+                  <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
+                    (click)="customReport()" [disabled]="!isUserSelected">
+                    Get Custom Report
+                  </button>
+                </div>
               </div>
             </div>
           </div>

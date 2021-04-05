@@ -17,12 +17,24 @@
   }
   .sel-user {
     max-height: 162px;
+    min-height: 162px;
     overflow-y: auto;
-    font-size: 12px;
+    font-size: 14px;
+    background-color: bisque;
+    border-radius: 3px;
   }
   #start-date-label,
   #end-date-label {
     display: flex;
+    align-items: center;
+  }
+  .date-width {
+    width: 120px;
+  }
+  .cust-btn {
+    display: flex;
+    height: 30px;
+    align-self: center;
     align-items: center;
   }
 }
