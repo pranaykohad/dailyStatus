@@ -1,21 +1,22 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
+  Input,
   OnInit,
   Output,
   ViewChild,
-  EventEmitter,
-  Input,
 } from '@angular/core';
 import { CalendarOptions, DateSpanApi, EventApi } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { FullCalendar } from 'primeng/fullcalendar';
+import { FULLDAY_LIST, HALFDAY_LIST, HOLIDAY_LIST } from 'src/app/app.constant';
 import { IHoliday, ILeave } from 'src/app/model/leave';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { UtilService } from 'src/services/util.service';
-import { FULLDAY_LIST, HALFDAY_LIST, HOLIDAY_LIST } from 'src/app/app.constant';
 import { Alert } from '../model/alert';
 
 @Component({
@@ -23,21 +24,21 @@ import { Alert } from '../model/alert';
   templateUrl: './full-calendar.component.html',
   styleUrls: ['./full-calendar.component.scss'],
 })
-export class FullCalendarComponent implements OnInit {
+export class FullCalendarComponent implements OnInit, AfterViewInit {
   calendarOptions: CalendarOptions;
-  fullDayLeaves: ILeave[];
-  halfDayLeaves: ILeave[];
-  holidays: IHoliday[];
   selectedItem: EventApi;
   loggedUserName: string;
   @Input() addedItems: ILeave[];
   @Input() removedItems: ILeave[];
   @Input() updatedItems: ILeave[];
-  @ViewChild('fullCalendar') fullCalendar: FullCalendar;
+  @Input() holidays: IHoliday[];
+  @Input() fullDayLeaves: ILeave[];
+  @Input() halfDayLeaves: ILeave[];
   @Output() addedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() updatedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
   @Output() alertEmitter = new EventEmitter<Alert>();
+  @ViewChild('fullCalendar') fullCalendar: FullCalendar;
 
   constructor(
     private localStoreService: LocalStorageService,
@@ -46,18 +47,16 @@ export class FullCalendarComponent implements OnInit {
   ) {
     const user: User = this.localStoreService.getUser();
     this.loggedUserName = `${user.firstName} ${user.lastName}`;
-    this.fullDayLeaves = [];
-    this.halfDayLeaves = [];
-    this.holidays = [];
   }
 
   ngOnInit(): void {
-    this.fullDayLeaves = this.initFullLeaves();
-    this.halfDayLeaves = this.initHalfLeaves();
-    this.holidays = this.initHolidays();
+    // this.fullDayLeaves = this.initFullLeaves();
+    // this.halfDayLeaves = this.initHalfLeaves();
     this.initCalendar();
     this.registerExternalDragEvent();
   }
+
+  ngAfterViewInit(): void {}
 
   initCalendar(): void {
     this.calendarOptions = {
@@ -345,43 +344,6 @@ export class FullCalendarComponent implements OnInit {
         title: 'Anuj Kumar:half-day',
         start: '2021-03-12',
         updatedStart: null,
-      },
-    ];
-  }
-
-  private initHolidays(): IHoliday[] {
-    return [
-      {
-        title: 'New half-day:holiday',
-        start: '2021-01-01',
-      },
-      {
-        title: 'Republic Day:holiday',
-        start: '2021-01-25',
-      },
-      {
-        title: 'Holi:holiday',
-        start: '2021-03-29',
-      },
-      {
-        title: 'Gudi Padwa:holiday',
-        start: '2021-04-13',
-      },
-      {
-        title: 'Ganesh Chaturti:holiday',
-        start: '2021-09-10',
-      },
-      {
-        title: 'Dussehra:holiday',
-        start: '2021-10-15',
-      },
-      {
-        title: 'Diwali:holiday',
-        start: '2021-11-04',
-      },
-      {
-        title: 'New half-day',
-        start: '2021-11-05',
       },
     ];
   }

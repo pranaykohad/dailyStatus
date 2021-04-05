@@ -132,6 +132,32 @@
   .no-sts {
     text-align: center;
   }
+  .leave-detail-contr {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .legends-box {
+    width: 15px;
+    height: 15px;
+  }
+  .holiday {
+    background-color: #f48b29;
+  }
+  .half-day {
+    background-color: #17a2b8;
+  }
+  .full-day {
+    background-color: #28a745;
+  }
+  .unsaved-leaves {
+    background-color: #3788d8;
+  }
+  .font-wt-400 {
+    font-weight: 400;
+  }
+  .font-wt-500 {
+    font-weight: 500;
+  }
 }
 select {
   border-radius: 3px;
