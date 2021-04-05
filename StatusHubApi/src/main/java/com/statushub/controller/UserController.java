@@ -58,16 +58,10 @@ public class UserController {
 	}
 
 	@GetMapping("/user")
-	public Result getAllUser() {
+	public Result getUsersByUserType(@RequestParam(defaultValue = "All") final String userType) {
 		final Result result = new Result();
-		final List<User> userList = userService.getAllUser();
-		if(userList.isEmpty()) {
-			result.setStatus(ResStatus.FAILURE);
-			result.setDescription("Failed to get User List. Please contact Admnistrator. Or add user");
-			LOG.error("Failed to get User List. Please contact Admnistrator add user");
-		} else {
-			result.setData(userList);
-		}
+		final List<User> userList = userService.getUsersByUserType(userType);
+		result.setData(userList);
 		return result;
 	}
 	

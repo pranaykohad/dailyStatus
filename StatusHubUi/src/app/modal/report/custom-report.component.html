@@ -8,66 +8,88 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="ml-4">
-          <div class="mb-2">
-            <label for="sel2">Mutiple select User List (hold shift to select more than one):</label>
-            <select multiple class="form-control module-name" #userDropDown style="width: 282px">
-              <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId">
-                {{ usr.firstName }} {{ usr.lastName }}
+        <div class="container-fluid">
+          <div>
+            <label for="user-type" class="mr-2">User Type:</label>
+            <select id="user-type" class="dropdown brd-rd-3" (change)="userTypeChange($event.target.value)">
+              <option *ngFor="let userType of userTypes" [selected]="userType === selUserType">
+                {{userType}}
               </option>
             </select>
           </div>
-          <div class="ml-3">
-            <div class="row">
-              <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
-                (click)="thisWeekReport(userDropDown.selectedOptions)">
-                Get Weekly Report
-              </button>
-              <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
-                (click)="thisMonthReport(userDropDown.selectedOptions)">
-                Get Monthly Report
-              </button>
+          <div class="row ml-0">
+            <div class="col-md-5 pr-0 pl-0 middle-brd">
+              <div>
+                <label for="multi-sel">Mutiple select User List (hold shift to select more than one):</label>
+                <select multiple class="form-control module-name multi-sel" id="multi-sel"
+                  (change)="usersChange($event.target.selectedOptions)">
+                  <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId">
+                    {{ usr.firstName }} {{ usr.lastName }}
+                  </option>
+                </select>
+              </div>
+              <div class="pt-3">
+                <button type="button" class="btn btn-outline-info btn-sm mr-2" data-dismiss="modal"
+                  (click)="thisWeekReport()" [disabled]="!isUserSelected">
+                  Get Weekly Report
+                </button>
+                <button type="button" class="btn btn-outline-info btn-sm" data-dismiss="modal"
+                  (click)="thisMonthReport()" [disabled]="!isUserSelected">
+                  Get Monthly Report
+                </button>
+              </div>
+            </div>
+            <div class="col-md-7 pl-3">
+              <label>Selected Users:</label>
+              <br>
+              <div class="sel-user p-1">
+                <span *ngFor="let usr of selUserList; let last = last; let first = first">
+                  <span *ngIf="!first">&nbsp;&nbsp;</span>
+                  <span *ngIf="!last; else notLastUsr">{{usr}},</span>
+                  <ng-template #notLastUsr>{{usr}}</ng-template>
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <hr />
-        <div>
-          <div class="mb-2 ml-4">
-            <div class="row ml-1 mb-1">
-              <span class="mr-2" style="display: flex; align-items: center;">Start Date:</span>
-              <form class="form-inline mb-1 mr-2">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customStartDate"
-                      ngbDatepicker #d1="ngbDatepicker" />
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
-                        +
-                      </button>
+          <hr>
+          <div>
+            <div class="mb-2">
+              <div class="row ml-1 mb-1">
+                <span class="mr-2" id="start-date-label">Start Date:</span>
+                <form class="form-inline mb-1 mr-2">
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" />
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </form>
-              <span class="mr-2" style="display: flex; align-items: center;">End Date:</span>
-              <form class="form-inline mb-1 mr-2">
-                <div class="form-group">
-                  <div class="input-group">
-                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="customEndDate"
-                      ngbDatepicker #d2="ngbDatepicker" />
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
-                        +
-                      </button>
+                </form>
+                <span class="mr-2" id="end-date-label">End Date:</span>
+                <form class="form-inline mb-1 mr-2">
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" />
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
+                </form>
+                <div class="ml-4 cust-btn">
+                  <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
+                    (click)="customReport()" [disabled]="!isUserSelected">
+                    Get Custom Report
+                  </button>
                 </div>
-              </form>
-            </div>
-            <div class="ml-4">
-              <button type="button" class="btn btn-outline-info btn-sm ml-n3" data-dismiss="modal"
-                (click)="customReport(userDropDown.selectedOptions)">
-                Get Custom Report
-              </button>
+              </div>
             </div>
           </div>
         </div>

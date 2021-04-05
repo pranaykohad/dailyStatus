@@ -53,6 +53,11 @@ export class UtilService {
     return dateList;
   }
 
+  isSatOrSun(): boolean {
+    const today = new Date();
+    return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
+  }
+
   private formatDate(value: string): string {
     return value.length === 1 ? '0' + value : value;
   }
