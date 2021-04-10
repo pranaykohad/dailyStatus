@@ -3,13 +3,19 @@ import { Router } from '@angular/router';
 import { EventApi } from '@fullcalendar/core';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
+import { DateUtilService } from 'src/services/date-util.service';
 import { HolidayService } from 'src/services/holiday.service';
 import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { DEFAULT_USER_TYPE, NEXT, PREV, stateList } from '../app.constant';
+import {
+  DEFAULT_USER_TYPE,
+  FULL_DAY_LABEL,
+  HALF_DAY_LABEL,
+  stateList,
+} from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { CustomReportComponent } from '../modal/report/custom-report.component';
 import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
@@ -43,7 +49,7 @@ export class MainComponent implements OnInit {
   halfDayLeaves: ILeave[];
   addedItems: ILeave[];
   removedItems: ILeave[];
-  updatedItems: ILeave[];
+  // updatedItems: ILeave[];
   selectedItem: EventApi;
   loggedUserName: string;
   editMode = false;
@@ -62,7 +68,8 @@ export class MainComponent implements OnInit {
     private router: Router,
     private utilService: UtilService,
     private leaveService: LeaveService,
-    private holidayService: HolidayService
+    private holidayService: HolidayService,
+    private dateUtilService: DateUtilService
   ) {
     this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
@@ -78,7 +85,7 @@ export class MainComponent implements OnInit {
     this.setCurrentMonth();
     this.addedItems = [];
     this.removedItems = [];
-    this.updatedItems = [];
+    // this.updatedItems = [];
     this.halfDayLeaves = [];
     this.fullDayLeaves = [];
   }
@@ -130,7 +137,7 @@ export class MainComponent implements OnInit {
   resetStatusList() {
     if (this.editLeavePlan) {
       this.addedItems.length = 0;
-      this.updatedItems.length = 0;
+      // this.updatedItems.length = 0;
       this.removedItems.length = 0;
       this.selectedItem = null;
     }
@@ -145,7 +152,7 @@ export class MainComponent implements OnInit {
           '',
           '',
           'In progress',
-          this.utilService.formatToTwoDigit(date),
+          this.dateUtilService.formatSlashDate(date),
           this.user
         )
       );
@@ -263,7 +270,7 @@ export class MainComponent implements OnInit {
   }
 
   updatedItemsHandler(leaves: ILeave[]) {
-    this.updatedItems = leaves;
+    // this.updatedItems = leaves;
   }
 
   selectedItemHandler(selectedItem: EventApi) {
@@ -274,33 +281,39 @@ export class MainComponent implements OnInit {
   }
 
   monthHandler(month: string) {
-    this.leaveService.getLeaves('half-day', month).subscribe((res) => {
+    this.leaveService.getLeaves(FULL_DAY_LABEL, month).subscribe((res) => {
       if (res['status'] === 'SUCCESS') {
-        const tempList: ILeave[] = res['data'];
-        this.halfDayLeaves = this.halfDayLeaves.concat(tempList);
-        this.halfDayLeaves = this.utilService.removeDupliFrmList(
-          this.halfDayLeaves
-        );
+        this.fullDayLeaves = res['data'];
       }
     });
-
-    this.leaveService.getLeaves('full-day', month).subscribe((res) => {
+    this.leaveService.getLeaves(HALF_DAY_LABEL, month).subscribe((res) => {
       if (res['status'] === 'SUCCESS') {
-        const tempList: ILeave[] = res['data'];
-        this.fullDayLeaves = this.fullDayLeaves.concat(tempList);
-        this.fullDayLeaves = this.utilService.removeDupliFrmList(
-          this.fullDayLeaves
-        );
+        this.halfDayLeaves = res['data'];
       }
     });
   }
 
   private submitLeaves() {
     if (this.addedItems.length) {
-      this.leaveService.addLeaves(this.addedItems).subscribe((res) => {
-        this.addedItems.length = 0;
-      });
+      this.addLeaves();
     }
+    this.deleteLeaves();
+    return;
+  }
+
+  private addLeaves() {
+    const addedItems = this.addedItems;
+    addedItems.forEach((item) => {
+      item.start = this.dateUtilService.formatCalDateToDate(
+        new Date(item.start)
+      );
+    });
+    this.leaveService.addLeaves(addedItems).subscribe((res) => {
+      this.addedItems.length = 0;
+    });
+  }
+
+  private deleteLeaves() {
     const leavesIds: number[] = [];
     this.removedItems.forEach((item) => {
       leavesIds.push(item.leaveId);
@@ -310,7 +323,6 @@ export class MainComponent implements OnInit {
         this.removedItems.length = 0;
       });
     }
-    return;
   }
 
   private setRecentDate() {
@@ -399,24 +411,28 @@ export class MainComponent implements OnInit {
   }
 
   private initHalfDayLeaves(currrentMonth: string): void {
-    this.leaveService.getLeaves('half-day', currrentMonth).subscribe((res) => {
-      if (res['status'] === 'SUCCESS') {
-        this.halfDayLeaves = res['data'];
-      }
-    });
+    this.leaveService
+      .getLeaves(HALF_DAY_LABEL, currrentMonth)
+      .subscribe((res) => {
+        if (res['status'] === 'SUCCESS') {
+          this.halfDayLeaves = res['data'];
+        }
+      });
   }
 
   private initFullDayLeaves(currrentMonth: string): void {
-    this.leaveService.getLeaves('full-day', currrentMonth).subscribe((res) => {
-      if (res['status'] === 'SUCCESS') {
-        this.fullDayLeaves = res['data'];
-      }
-    });
+    this.leaveService
+      .getLeaves(FULL_DAY_LABEL, currrentMonth)
+      .subscribe((res) => {
+        if (res['status'] === 'SUCCESS') {
+          this.fullDayLeaves = res['data'];
+        }
+      });
   }
 
   private setCurrentMonth() {
     const date = new Date();
-    this.currrentMonth = this.utilService.formatToTwoDigit3(
+    this.currrentMonth = this.dateUtilService.formatHyphenDate(
       date.getFullYear() + '-' + (date.getMonth() + 1)
     );
   }

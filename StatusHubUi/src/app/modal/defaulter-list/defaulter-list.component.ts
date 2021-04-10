@@ -3,6 +3,7 @@ import { TOP_DEF_COUNT } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
+import { DateUtilService } from 'src/services/date-util.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 
@@ -25,7 +26,8 @@ export class DefaulterListComponent {
 
   constructor(
     private userService: UserService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private dateUtilService: DateUtilService
   ) {
     this.alert = new Alert(null, null);
     this.initDates();
@@ -70,7 +72,7 @@ export class DefaulterListComponent {
     const end = new Date(
       `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`
     );
-    const dateList = this.utilService.buildCustomDates(start, end);
+    const dateList = this.dateUtilService.buildCustomDates(start, end);
     if (!dateList) {
       this.alert = {
         message: 'Start Date cannot be greater than End Date',

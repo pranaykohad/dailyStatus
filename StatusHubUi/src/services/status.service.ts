@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { BASE_URL } from 'src/app/app.constant';
 import { Attachment } from 'src/app/model/attachment';
 import { Status } from 'src/app/model/status';
+import { DateUtilService } from './date-util.service';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -12,16 +13,17 @@ import { UtilService } from './util.service';
 export class StatusService {
   constructor(
     private httpClient: HttpClient,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private dateUtilService: DateUtilService
   ) {}
 
   getTodaysReport(date: string): Observable<any> {
-    date = this.utilService.formatToTwoDigit(date);
+    date = this.dateUtilService.formatSlashDate(date);
     return this.httpClient.get<any>(`${BASE_URL}report?date=${date}`);
   }
 
   statusByDateAndUserId(date: string, userId: number): Observable<any> {
-    date = this.utilService.formatToTwoDigit(date);
+    date = this.dateUtilService.formatSlashDate(date);
     return this.httpClient.get<any>(
       `${BASE_URL}statusByDateAndUserId?date=${date}&&userId=${userId}`
     );
@@ -33,8 +35,8 @@ export class StatusService {
     endDate: string,
     reportType: string
   ): Observable<any> {
-    startDate = this.utilService.formatToTwoDigit(startDate);
-    endDate = this.utilService.formatToTwoDigit(endDate);
+    startDate = this.dateUtilService.formatSlashDate(startDate);
+    endDate = this.dateUtilService.formatSlashDate(endDate);
     return this.httpClient.get<any>(
       `${BASE_URL}reportByUserAndDateRange?userIdList=${userIdList}&startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`
     );

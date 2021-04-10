@@ -9,8 +9,8 @@
       </app-alert>
     </div>
     <div class="dropdown col-md-3 top-right-contr">
-      <i class="fa fa-bars" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-        aria-hidden="true" style="font-size: 30px"></i>
+      <i class="fa fa-bars font-size-30" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+        aria-expanded="false" aria-hidden="true"></i>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Download Today's Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);"
@@ -54,11 +54,11 @@
   <div class="main-content col-md-12 p-0">
     <div class="main-content-left pt-1 pl-0" [ngClass]="editLeavePlan? 'col-md-10':'col-md-8'">
       <ng-container *ngIf="editLeavePlan; else statusView">
-        <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems"
-          [updatedItems]="updatedItems" [holidays]="holidays" [halfDayLeaves]="halfDayLeaves"
-          [fullDayLeaves]="fullDayLeaves" (addedItemsEmitter)="addedItemsHandler($event)"
-          (updatedItemsEmitter)="updatedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)"
-          (alertEmitter)="alertHandler($event)" (monthEmitter)="monthHandler($event)">
+        <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems" [holidays]="holidays"
+          [halfDayLeaves]="halfDayLeaves" [fullDayLeaves]="fullDayLeaves"
+          (addedItemsEmitter)="addedItemsHandler($event)" (updatedItemsEmitter)="updatedItemsHandler($event)"
+          (selectedItemEmitter)="selectedItemHandler($event)" (alertEmitter)="alertHandler($event)"
+          (monthEmitter)="monthHandler($event)">
         </app-full-calendar>
       </ng-container>
       <ng-template #statusView>
@@ -68,7 +68,7 @@
           </div>
         </ng-container>
         <ng-template #statusListView>
-          <div class="row ml-2" *ngFor="let row of statusList; let index = index">
+          <div class="row ml-3" *ngFor="let row of statusList; let index = index">
             <div class="form-group row pl-0 justify-content-around-space-evenly">
               <label [for]="' tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
               <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1"
@@ -99,12 +99,13 @@
     <div class=" p-0 rt-pane-contr" [ngClass]="editLeavePlan? 'col-md-2':'col-md-4'">
       <div *ngIf="editLeavePlan; else recentStatusView" class="column col-md-12 p-0">
         <div class="recent-update-lbl text-center ">Leave Options:</div>
-        <div id="external" class="col-md-12 pt-2 pb-2" style="border-bottom: 1px solid grey;">
-          <button id="draggable" class="btn btn btn-success btn-md mb-2 draggable"
+        <div id="external" class="col-md-12 pt-2 pb-2 grey-bolder-grey">
+          <button id="draggable" class="btn btn btn-success btn-md mb-2 draggable full-day"
             [id]="user.firstName+' '+user.lastName+':full-day'">
             Drag Full Day Leave
           </button>
-          <button class="btn btn btn-info btn-md mb-2 draggable" [id]="user.firstName+' '+user.lastName+':half-day'">
+          <button class="btn btn btn-info btn-md mb-2 draggable half-day"
+            [id]="user.firstName+' '+user.lastName+':half-day'">
             Drag Half Day Leave
           </button>
           <button class="btn btn-danger" [id]="user.firstName+' '+user.lastName+':half-day'" [disabled]="!selectedItem"
@@ -112,37 +113,49 @@
             Add to Delete
           </button>
         </div>
-        <div class="pl-3 pb-2" style="border-bottom: 1px solid grey; font-size: 12px">
-          <div class="row col-md-12 align-items-center">
-            <label class="pr-2 mb-0">Holiday:</label>
-            <div class="legends-box holiday"></div>
-          </div>
-          <div class="row col-md-12 align-items-center">
-            <label class="pr-2 mb-0">Half day leave:</label>
-            <div class="legends-box half-day"></div>
-          </div>
-          <div class="row col-md-12 align-items-center">
-            <label class="pr-2 mb-0">Full day leave:</label>
-            <div class="legends-box full-day"></div>
-          </div>
-          <div class="row col-md-12 align-items-center">
-            <label class="pr-2 mb-0">Unsaved leave:</label>
-            <div class="legends-box unsaved-leaves"></div>
-          </div>
+        <div class="pl-3 pb-2 pt-2 grey-bolder-grey font-size-13">
+          <table class="table table-borderless mb-0">
+            <tbody>
+              <tr>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Holiday:</label></td>
+                <td class="p-0">
+                  <div class="legends-box holiday"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Half day leave:</label></td>
+                <td class="p-0">
+                  <div class="legends-box half-day"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Full day leave:</label></td>
+                <td class="p-0">
+                  <div class="legends-box full-day"></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Un-saved leave:</label></td>
+                <td class="p-0">
+                  <div class="legends-box unsaved-leaves"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="col-md-12">
           <span class="font-wt-500">Your Changes:</span>
-          <div *ngIf="!addedItems.length && !updatedItems.length && !removedItems.length; else leaveList">
+          <div *ngIf="!addedItems.length && !removedItems.length; else leaveList">
             No Changes
           </div>
           <ng-template #leaveList>
             <div class="leave-detail-contr">
-              <div *ngIf="updatedItems.length">
+              <!-- <div *ngIf="updatedItems.length">
                 <span class="font-wt-400">Update Leaves:</span>
                 <div *ngFor="let item of updatedItems" class="col-md-12">
                   {{item.start | dateFormat}} => {{item.updatedStart | dateFormat}}
                 </div>
-              </div>
+              </div> -->
               <div *ngIf="removedItems.length">
                 <span class="font-wt-400">Remove Leaves:</span>
                 <div *ngFor="let item of removedItems" class="col-md-12">
@@ -167,7 +180,7 @@
               <tr>
                 <th id="ticket-id" class="tab-head tab-head-middle">Ticket Id</th>
                 <th id="description" class="tab-head">Description</th>
-                <th id="date" class="tab-head" style="width: 100px">State</th>
+                <th id="date" class="tab-head">State</th>
               </tr>
             </thead>
             <tbody>
