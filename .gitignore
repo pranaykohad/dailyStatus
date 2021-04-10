@@ -1,5 +1,5 @@
 /StatusHubApi/logs
+/StatusHubApi/*.xml
 static
 target
-/StatusHubApi/*.xml
 environments
