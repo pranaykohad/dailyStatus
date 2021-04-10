@@ -8,8 +8,8 @@ import com.statushub.entity.Result;
 
 public interface LeaveService {
 
-	public void addLeave(Leave leave);
-	public void addLeaves(List<Leave> leaves);
-	public void truncateLeaveTable();
-	public Result getHalfdayLeavesByMonth(String type, String month);
+	public Result addLeaves(final List<Leave> leaves);
+	public void deleteLeaveTable();
+	public Result getLeavesByTypeAndMonth(final String type,final String month);
+	public Result deleteLeaveById(final List<Integer> leaveIds);
 }

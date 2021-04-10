@@ -11,10 +11,12 @@ import com.statushub.entity.Leave;
 @Repository
 public interface LeaveRepository extends JpaRepository<Leave, Integer>{
 
-	@Query(value = "INSERT INTO dleave", nativeQuery = true)
-	public void addLeave(Leave leave);
+//	@Query(value = "INSERT INTO dleave", nativeQuery = true)
+//	public void addLeave(Leave leave);
 
 	@Query(value = "SELECT * FROM dleave l WHERE l.type=?1 AND l.start_date LIKE ?2", nativeQuery = true)
 	public List<Leave> getHalfdayLeavesByMonth(String type, String month);
+	
+	int deleteLeaveByLeaveId(int leaveId);
 
 }

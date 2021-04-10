@@ -18,7 +18,7 @@
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
           (click)="initDefList()">Defaulters List</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#wsrReport" href="javascript:void(0);"
-          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="clearLeaveReport()">WSR Report</a>
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Resource Utility</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add User</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
@@ -150,12 +150,6 @@
           </div>
           <ng-template #leaveList>
             <div class="leave-detail-contr">
-              <!-- <div *ngIf="updatedItems.length">
-                <span class="font-wt-400">Update Leaves:</span>
-                <div *ngFor="let item of updatedItems" class="col-md-12">
-                  {{item.start | dateFormat}} => {{item.updatedStart | dateFormat}}
-                </div>
-              </div> -->
               <div *ngIf="removedItems.length">
                 <span class="font-wt-400">Remove Leaves:</span>
                 <div *ngFor="let item of removedItems" class="col-md-12">
@@ -201,13 +195,19 @@
   <hr />
   <div>
     <div class="row ml-2">
-      <button class="btn btn-outline-success btn-sm mr-3" (click)="submitStatus()"
-        [disabled]="!statusList.length && !editLeavePlan">
-        {{editLeavePlan ? 'Submit Leave Plan' : 'Submit Status' }}
+
+      <button *ngIf="editLeavePlan; else statusSubmitBtn" class="btn btn-outline-success btn-sm mr-3"
+        (click)="submitForm()" [disabled]="!(addedItems.length || removedItems.length)">
+        Submit Leave Plan
       </button>
+      <ng-template #statusSubmitBtn>
+        <button class="btn btn-outline-success btn-sm mr-3" (click)="submitForm()" [disabled]="!statusList.length">
+          Submit Status
+        </button>
+      </ng-template>
       <button class="btn btn-outline-danger btn-sm"
-        (click)="resetStatusList();alertHandler({message: 'Your changes has been Reset',type:'success'})">
-        Reset
+        (click)="resetStatusList(); alertHandler( { message : 'Your changes has been Reset', type : 'success'})">
+        Back
       </button>
     </div>
   </div>
@@ -219,7 +219,7 @@
   <app-defaulter-list #defComp></app-defaulter-list>
   <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
     (alertEmitter)="alertHandler($event)"></app-delete-user>
-  <app-wsr-report #wsrReportComp></app-wsr-report>
+  <app-res-utility></app-res-utility>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: PRANAY KOHAD

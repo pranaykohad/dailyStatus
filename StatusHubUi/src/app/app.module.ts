@@ -22,7 +22,7 @@ import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.co
 import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
 import { CustomReportComponent } from './modal/report/custom-report.component';
 import { UserDetailComponent } from './modal/user-detail/user-detail.component';
-import { WsrReportComponent } from './modal/wsr-report/wsr-report.component';
+import { ResourceUilityComponent } from './modal/resource-utility/resource-utility.component';
 import { DateFormatPipe } from './pipe/date-format.pipe';
 import { FullCalendarComponent } from './full-calendar/full-calendar.component';
 
@@ -43,7 +43,7 @@ const routes: Routes = [
     AlertComponent,
     DefaulterListComponent,
     DeleteUserComponent,
-    WsrReportComponent,
+    ResourceUilityComponent,
     DateFormatPipe,
     FullCalendarComponent,
   ],

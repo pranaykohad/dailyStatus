@@ -18,7 +18,7 @@ import {
 } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { CustomReportComponent } from '../modal/report/custom-report.component';
-import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
+import { ResourceUilityComponent } from '../modal/resource-utility/resource-utility.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -57,7 +57,6 @@ export class MainComponent implements OnInit {
   holidays: IHoliday[];
   currrentMonth: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
-  @ViewChild('wsrReportComp') wsrReportComp: WsrReportComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
 
@@ -85,9 +84,6 @@ export class MainComponent implements OnInit {
     this.setCurrentMonth();
     this.addedItems = [];
     this.removedItems = [];
-    // this.updatedItems = [];
-    this.halfDayLeaves = [];
-    this.fullDayLeaves = [];
   }
 
   ngOnInit(): void {
@@ -107,9 +103,10 @@ export class MainComponent implements OnInit {
     row.state = this.stateList[index];
   }
 
-  submitStatus() {
+  submitForm(): void {
     if (this.editLeavePlan) {
-      return this.submitLeaves();
+      this.submitLeaves();
+      return;
     }
     if (!this.statusList.length) {
       return;
@@ -136,9 +133,8 @@ export class MainComponent implements OnInit {
 
   resetStatusList() {
     if (this.editLeavePlan) {
-      this.addedItems.length = 0;
-      // this.updatedItems.length = 0;
-      this.removedItems.length = 0;
+      this.addedItems = [];
+      this.removedItems = [];
       this.selectedItem = null;
     }
     this.statusList = [];
@@ -228,15 +224,6 @@ export class MainComponent implements OnInit {
     this.defComp.message = '';
   }
 
-  clearLeaveReport() {
-    const a: HTMLInputElement = document.querySelector('#leaveReport');
-    if (a) {
-      a.value = null;
-    }
-    this.wsrReportComp.selectedSheetName = null;
-    this.wsrReportComp.sheetNames = [];
-  }
-
   showLeavePlan(): void {
     this.editStatus = false;
     this.editLeavePlan = true;
@@ -298,7 +285,6 @@ export class MainComponent implements OnInit {
       this.addLeaves();
     }
     this.deleteLeaves();
-    return;
   }
 
   private addLeaves() {
@@ -310,6 +296,11 @@ export class MainComponent implements OnInit {
     });
     this.leaveService.addLeaves(addedItems).subscribe((res) => {
       this.addedItems.length = 0;
+      this.alertHandler({
+        message: res['description'],
+        type: res['status'],
+      });
+      this.reInitFullCalendar();
     });
   }
 
@@ -321,8 +312,19 @@ export class MainComponent implements OnInit {
     if (leavesIds.length) {
       this.leaveService.deleteLeaves(leavesIds).subscribe((res) => {
         this.removedItems.length = 0;
+        this.alertHandler({
+          message: res['description'],
+          type: res['status'],
+        });
+        this.reInitFullCalendar();
       });
     }
+  }
+
+  private reInitFullCalendar() {
+    this.initHalfDayLeaves(this.currrentMonth);
+    this.initFullDayLeaves(this.currrentMonth);
+    this.resetStatusList();
   }
 
   private setRecentDate() {
@@ -411,6 +413,7 @@ export class MainComponent implements OnInit {
   }
 
   private initHalfDayLeaves(currrentMonth: string): void {
+    this.halfDayLeaves = [];
     this.leaveService
       .getLeaves(HALF_DAY_LABEL, currrentMonth)
       .subscribe((res) => {
@@ -421,6 +424,7 @@ export class MainComponent implements OnInit {
   }
 
   private initFullDayLeaves(currrentMonth: string): void {
+    this.fullDayLeaves = [];
     this.leaveService
       .getLeaves(FULL_DAY_LABEL, currrentMonth)
       .subscribe((res) => {
