@@ -1,3 +1,4 @@
 /StatusHubApi/logs
 static
 target
+/StatusHubApi/*.xml
