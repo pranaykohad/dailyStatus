@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.statushub.entity.Result;
-import com.statushub.entity.Result.ResStatus;
 import com.statushub.service.HolidayService;
 
 @CrossOrigin(origins = "*")
@@ -20,10 +19,7 @@ public class HolidayController {
 
 	@GetMapping("/holidays")
 	public Result getAllHolidays() {
-		final Result result = new Result();
-		result.setData(holidayService.getAllHolidays());
-		result.setStatus(ResStatus.SUCCESS);
-		return result;
+		return holidayService.getAllHolidays();
 	}
 
 	

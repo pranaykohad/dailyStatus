@@ -1,18 +1,18 @@
-import { HolidayService } from 'src/services/holiday.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventApi } from '@fullcalendar/core';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
+import { HolidayService } from 'src/services/holiday.service';
 import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { DEFAULT_USER_TYPE, stateList } from '../app.constant';
+import { DEFAULT_USER_TYPE, NEXT, PREV, stateList } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
-import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
 import { CustomReportComponent } from '../modal/report/custom-report.component';
+import { WsrReportComponent } from '../modal/wsr-report/wsr-report.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -79,6 +79,8 @@ export class MainComponent implements OnInit {
     this.addedItems = [];
     this.removedItems = [];
     this.updatedItems = [];
+    this.halfDayLeaves = [];
+    this.fullDayLeaves = [];
   }
 
   ngOnInit(): void {
@@ -89,8 +91,8 @@ export class MainComponent implements OnInit {
       this.getRecentStatus();
       this.getUsersByUserType(this.DEFAULT_USER_TYPE);
       this.initHolidays();
-      this.initHalfDayLeaves();
-      this.initFullDayLeaves();
+      this.initHalfDayLeaves(this.currrentMonth);
+      this.initFullDayLeaves(this.currrentMonth);
     }
   }
 
@@ -267,6 +269,31 @@ export class MainComponent implements OnInit {
   selectedItemHandler(selectedItem: EventApi) {
     this.selectedItem = selectedItem;
   }
+  userTypeHandler(userType: string) {
+    this.getUsersByUserType(userType);
+  }
+
+  monthHandler(month: string) {
+    this.leaveService.getLeaves('half-day', month).subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        const tempList: ILeave[] = res['data'];
+        this.halfDayLeaves = this.halfDayLeaves.concat(tempList);
+        this.halfDayLeaves = this.utilService.removeDupliFrmList(
+          this.halfDayLeaves
+        );
+      }
+    });
+
+    this.leaveService.getLeaves('full-day', month).subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        const tempList: ILeave[] = res['data'];
+        this.fullDayLeaves = this.fullDayLeaves.concat(tempList);
+        this.fullDayLeaves = this.utilService.removeDupliFrmList(
+          this.fullDayLeaves
+        );
+      }
+    });
+  }
 
   private submitLeaves() {
     if (this.addedItems.length) {
@@ -284,9 +311,6 @@ export class MainComponent implements OnInit {
       });
     }
     return;
-  }
-  userTypeHandler(userType: string) {
-    this.getUsersByUserType(userType);
   }
 
   private setRecentDate() {
@@ -374,26 +398,20 @@ export class MainComponent implements OnInit {
     });
   }
 
-  private initHalfDayLeaves(): void {
-    this.halfDayLeaves = [];
-    this.leaveService
-      .getLeaves('half-day', this.currrentMonth)
-      .subscribe((res) => {
-        if (res['status'] === 'SUCCESS') {
-          this.halfDayLeaves = res['data'];
-        }
-      });
+  private initHalfDayLeaves(currrentMonth: string): void {
+    this.leaveService.getLeaves('half-day', currrentMonth).subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        this.halfDayLeaves = res['data'];
+      }
+    });
   }
 
-  private initFullDayLeaves(): void {
-    this.fullDayLeaves = [];
-    this.leaveService
-      .getLeaves('full-day', this.currrentMonth)
-      .subscribe((res) => {
-        if (res['status'] === 'SUCCESS') {
-          this.fullDayLeaves = res['data'];
-        }
-      });
+  private initFullDayLeaves(currrentMonth: string): void {
+    this.leaveService.getLeaves('full-day', currrentMonth).subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        this.fullDayLeaves = res['data'];
+      }
+    });
   }
 
   private setCurrentMonth() {

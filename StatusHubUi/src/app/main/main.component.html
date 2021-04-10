@@ -58,7 +58,7 @@
           [updatedItems]="updatedItems" [holidays]="holidays" [halfDayLeaves]="halfDayLeaves"
           [fullDayLeaves]="fullDayLeaves" (addedItemsEmitter)="addedItemsHandler($event)"
           (updatedItemsEmitter)="updatedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)"
-          (alertEmitter)="alertHandler($event)">
+          (alertEmitter)="alertHandler($event)" (monthEmitter)="monthHandler($event)">
         </app-full-calendar>
       </ng-container>
       <ng-template #statusView>

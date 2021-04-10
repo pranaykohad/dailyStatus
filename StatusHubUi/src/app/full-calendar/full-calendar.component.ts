@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -12,7 +11,13 @@ import { CalendarOptions, DateSpanApi, EventApi } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { FullCalendar } from 'primeng/fullcalendar';
-import { FULLDAY_LIST, HALFDAY_LIST, HOLIDAY_LIST } from 'src/app/app.constant';
+import {
+  FULLDAY_LIST,
+  HALFDAY_LIST,
+  HOLIDAY_LIST,
+  NEXT,
+  PREV,
+} from 'src/app/app.constant';
 import { IHoliday, ILeave } from 'src/app/model/leave';
 import { User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
@@ -24,7 +29,7 @@ import { Alert } from '../model/alert';
   templateUrl: './full-calendar.component.html',
   styleUrls: ['./full-calendar.component.scss'],
 })
-export class FullCalendarComponent implements OnInit, AfterViewInit {
+export class FullCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions;
   selectedItem: EventApi;
   loggedUserName: string;
@@ -32,12 +37,13 @@ export class FullCalendarComponent implements OnInit, AfterViewInit {
   @Input() removedItems: ILeave[];
   @Input() updatedItems: ILeave[];
   @Input() holidays: IHoliday[];
-  @Input() fullDayLeaves: ILeave[];
-  @Input() halfDayLeaves: ILeave[];
+  private _fullDayLeaves: ILeave[];
+  private _halfDayLeaves: ILeave[];
   @Output() addedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() updatedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
   @Output() alertEmitter = new EventEmitter<Alert>();
+  @Output() monthEmitter = new EventEmitter<string>();
   @ViewChild('fullCalendar') fullCalendar: FullCalendar;
 
   constructor(
@@ -50,13 +56,54 @@ export class FullCalendarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // this.fullDayLeaves = this.initFullLeaves();
-    // this.halfDayLeaves = this.initHalfLeaves();
     this.initCalendar();
     this.registerExternalDragEvent();
+    setTimeout(() => {
+      this.registerButtonEvents();
+    });
   }
 
-  ngAfterViewInit(): void {}
+  @Input()
+  set fullDayLeaves(fullDayLeaves: ILeave[]) {
+    this._fullDayLeaves = fullDayLeaves;
+    if (!this.calendarOptions) {
+      return;
+    }
+    setTimeout(() => {
+      this.calendarOptions.eventSources[0] = {
+        events: this._fullDayLeaves,
+        color: '#28a745',
+      };
+      this.cdrf.detectChanges();
+      this.fullCalendar.calendar.getEventSources().refetch();
+      this.cdrf.detectChanges();
+    });
+  }
+
+  get fullDayLeaves(): ILeave[] {
+    return this._fullDayLeaves;
+  }
+
+  @Input()
+  set halfDayLeaves(halfDayLeaves: ILeave[]) {
+    this._halfDayLeaves = halfDayLeaves;
+    if (!this.calendarOptions) {
+      return;
+    }
+    setTimeout(() => {
+      this.calendarOptions.eventSources[1] = {
+        events: this._halfDayLeaves,
+        color: '#17a2b8',
+      };
+      this.cdrf.detectChanges();
+      this.fullCalendar.calendar.getEventSources().refetch();
+      this.cdrf.detectChanges();
+    });
+  }
+
+  get halfDayLeaves(): ILeave[] {
+    return this._halfDayLeaves;
+  }
 
   initCalendar(): void {
     this.calendarOptions = {
@@ -110,6 +157,8 @@ export class FullCalendarComponent implements OnInit, AfterViewInit {
         this.selectedItemEmitter.emit(this.selectedItem);
       },
     };
+    console.log(this.calendarOptions.eventSources[0]);
+    console.log(this.calendarOptions.eventSources[1]);
   }
 
   private externalDrop(info: any) {
@@ -346,5 +395,30 @@ export class FullCalendarComponent implements OnInit, AfterViewInit {
         updatedStart: null,
       },
     ];
+  }
+
+  private registerButtonEvents(): void {
+    const prevBtn: HTMLButtonElement = document.querySelector(
+      'button.fc-prev-button.fc-button.fc-button-primary'
+    );
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        this.emitMonth();
+      });
+    }
+    const nextBtn: HTMLButtonElement = document.querySelector(
+      'button.fc-next-button.fc-button.fc-button-primary'
+    );
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        this.emitMonth();
+      });
+    }
+  }
+
+  private emitMonth() {
+    const currentDate = new Date(this.fullCalendar.calendar.getDate());
+    const finalDate = this.utilService.formatCalDateToMonth(currentDate);
+    this.monthEmitter.emit(finalDate);
   }
 }

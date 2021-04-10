@@ -24,3 +24,5 @@ export const FULLDAY_LIST = 0;
 export const HALFDAY_LIST = 1;
 export const HOLIDAY_LIST = 2;
 export const DEFAULT_USER_TYPE = 'All';
+export const PREV = 'PREV';
+export const NEXT = 'NEXT';

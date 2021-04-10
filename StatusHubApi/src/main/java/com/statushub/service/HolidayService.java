@@ -1,10 +1,8 @@
 package com.statushub.service;
 
-import java.util.List;
-
-import com.statushub.entity.Holiday;
+import com.statushub.entity.Result;
 
 public interface HolidayService {
 
-	public List<Holiday> getAllHolidays();
+	public Result getAllHolidays();
 }

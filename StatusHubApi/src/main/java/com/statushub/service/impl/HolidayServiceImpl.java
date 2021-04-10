@@ -1,11 +1,14 @@
 package com.statushub.service.impl;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.statushub.entity.Holiday;
+import com.statushub.entity.Result;
+import com.statushub.entity.Result.ResStatus;
 import com.statushub.repository.HolidayRepository;
 import com.statushub.service.HolidayService;
 
@@ -16,16 +19,24 @@ public class HolidayServiceImpl implements HolidayService {
 	HolidayRepository holidayRepository;
 
 	@Override
-	public List<Holiday> getAllHolidays() {
+	public Result getAllHolidays() {
+		final Result result = new Result();
+		result.setStatus(ResStatus.FAILURE);
 		final List<Holiday> holidays = holidayRepository.findAll();
-		buildTitle(holidays);
-		return holidays;
+		if(!holidays.isEmpty()) {
+			final List<Holiday> finalHolidays = buildTitle(holidays);
+			result.setData(finalHolidays);
+			result.setStatus(ResStatus.SUCCESS);
+		}
+		return result;
 	}
 
-	private void buildTitle(final List<Holiday> holidays) {
-		holidays.forEach(Holiday -> {
-			Holiday.setTitle(Holiday.getTitle() + ":holiday");
+	private List<Holiday> buildTitle(final List<Holiday> holidays) {
+		final List<Holiday> tempList = new CopyOnWriteArrayList<>(holidays);
+		tempList.forEach(holiday -> {
+			holiday.setTitle(holiday.getTitle() + ":holiday");
 		});
+		return tempList;
 	}
 
 }

@@ -27,23 +27,31 @@ export class UtilService {
 
   formatToTwoDigit(date: string): string {
     const tokens: string[] = date.split('/');
-    return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
-      tokens[2]
-    }`;
+    return `${this.formatDateToTwoDigit(tokens[0])}/${this.formatDateToTwoDigit(
+      tokens[1]
+    )}/${tokens[2]}`;
   }
 
   formatToTwoDigit2(date: string): string {
     const tokens: string[] = date.split('/');
-    const date1 = `${this.formatDate(tokens[0])}-${this.formatDate(
-      tokens[1]
-    )}-${tokens[2]}`;
+    const date1 = `${this.formatDateToTwoDigit(
+      tokens[0]
+    )}-${this.formatDateToTwoDigit(tokens[1])}-${tokens[2]}`;
     const tns: string[] = date1.split('-');
     return `${tns[2]}-${tns[0]}-${tns[1]}`;
   }
 
   formatToTwoDigit3(date: string): string {
     const tokens: string[] = date.split('-');
-    return `${this.formatDate(tokens[0])}-${this.formatDate(tokens[1])}`;
+    return `${this.formatDateToTwoDigit(tokens[0])}-${this.formatDateToTwoDigit(
+      tokens[1]
+    )}`;
+  }
+
+  formatCalDateToMonth(currentDate: Date): string {
+    const date1: string = currentDate.toLocaleDateString();
+    const tokens: string[] = date1.split('/');
+    return `${tokens[2]}-${this.formatDateToTwoDigit(tokens[0])}`;
   }
 
   removeComma(description: string): string {
@@ -72,7 +80,13 @@ export class UtilService {
     return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
   }
 
-  private formatDate(value: string): string {
+  formatDateToTwoDigit(value: string): string {
     return value.length === 1 ? '0' + value : value;
+  }
+
+  removeDupliFrmList(halfDayLeaves: any[]): any[] {
+    return halfDayLeaves.filter((array, index, self) => {
+      return index === self.findIndex((t) => t.leaveId === array.leaveId);
+    });
   }
 }
