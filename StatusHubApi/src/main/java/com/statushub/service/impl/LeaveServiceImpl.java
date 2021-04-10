@@ -29,7 +29,7 @@ public class LeaveServiceImpl implements LeaveService {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 
-		for (Leave leave : leaves) {
+		for (final Leave leave : leaves) {
 			final String title = leave.getTitle();
 			final String[] tokens = title.split(":");
 
@@ -65,12 +65,12 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	@Transactional
-	public Result deleteLeaveById(List<Integer> leaveIds) {
+	public Result deleteLeaveById(final List<Integer> leaveIds) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		int count = 0;
-		for (int leaveId : leaveIds) {
-			int rowCount = leaveRepo.deleteLeaveByLeaveId(leaveId);
+		for (final int leaveId : leaveIds) {
+			final int rowCount = leaveRepo.deleteLeaveByLeaveId(leaveId);
 			count = rowCount > 0 ? ++count : count;
 		}
 		if (count > 0) {
@@ -84,7 +84,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private void buildTitle(final List<Leave> leaves) {
 		leaves.forEach(leave -> {
 			leave.setTitle(
-					leave.getUser().getFirstName() + " " + leave.getUser().getLastName() + ":" + leave.getType());
+				leave.getUser().getFirstName() + " " + leave.getUser().getLastName() + ":" + leave.getType());
 		});
 	}
 
@@ -94,10 +94,10 @@ public class LeaveServiceImpl implements LeaveService {
 		return userRepository.findByFirstnameAndLastname(firstName, lastName);
 	}
 
-	private void saveLeave(final Result result, Leave leave, final String[] tokens, final String[] userFullName) {
+	private void saveLeave(final Result result, final Leave leave, final String[] tokens, final String[] userFullName) {
 		final User user = getUserByFirstNameAndLastName(userFullName);
 		leave.setUser(user);
-		leave.setType(!tokens[1].isBlank() ? tokens[1] : "full-day");
+		leave.setType(!tokens[1].isEmpty() ? tokens[1] : "full-day");
 		leaveRepo.save(leave);
 		result.setStatus(ResStatus.SUCCESS);
 		result.setDescription("Leaves are successfully updated");
