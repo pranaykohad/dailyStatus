@@ -1,5 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { moduleList, POSITION_LIST, userTypeList } from 'src/app/app.constant';
+import {
+  moduleList,
+  POSITION_LIST,
+  roleList,
+  userTypeList,
+} from 'src/app/app.constant';
 import { IUser } from 'src/app/model/user';
 
 @Component({
@@ -11,6 +16,7 @@ export class UserConsoleComponent implements OnInit {
   userTypeList = userTypeList;
   POSITION_LIST = POSITION_LIST;
   moduleList = moduleList;
+  roleList = roleList;
   @Input() loggedInUser: IUser;
   users: IUser[];
   private _userList: IUser[];

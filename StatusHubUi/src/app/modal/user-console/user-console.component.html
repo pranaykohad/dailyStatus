@@ -43,7 +43,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="type">User Type:</label>
               <select class="dropdown col-md-12 pl-1" style="border-radius: 3px">
                 <option *ngFor="let userType of userTypeList" [selected]="userType === loggedInUser.type">
@@ -51,7 +51,7 @@
                 </option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="position">Position:</label>
               <select class="dropdown col-md-12 pl-1" style="border-radius: 3px">
                 <option *ngFor="let position of POSITION_LIST" [selected]="position === loggedInUser.position">
@@ -59,11 +59,19 @@
                 </option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="module">Module:</label>
               <select class="dropdown col-md-12 pl-1" style="border-radius: 3px">
                 <option *ngFor="let module of moduleList" [selected]="module === loggedInUser.moduleName">
                   {{ module }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="module">Role:</label>
+              <select class="dropdown col-md-12 pl-1" style="border-radius: 3px">
+                <option *ngFor="let role of roleList" [selected]="role === loggedInUser.role">
+                  {{ role }}
                 </option>
               </select>
             </div>
