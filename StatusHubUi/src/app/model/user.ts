@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
   userId: number;
   userName: string;
   password: string;
@@ -8,8 +8,12 @@ export interface User {
   role: string;
   type: string;
   defCount: number;
+  position: string;
+  billable: boolean;
+  email: string;
+  baseHour: number;
 }
-export class User {
+export class User implements IUser {
   public userId: number;
   public userName: string;
   public password: string;
@@ -19,4 +23,8 @@ export class User {
   public role: string;
   public type: string;
   public defCount: number;
+  public position: string;
+  public billable: boolean;
+  public email: string;
+  public baseHour: number;
 }

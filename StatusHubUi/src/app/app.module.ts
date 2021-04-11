@@ -25,6 +25,7 @@ import { UserDetailComponent } from './modal/user-detail/user-detail.component';
 import { ResourceUilityComponent } from './modal/resource-utility/resource-utility.component';
 import { DateFormatPipe } from './pipe/date-format.pipe';
 import { FullCalendarComponent } from './full-calendar/full-calendar.component';
+import { UserConsoleComponent } from './modal/user-console/user-console.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -46,6 +47,7 @@ const routes: Routes = [
     ResourceUilityComponent,
     DateFormatPipe,
     FullCalendarComponent,
+    UserConsoleComponent,
   ],
   imports: [
     BrowserModule,

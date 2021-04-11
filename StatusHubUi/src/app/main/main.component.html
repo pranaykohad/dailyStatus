@@ -17,13 +17,15 @@
           (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Custom Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
           (click)="initDefList()">Defaulters List</a>
-        <a class="dropdown-item" data-toggle="modal" data-target="#wsrReport" href="javascript:void(0);"
+        <a class="dropdown-item" data-toggle="modal" data-target="#resUtility" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Resource Utility</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#addUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Add User</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' "
           (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Delete User</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#userConsole" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">User Console</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>
@@ -219,6 +221,7 @@
   <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
     (alertEmitter)="alertHandler($event)"></app-delete-user>
   <app-res-utility></app-res-utility>
+  <app-user-console [loggedInUser]="user" [userList]="userList"></app-user-console>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: PRANAY KOHAD

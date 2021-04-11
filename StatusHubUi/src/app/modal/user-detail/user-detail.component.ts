@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { moduleList } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { User } from 'src/app/model/user';
@@ -23,8 +17,7 @@ export class UserDetailComponent {
 
   constructor(
     private localStoreService: LocalStorageService,
-    private userService: UserService,
-    private crdf: ChangeDetectorRef
+    private userService: UserService
   ) {
     this.initModuleList();
   }

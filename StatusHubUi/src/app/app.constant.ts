@@ -11,6 +11,20 @@ export const moduleList = [
 export const stateList = ['In progress', 'Completed'];
 export const roleList = ['NORMAL', 'ADMIN'];
 export const userTypeList = ['DEV', 'QA', 'AQA', 'PQA'];
+export const POSITION_LIST = [
+  'PgM',
+  'Project Lead',
+  'Sr. Architech',
+  'Sr. Tech Lead',
+  'Lead Developer',
+  'Developer',
+  'Sr. Developer',
+  'Perf. Eng.',
+  'Lead QA',
+  'QA',
+  'Sr. AQA',
+  'AQA',
+];
 export const numOfStatus = 2;
 export const SUNDAY = 0;
 export const MONDAY = 1;
