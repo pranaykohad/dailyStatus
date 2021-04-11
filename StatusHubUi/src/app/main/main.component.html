@@ -56,9 +56,8 @@
       <ng-container *ngIf="editLeavePlan; else statusView">
         <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems" [holidays]="holidays"
           [halfDayLeaves]="halfDayLeaves" [fullDayLeaves]="fullDayLeaves"
-          (addedItemsEmitter)="addedItemsHandler($event)" (updatedItemsEmitter)="updatedItemsHandler($event)"
-          (selectedItemEmitter)="selectedItemHandler($event)" (alertEmitter)="alertHandler($event)"
-          (monthEmitter)="monthHandler($event)">
+          (addedItemsEmitter)="addedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)"
+          (alertEmitter)="alertHandler($event)" (monthEmitter)="monthHandler($event)">
         </app-full-calendar>
       </ng-container>
       <ng-template #statusView>

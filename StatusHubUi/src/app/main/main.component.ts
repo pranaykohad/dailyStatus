@@ -18,7 +18,6 @@ import {
 } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { CustomReportComponent } from '../modal/report/custom-report.component';
-import { ResourceUilityComponent } from '../modal/resource-utility/resource-utility.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -49,7 +48,6 @@ export class MainComponent implements OnInit {
   halfDayLeaves: ILeave[];
   addedItems: ILeave[];
   removedItems: ILeave[];
-  // updatedItems: ILeave[];
   selectedItem: EventApi;
   loggedUserName: string;
   editMode = false;
@@ -241,23 +239,24 @@ export class MainComponent implements OnInit {
       start: this.selectedItem._instance.range.start.toString(),
       updatedStart: null,
     };
-    this.selectedItem.remove();
     if (leave.leaveId) {
-      this.removedItems.push(leave);
+      // add item in removed-item list, so that we can remove those from existing object
+      const temp = this.removedItems;
+      this.removedItems = [];
+      this.removedItems = this.removedItems.concat(temp).concat(leave);
     } else {
-      this.fullCalendar.removeAddedLeave(
+      // remove item from added-items list.
+      this.fullCalendar.updateAddedItems(
         this.selectedItem._instance.range.start
       );
     }
+    // remove card from UI
+    this.selectedItem.remove();
     this.selectedItem = null;
   }
 
   addedItemsHandler(leaves: ILeave[]) {
     this.addedItems = leaves;
-  }
-
-  updatedItemsHandler(leaves: ILeave[]) {
-    // this.updatedItems = leaves;
   }
 
   selectedItemHandler(selectedItem: EventApi) {

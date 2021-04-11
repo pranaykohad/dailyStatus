@@ -89,18 +89,20 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	private User getUserByFirstNameAndLastName(final String[] userFullName) {
-		final String firstName = userFullName[0].toUpperCase();
-		final String lastName = userFullName[1].toUpperCase();
+		final String firstName = userFullName[0].toUpperCase().trim();
+		final String lastName = userFullName[1].toUpperCase().trim();
 		return userRepository.findByFirstnameAndLastname(firstName, lastName);
 	}
 
 	private void saveLeave(final Result result, final Leave leave, final String[] tokens, final String[] userFullName) {
 		final User user = getUserByFirstNameAndLastName(userFullName);
-		leave.setUser(user);
-		leave.setType(!tokens[1].isEmpty() ? tokens[1] : "full-day");
-		leaveRepo.save(leave);
-		result.setStatus(ResStatus.SUCCESS);
-		result.setDescription("Leaves are successfully updated");
+		if (user != null) {
+			leave.setUser(user);
+			leave.setType(!tokens[1].isEmpty() ? tokens[1] : "full-day");
+			leaveRepo.save(leave);
+			result.setStatus(ResStatus.SUCCESS);
+			result.setDescription("Leaves are successfully updated");
+		}
 	}
 
 }
