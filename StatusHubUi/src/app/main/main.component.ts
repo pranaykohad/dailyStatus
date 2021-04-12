@@ -420,7 +420,25 @@ export class MainComponent implements OnInit {
     });
   }
 
-  private initHalfDayLeaves(currrentMonth: string): void {
+  // private getThreeMonthHalfDayLeaves() {
+  //   const dateArray: string[] = this.dateUtilService.getYMSlashFromDate();
+  //   const previousMonth = dateArray[0];
+  //   const currentMonth = dateArray[1];
+  //   const nextMonth = dateArray[2];
+  //   let halfDayLeaves: ILeave[] = [];
+  //   forkJoin(
+  //     this.leaveService.getLeaves(HALF_DAY_LABEL, previousMonth),
+  //     this.leaveService.getLeaves(HALF_DAY_LABEL, currentMonth),
+  //     this.leaveService.getLeaves(HALF_DAY_LABEL, nextMonth)
+  //   ).subscribe((res) => {
+  //     halfDayLeaves = halfDayLeaves.concat(res[0]['data']);
+  //     halfDayLeaves = halfDayLeaves.concat(res[1]['data']);
+  //     halfDayLeaves = halfDayLeaves.concat(res[2]['data']);
+  //     this.halfDayLeaves = halfDayLeaves;
+  //   });
+  // }
+
+  private initHalfDayLeaves(currrentMonth: string) {
     this.halfDayLeaves = [];
     this.leaveService
       .getLeaves(HALF_DAY_LABEL, currrentMonth)
