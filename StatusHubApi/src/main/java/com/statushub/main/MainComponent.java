@@ -17,19 +17,19 @@ import com.statushub.service.UserService;
 @EntityScan("com.statushub.entity")
 @EnableJpaRepositories("com.statushub.repository")
 public class MainComponent {
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger("controller.class");
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		SpringApplication.run(MainComponent.class, args);
 		LOG.debug("StatusHub has started..........");
 	}
-	
+
 	@PostConstruct
-    public void init(){
+	public void init(){
 		if(userService.userCount() == 0) {
 			final User adminUser = new User(); 
 			adminUser.setFirstName("admin");
@@ -39,13 +39,13 @@ public class MainComponent {
 			adminUser.setPassword("admin");
 			adminUser.setRole("ADMIN");
 			adminUser.setType("");
-			adminUser.setBaseHours(0D);
+			adminUser.setBaseHours(0f);
 			adminUser.setBillable(false);
 			adminUser.setDefCount(0);
 			adminUser.setEmail("");
 			adminUser.setPosition("");
 			userService.addUser(adminUser);
 		}
-    }
+	}
 
 }

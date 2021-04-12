@@ -19,9 +19,9 @@ import com.statushub.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	private static final Logger LOG = LoggerFactory.getLogger("UserServiceImpl.class");
-	
+
 	@Autowired
 	private UserRepository userRepo;
 
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User addUser(User user) {
+	public User addUser(final User user) {
 		return userRepo.save(user);
 	}
 
@@ -73,12 +73,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Result deleteUser(String userId) {
+	public Result deleteUser(final String userId) {
 		final Result result = new Result();
 		try {
 			userRepo.deleteById(Integer.parseInt(userId));
 			result.setDescription("User is deleted successfully");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			LOG.debug("Error while deleting user {}",userId);
 			result.setStatus(ResStatus.FAILURE);
 			result.setDescription("Failed to delete user");
@@ -92,14 +92,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Result getCustomDefaulters(List<String> dateList) {
+	public Result getCustomDefaulters(final List<String> dateList) {
 		final Result result = new Result();
 		final List<String> userTypes = new ArrayList<>();
 		userTypes.addAll(ReportConstant.getAllUserTypeList());
 		final List<User> userList = userRepo.getUserAllButAdmin(userTypes);
 		userList.forEach(user -> user.setDefCount(0));
 		dateList.forEach(date -> {
-			List<User> defList =  userRepo.getUserAllButAdmin(userTypes);
+			final List<User> defList =  userRepo.getUserAllButAdmin(userTypes);
 			final  List<User> validUserList = userRepo.getValidUserList(date);
 			defList.removeAll(validUserList);
 			userList.forEach(user -> {
@@ -112,14 +112,14 @@ public class UserServiceImpl implements UserService {
 		});
 		final List<User> zeroCntList = getZeroCountList(userList);
 		userList.removeAll(zeroCntList);
-		List<User> sortedList = userList.stream().sorted(
-									Comparator.comparingInt(User::getDefCount)
-											  .reversed()).collect(Collectors.toList());
+		final List<User> sortedList = userList.stream().sorted(
+			Comparator.comparingInt(User::getDefCount)
+			.reversed()).collect(Collectors.toList());
 		result.setData(sortedList);
 		return result;
 	}
 
-	private List<User> getZeroCountList(List<User> userList) {
+	private List<User> getZeroCountList(final List<User> userList) {
 		final List<User> zeroCntList = new ArrayList<>();
 		userList.forEach(user -> {
 			if(user.getDefCount() == 0) {
@@ -142,12 +142,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findByFirstnameAndLastname(String firstName, String lastName) {
+	public User findByFirstnameAndLastname(final String firstName, final String lastName) {
 		return userRepo.findByFirstnameAndLastname(firstName, lastName);
 	}
 
 	@Override
-	public Result getUserById(int userId) {
+	public Result getUserById(final int userId) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		final User user =  userRepo.getUserByUserId(userId);

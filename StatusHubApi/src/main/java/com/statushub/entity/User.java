@@ -29,7 +29,7 @@ public class User {
 	private String lastName;
 	private String position;
 	private Boolean billable;
-	private Double baseHours;
+	private Float baseHours;
 	private String email;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -38,12 +38,11 @@ public class User {
 	@Transient 
 	private int defCount;
 
-
-	public Double getBaseHours() {
+	public Float getBaseHours() {
 		return baseHours;
 	}
 
-	public void setBaseHours(final Double baseHours) {
+	public void setBaseHours(final Float baseHours) {
 		this.baseHours = baseHours;
 	}
 	public int getDefCount() {
@@ -115,13 +114,13 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
-	public void setEmail(String email) {
+	public void setEmail(final String email) {
 		this.email = email;
 	}
 	public String getPosition() {
 		return position;
 	}
-	public void setPosition(String position) {
+	public void setPosition(final String position) {
 		this.position = position;
 	}
 

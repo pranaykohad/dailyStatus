@@ -92,7 +92,9 @@ export class UserConsoleComponent implements OnInit {
 
   isNumberKey(evt: any): boolean {
     const charCode = evt.which ? evt.which : evt.keyCode;
-    if (charCode < 48 || charCode > 57) {
+    if (charCode === 46) {
+      return true;
+    } else if (charCode < 48 || charCode > 57) {
       return false;
     }
     return true;
