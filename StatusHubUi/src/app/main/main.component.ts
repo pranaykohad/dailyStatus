@@ -262,6 +262,7 @@ export class MainComponent implements OnInit {
   selectedItemHandler(selectedItem: EventApi) {
     this.selectedItem = selectedItem;
   }
+
   userTypeHandler(userType: string) {
     this.getUsersByUserType(userType);
   }
@@ -277,6 +278,14 @@ export class MainComponent implements OnInit {
         this.halfDayLeaves = res['data'];
       }
     });
+  }
+
+  loggedInUserUpdateHandler() {
+    this.user = this.localStoreService.getUser();
+  }
+
+  updateUserListHandler() {
+    this.getUsersByUserType(DEFAULT_USER_TYPE);
   }
 
   private submitLeaves() {

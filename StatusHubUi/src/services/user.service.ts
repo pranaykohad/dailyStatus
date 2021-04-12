@@ -19,11 +19,17 @@ export class UserService {
   }
 
   getUsersByUserType(userType: string): Observable<User> {
-    return this.httpClient.get<User>(`${BASE_URL}user?userType=${userType}`);
+    return this.httpClient.get<User>(
+      `${BASE_URL}user-by-type?userType=${userType}`
+    );
+  }
+
+  getUsersById(userId: number): Observable<User> {
+    return this.httpClient.get<User>(`${BASE_URL}user?userId=${userId}`);
   }
 
   updateUserDetails(user: User): Observable<User> {
-    return this.httpClient.post<User>(`${BASE_URL}update`, user);
+    return this.httpClient.put<User>(`${BASE_URL}user`, user);
   }
 
   authenticateUser(user: User): Observable<User> {

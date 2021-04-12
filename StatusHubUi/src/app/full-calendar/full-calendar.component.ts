@@ -250,7 +250,7 @@ export class FullCalendarComponent implements OnInit {
       )
     ) {
       const alert: Alert = {
-        message: 'Leave Already Added',
+        message: "Leave already added or it's a holiday",
         type: 'FAILURE',
       };
       this.alertEmitter.emit(alert);
@@ -296,7 +296,6 @@ export class FullCalendarComponent implements OnInit {
   }
 
   private registerExternalDragEvent() {
-    // this.cdrf.detectChanges();
     var containerEl = document.getElementById('external');
     new Draggable(containerEl, {
       itemSelector: '.draggable',

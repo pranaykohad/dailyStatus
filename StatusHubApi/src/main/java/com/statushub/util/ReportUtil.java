@@ -38,7 +38,7 @@ public class ReportUtil {
 
 
 
-	public void addName(final StringBuilder content, final String userId) {
+	public void addName(final StringBuilder content, final Integer userId) {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());

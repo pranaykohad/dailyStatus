@@ -11,7 +11,7 @@ export interface IUser {
   position: string;
   billable: boolean;
   email: string;
-  baseHour: number;
+  baseHours: number;
 }
 export class User implements IUser {
   public userId: number;
@@ -26,5 +26,5 @@ export class User implements IUser {
   public position: string;
   public billable: boolean;
   public email: string;
-  public baseHour: number;
+  public baseHours: number;
 }

@@ -93,20 +93,9 @@ export class FullCalendarUtil {
     leaveType: number,
     calendarOptions: CalendarOptions
   ): boolean {
-    let isExists = false;
-    calendarOptions.eventSources[leaveType]['events'].forEach((item) => {
-      if (JSON.stringify(formattedDate) === JSON.stringify(item.start)) {
-        isExists = true;
-      }
+    return calendarOptions.eventSources[leaveType]['events'].some((item) => {
+      return JSON.stringify(formattedDate) === JSON.stringify(item.start);
     });
-    // if (isExists) {
-    //   const alert: Alert = {
-    //     message: 'You cannot add leave on holiday',
-    //     type: 'FAILURE',
-    //   };
-    //   this.alertEmitter.emit(alert);
-    // }
-    return isExists;
   }
 
   checkItemInEventSource(

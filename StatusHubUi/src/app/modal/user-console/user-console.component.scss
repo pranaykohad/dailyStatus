@@ -2,4 +2,13 @@
   .brd-rd-3 {
     border-radius: 3px;
   }
+  select:hover {
+    cursor: pointer;
+  }
+  .rd:hover {
+    cursor: pointer;
+  }
+  .req {
+    color: red;
+  }
 }

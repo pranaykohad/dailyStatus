@@ -34,11 +34,16 @@ public class MainComponent {
 			final User adminUser = new User(); 
 			adminUser.setFirstName("admin");
 			adminUser.setLastName("admin");
-			adminUser.setModuleName("Workbench 9.2");
+			adminUser.setModuleName("Not Applicable");
 			adminUser.setUserName("admin");
 			adminUser.setPassword("admin");
 			adminUser.setRole("ADMIN");
-			adminUser.setType("DEV");
+			adminUser.setType("");
+			adminUser.setBaseHours(0D);
+			adminUser.setBillable(false);
+			adminUser.setDefCount(0);
+			adminUser.setEmail("");
+			adminUser.setPosition("");
 			userService.addUser(adminUser);
 		}
     }

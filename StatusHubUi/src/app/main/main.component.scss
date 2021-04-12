@@ -217,6 +217,9 @@
   .grey-bolder-grey {
     border-bottom: 1px solid grey;
   }
+  select:hover {
+    cursor: pointer;
+  }
 }
 select {
   border-radius: 3px;

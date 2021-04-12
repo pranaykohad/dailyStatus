@@ -146,4 +146,16 @@ public class UserServiceImpl implements UserService {
 		return userRepo.findByFirstnameAndLastname(firstName, lastName);
 	}
 
+	@Override
+	public Result getUserById(int userId) {
+		final Result result = new Result();
+		result.setStatus(ResStatus.FAILURE);
+		final User user =  userRepo.getUserByUserId(userId);
+		if(user != null) {
+			result.setData(user);
+			result.setStatus(ResStatus.SUCCESS);
+		}
+		return result;
+	}
+
 }

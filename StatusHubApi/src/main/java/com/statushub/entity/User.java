@@ -27,9 +27,10 @@ public class User {
 	private String role;
 	private String firstName;
 	private String lastName;
-	private String roleLabel;
+	private String position;
 	private Boolean billable;
-	private Long baseHours;
+	private Double baseHours;
+	private String email;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
@@ -38,11 +39,11 @@ public class User {
 	private int defCount;
 
 
-	public Long getBaseHours() {
+	public Double getBaseHours() {
 		return baseHours;
 	}
 
-	public void setBaseHours(final Long baseHours) {
+	public void setBaseHours(final Double baseHours) {
 		this.baseHours = baseHours;
 	}
 	public int getDefCount() {
@@ -105,19 +106,23 @@ public class User {
 	public void setStatusList(final List<Status> statusList) {
 		this.statusList = statusList;
 	}
-	public String getRoleLabel() {
-		return roleLabel;
-	}
-	public void setRoleLabel(final String roleLabel) {
-		this.roleLabel = roleLabel;
-	}
-
 	public Boolean getBillable() {
 		return billable;
 	}
-
 	public void setBillable(final Boolean billable) {
 		this.billable = billable;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 }

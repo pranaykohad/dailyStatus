@@ -12,6 +12,7 @@ public interface UserService {
 	public User autheticateUser(final String userName,final String password);
 	public User updateUserDetails(final User user);
 	public User addUser(final User user);
+	public Result getUserById(final int userId);
 	public List<User> getUsersByUserType(final String userType);
 	public Result getDefaultersList(final String date);
 	public Result getCustomDefaulters(final List<String> dateList);
