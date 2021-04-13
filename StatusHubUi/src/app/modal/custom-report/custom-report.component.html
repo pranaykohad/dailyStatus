@@ -11,7 +11,7 @@
         <div class="container-fluid">
           <div>
             <label for="user-type" class="mr-2">User Type:</label>
-            <select id="user-type" class="dropdown brd-rd-3" (change)="userTypeChange($event.target.value)">
+            <select id="user-type" class="dropdown brd-rd-3" (change)="getUserList($event.target.value)">
               <option *ngFor="let userType of userTypes" [selected]="userType === selUserType">
                 {{userType}}
               </option>

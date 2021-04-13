@@ -1,6 +1,6 @@
-import { EventApi } from '@fullcalendar/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { EventApi } from '@fullcalendar/angular';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
 import { DateUtilService } from 'src/services/date-util.service';
@@ -16,8 +16,9 @@ import {
   HALF_DAY_LABEL,
   stateList,
 } from '../app.constant';
-import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
+import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
+import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -39,7 +40,6 @@ export class MainComponent implements OnInit {
   recentStatus: Status[];
   alertTimeout: any;
   today: DatePicker;
-  userList: User[];
   todaysStatus: Status[];
   message: string;
   editStatus = false;
@@ -55,6 +55,7 @@ export class MainComponent implements OnInit {
   holidays: IHoliday[];
   currrentMonth: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
+  @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
 
@@ -90,7 +91,6 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
-      this.getUsersByUserType(this.DEFAULT_USER_TYPE);
       this.initHolidays();
       this.initHalfDayLeaves(this.currrentMonth);
       this.initFullDayLeaves(this.currrentMonth);
@@ -182,21 +182,6 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getUsersByUserType(userType) {
-    if (this.customReportComp) {
-      this.customReportComp.selUserType = userType;
-    }
-    this.userList = [];
-    this.userService.getUsersByUserType(userType).subscribe((res) => {
-      if (res['status'] === 'FAILURE') {
-        const alert = { message: res['description'], type: res['status'] };
-        this.alertHandler(alert);
-      } else {
-        this.userList = res['data'];
-      }
-    });
-  }
-
   getTodaysStatus() {
     if (this.editStatus) {
       return;
@@ -215,11 +200,6 @@ export class MainComponent implements OnInit {
           this.message = 'No Status Found';
         }
       });
-  }
-
-  initDefList() {
-    this.defComp.defaulterList = [];
-    this.defComp.message = '';
   }
 
   showLeavePlan(): void {
@@ -263,10 +243,6 @@ export class MainComponent implements OnInit {
     this.selectedItem = selectedItem;
   }
 
-  userTypeHandler(userType: string) {
-    this.getUsersByUserType(userType);
-  }
-
   monthHandler(month: string) {
     this.leaveService.getLeaves(FULL_DAY_LABEL, month).subscribe((res) => {
       if (res['status'] === 'SUCCESS') {
@@ -282,10 +258,6 @@ export class MainComponent implements OnInit {
 
   loggedInUserUpdateHandler() {
     this.user = this.localStoreService.getUser();
-  }
-
-  updateUserListHandler() {
-    this.getUsersByUserType(DEFAULT_USER_TYPE);
   }
 
   private submitLeaves() {

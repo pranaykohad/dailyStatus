@@ -33,7 +33,9 @@ export class DefaulterListComponent {
     this.initDates();
   }
 
-  private initDates() {
+  initDates() {
+    this.defaulterList = [];
+    this.message = '';
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,

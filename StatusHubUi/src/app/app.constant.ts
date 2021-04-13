@@ -48,3 +48,4 @@ export const FULL_DAY_LEAVE_INDEX = 0;
 export const HALF_DAY_LEAVE_INDEX = 1;
 export const FULL_DAY_LABEL = 'full-day';
 export const HALF_DAY_LABEL = 'half-day';
+export const NOT_APPLICABLE = 'Not Applicable';

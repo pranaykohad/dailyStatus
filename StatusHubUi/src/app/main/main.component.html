@@ -14,17 +14,16 @@
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" href="javascript:void(0);" (click)="todaysReport()">Download Today's Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userReport" href="javascript:void(0);"
-          (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Custom Report</a>
+          (click)="customReportComp.getUserList('All')">Custom Report</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#defaulterList" href="javascript:void(0);"
-          (click)="initDefList()">Defaulters List</a>
+          (click)="defComp.initDates()">Defaulters List</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#userConsole" href="javascript:void(0);"
-          (click)="userConsole.getLoggedUserDetail()">User
+          (click)="userConsole.getLoggedUserDetail();userConsole.getUserList()">User
           Console</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#resUtility" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Resource Utility</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
-          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' "
-          (click)="getUsersByUserType(DEFAULT_USER_TYPE)">Delete User</a>
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="delUserComp.getUserList()">Delete User</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>
@@ -207,15 +206,15 @@
       </button>
     </div>
   </div>
-  <app-custom-report #customReportComp *ngIf="user" [user]="user" [userList]="userList"
-    (alertEmitter)="alertHandler($event)" (userTypeEmitter)="userTypeHandler($event)">
+  <app-custom-report #customReportComp *ngIf="user" [user]="user" (alertEmitter)=" alertHandler($event)">
   </app-custom-report>
   <app-defaulter-list #defComp></app-defaulter-list>
-  <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
-    (alertEmitter)="alertHandler($event)"></app-delete-user>
+  <app-delete-user #delUserComp *ngIf="user && user.role === 'ADMIN'" [user]="user"
+    (alertEmitter)="alertHandler($event)">
+  </app-delete-user>
   <app-res-utility (alertEmitter)="alertHandler($event)"></app-res-utility>
-  <app-user-console #userConsole [userList]="userList" (alertEmitter)="alertHandler($event)"
-    (loggedInUserUpdateEmitter)="loggedInUserUpdateHandler()" (updateUserListEmitter)="updateUserListHandler()">
+  <app-user-console #userConsole (alertEmitter)="alertHandler($event)"
+    (loggedInUserUpdateEmitter)="loggedInUserUpdateHandler()">
   </app-user-console>
   <div class="footer">
     <div class="mr-2 mb-1">

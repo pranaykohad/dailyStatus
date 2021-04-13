@@ -1,13 +1,13 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {
   moduleList,
+  NOT_APPLICABLE,
   POSITION_LIST,
   roleList,
   userTypeList,
@@ -30,10 +30,9 @@ export class UserConsoleComponent implements OnInit {
   newUserFlag = false;
   loggedInUser: IUser;
   user: IUser;
-  @Input() userList: IUser[];
+  userList: IUser[];
   @Output() alertEmitter = new EventEmitter<Alert>();
   @Output() loggedInUserUpdateEmitter = new EventEmitter();
-  @Output() updateUserListEmitter = new EventEmitter();
 
   constructor(
     private userService: UserService,
@@ -42,8 +41,34 @@ export class UserConsoleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.moduleList.push('Not Applicable');
+    this.userTypeList.push(NOT_APPLICABLE);
+    this.moduleList.push(NOT_APPLICABLE);
     this.loggedInUser = this.localStoreService.getUser();
+  }
+
+  getLoggedUserDetail() {
+    this.userService.getUsersById(this.loggedInUser.userId).subscribe((res) => {
+      if (res['data']) {
+        this.loggedInUser = res['data'];
+        this.user = this.loggedInUser;
+        this.cdrf.detectChanges();
+      }
+    });
+  }
+
+  getUserList() {
+    this.userList = [];
+    this.userService.findAllUsersButAmin().subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        const alert: Alert = {
+          message: res['description'],
+          type: res['status'],
+        };
+        this.alertEmitter.emit(alert);
+      } else {
+        this.userList = res['data'];
+      }
+    });
   }
 
   createNewUser() {
@@ -65,16 +90,6 @@ export class UserConsoleComponent implements OnInit {
     user.role = 'NORMAL';
     user.billable = false;
     return user;
-  }
-
-  getLoggedUserDetail() {
-    this.userService.getUsersById(this.loggedInUser.userId).subscribe((res) => {
-      if (res['data']) {
-        this.loggedInUser = res['data'];
-        this.user = this.loggedInUser;
-        this.cdrf.detectChanges();
-      }
-    });
   }
 
   isNumberKey(evt: any): boolean {
@@ -149,7 +164,7 @@ export class UserConsoleComponent implements OnInit {
           message: 'User Details updated successfully',
           type: 'success',
         };
-        this.updateUserListEmitter.emit();
+        this.getUserList();
       }
       this.alertEmitter.emit(alert);
     });
@@ -163,7 +178,7 @@ export class UserConsoleComponent implements OnInit {
           message: 'User is added successfully',
           type: res['status'],
         };
-        this.updateUserListEmitter.emit();
+        this.getUserList();
       }
       this.alertEmitter.emit(alert);
     });
