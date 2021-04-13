@@ -12,4 +12,6 @@ public interface LeaveService {
 	public void deleteLeaveTable();
 	public Result getLeavesByTypeAndMonth(final String type,final String month);
 	public Result deleteLeaveById(final List<Integer> leaveIds);
+	public int getLeaveCount(final int userId, final String type, final String startDate, final String endDate);
+	public Result buildResourceUtilizationReport(final String startDate, final String endDate, final int dateCount);
 }

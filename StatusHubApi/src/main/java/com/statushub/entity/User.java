@@ -35,13 +35,17 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Status> statusList;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<Leave> leaveList;
+	
 	@Transient 
 	private int defCount;
 
 	public Float getBaseHours() {
 		return baseHours;
 	}
-
 	public void setBaseHours(final Float baseHours) {
 		this.baseHours = baseHours;
 	}

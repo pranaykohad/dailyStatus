@@ -14,10 +14,9 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 
 	public User getUserByUserNameAndPassword(String userName, String password);
 
-	@Query(value="SELECT * FROM Duser u where u.user_id != 1 and u.type IN (:names) order by u.first_name, u.last_name", nativeQuery = true)
-	public List<User> getUserAllButAdmin(@Param("names")List<String> names);
+	@Query(value="SELECT * FROM Duser u where u.user_id != 1 and u.type IN (:userTypes) order by u.first_name, u.last_name", nativeQuery = true)
+	public List<User> findAllUsers(@Param("userTypes") List<String> userTypes);
 
-//	@Query(value="SELECT * FROM Duser u where u.user_id = ?1", nativeQuery = true)
 	public User getUserByUserId(int userId);
 
 	@Query(value = "SELECT u.* FROM  duser u JOIN dstatus s ON u.user_id = s.user_user_id WHERE s.d_date = ?1", nativeQuery = true)
