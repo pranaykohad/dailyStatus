@@ -1,7 +1,6 @@
 import { EventApi } from '@fullcalendar/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { EventApi } from '@fullcalendar/core';
 import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
 import { DateUtilService } from 'src/services/date-util.service';
