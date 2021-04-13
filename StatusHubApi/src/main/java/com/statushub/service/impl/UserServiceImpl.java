@@ -158,4 +158,16 @@ public class UserServiceImpl implements UserService {
 		return result;
 	}
 
+	@Override
+	public Result findAllUsersButAmin() {
+		final Result result = new Result();
+		result.setStatus(ResStatus.FAILURE);
+		final List<User> userList = userRepo.findAllUsersButAmin();
+		if(userList.size() > 0) {
+			result.setData(userList);
+			result.setStatus(ResStatus.SUCCESS);
+		}
+		return result;
+	}
+
 }

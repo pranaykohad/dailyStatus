@@ -19,4 +19,5 @@ public interface UserService {
 	public Result deleteUser(final String userId);
 	public Long userCount();
 	public User findByFirstnameAndLastname(final String firstName, final String lastName);
+	public Result findAllUsersButAmin();
 }

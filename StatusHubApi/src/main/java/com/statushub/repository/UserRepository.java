@@ -24,4 +24,11 @@ public interface UserRepository extends JpaRepository<User, Integer>{
 
 	@Query(value = "SELECT u.* FROM  duser u WHERE UPPER(u.first_name) = UPPER(?1) and UPPER(u.last_name) = UPPER(?2)", nativeQuery = true)
 	public User findByFirstnameAndLastname(String firstName, String lastName);
+	
+	@Query(value="SELECT * FROM Duser u where u.user_id != 1 order by u.first_name, u.last_name", nativeQuery = true)
+	public List<User> findAllUsersButAmin();
+	
+	@Query(value="SELECT * FROM Duser u where u.user_id != 1 AND u.billable = ?1 order by u.first_name, u.last_name", nativeQuery = true)
+	public List<User> findAllBillableUsersButAmin(final Boolean isbillable);
+	
 }

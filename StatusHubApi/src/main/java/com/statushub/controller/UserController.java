@@ -71,6 +71,11 @@ public class UserController {
 		return result;
 	}
 	
+	@GetMapping("/user-but-admin")
+	public Result findAllUsersButAmin() {
+		return userService.findAllUsersButAmin();
+	}
+	
 	@DeleteMapping("/user")
 	public Result deleteUser(@RequestParam final String userId) {
 		return userService.deleteUser(userId);
