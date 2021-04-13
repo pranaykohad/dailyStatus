@@ -213,7 +213,7 @@
   <app-defaulter-list #defComp></app-defaulter-list>
   <app-delete-user *ngIf="user && user.role === 'ADMIN'" [user]="user" [userList]="userList"
     (alertEmitter)="alertHandler($event)"></app-delete-user>
-  <app-res-utility></app-res-utility>
+  <app-res-utility (alertEmitter)="alertHandler($event)"></app-res-utility>
   <app-user-console #userConsole [userList]="userList" (alertEmitter)="alertHandler($event)"
     (loggedInUserUpdateEmitter)="loggedInUserUpdateHandler()" (updateUserListEmitter)="updateUserListHandler()">
   </app-user-console>

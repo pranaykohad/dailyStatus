@@ -1,2 +1,10 @@
-#wsrReport {
+#resUtility {
+  #start-date-label,
+  #end-date-label {
+    display: flex;
+    align-items: center;
+  }
+  .date-width {
+    width: 120px;
+  }
 }

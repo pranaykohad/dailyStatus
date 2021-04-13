@@ -19,7 +19,7 @@ import { MainComponent } from './main/main.component';
 import { AlertComponent } from './modal/alert/alert.component';
 import { DefaulterListComponent } from './modal/defaulter-list/defaulter-list.component';
 import { DeleteUserComponent } from './modal/delete-user/delete-user.component';
-import { CustomReportComponent } from './modal/report/custom-report.component';
+import { CustomReportComponent } from './modal/custom-report/custom-report.component';
 import { ResourceUilityComponent } from './modal/resource-utility/resource-utility.component';
 import { UserConsoleComponent } from './modal/user-console/user-console.component';
 import { DateFormatPipe } from './pipe/date-format.pipe';

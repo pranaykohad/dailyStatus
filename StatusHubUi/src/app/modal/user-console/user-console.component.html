@@ -12,6 +12,7 @@
           <div *ngIf="loggedInUser.role === 'ADMIN'" class="form-group">
             <label for="users" class="mr-2">User:</label>
             <select id="users" class="dropdown col-md-4 pl-1 mr-5 brd-rd-3" (change)="userChange($event.target.value)">
+              <option [disabled]="!newUserFlag">New User</option>
               <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId"
                 [disabled]="!usr.userId">
                 {{usr.firstName}} {{usr.lastName}}
@@ -53,7 +54,7 @@
                 name="em" [(ngModel)]="user.email" />
             </div>
             <div class="form-group col-md-6">
-              <label for="bh" class="mr-2">Base Hour: <span *ngIf="loggedInUser.role === 'ADMIN'"
+              <label for="bh" class="mr-2">Base Hours(per day): <span *ngIf="loggedInUser.role === 'ADMIN'"
                   class="req">*</span></label>
               <input *ngIf="loggedInUser.role === 'ADMIN'; else baseHourLabel"
                 class="form-control form-control-sm col-md-12" id="bh" placeholder="Base Hours" name="bh"

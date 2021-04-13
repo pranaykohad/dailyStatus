@@ -3,12 +3,16 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BASE_URL } from 'src/app/app.constant';
+import { DateUtilService } from './date-util.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LeaveService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(
+    private httpClient: HttpClient,
+    private dateUtilService: DateUtilService
+  ) {}
 
   getLeaves(type: string, month: string): Observable<any> {
     return this.httpClient.get<any>(
@@ -23,6 +27,19 @@ export class LeaveService {
   deleteLeaves(leavesIds: number[]): Observable<any> {
     return this.httpClient.delete<any>(
       `${BASE_URL}leaves?leavesIds=${leavesIds}`
+    );
+  }
+
+  getResUtilreport(
+    startDate: string,
+    endDate: string,
+    dateCount: number
+  ): Observable<any> {
+    const start: string = this.dateUtilService.formatHyphenDate(startDate);
+    const end: string = this.dateUtilService.formatHyphenDate(endDate);
+    console.log(start, end);
+    return this.httpClient.get<any>(
+      `${BASE_URL}res-utilization-report?&startDate=${start}&endDate=${end}&dateCount=${dateCount}`
     );
   }
 }

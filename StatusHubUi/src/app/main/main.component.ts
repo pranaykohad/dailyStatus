@@ -1,3 +1,4 @@
+import { EventApi } from '@fullcalendar/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventApi } from '@fullcalendar/core';
@@ -17,7 +18,7 @@ import {
   stateList,
 } from '../app.constant';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
-import { CustomReportComponent } from '../modal/report/custom-report.component';
+import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
@@ -462,7 +463,7 @@ export class MainComponent implements OnInit {
 
   private setCurrentMonth() {
     const date = new Date();
-    this.currrentMonth = this.dateUtilService.formatHyphenDate(
+    this.currrentMonth = this.dateUtilService.formatHyphenDateToYM(
       date.getFullYear() + '-' + (date.getMonth() + 1)
     );
   }

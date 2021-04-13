@@ -22,6 +22,20 @@ export class DateUtilService {
     return dateList;
   }
 
+  buildDateCount(start: Date, end: Date): number {
+    let dateCount = 0;
+    if (end.getTime() - start.getTime() < 0) {
+      return;
+    }
+    while (start.getTime() - end.getTime() <= 0) {
+      if (start.getDay() !== SUNDAY && start.getDay() !== SATURDAY) {
+        dateCount++;
+      }
+      start.setDate(start.getDate() + 1);
+    }
+    return dateCount;
+  }
+
   formatSlashDate(date: string): string {
     const tokens: string[] = date.split('/');
     return `${this.formatNumToTwoDigit(tokens[0])}/${this.formatNumToTwoDigit(
@@ -38,11 +52,18 @@ export class DateUtilService {
     return `${tns[2]}-${tns[0]}-${tns[1]}`;
   }
 
-  formatHyphenDate(date: string): string {
+  formatHyphenDateToYM(date: string): string {
     const tokens: string[] = date.split('-');
     return `${this.formatNumToTwoDigit(tokens[0])}-${this.formatNumToTwoDigit(
       tokens[1]
     )}`;
+  }
+
+  formatHyphenDate(date: string): string {
+    const tokens: string[] = date.split('-');
+    return `${this.formatNumToTwoDigit(tokens[0])}-${this.formatNumToTwoDigit(
+      tokens[1]
+    )}-${this.formatNumToTwoDigit(tokens[2])}`;
   }
 
   extractYearAndMonth(currentDate: Date): string {

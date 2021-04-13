@@ -72,7 +72,10 @@ export class DefaulterListComponent {
     const end = new Date(
       `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`
     );
-    const dateList = this.dateUtilService.buildCustomDates(start, end);
+    const dateList: string[] = this.dateUtilService.buildCustomDates(
+      start,
+      end
+    );
     if (!dateList) {
       this.alert = {
         message: 'Start Date cannot be greater than End Date',

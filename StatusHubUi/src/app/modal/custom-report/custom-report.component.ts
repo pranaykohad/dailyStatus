@@ -13,10 +13,6 @@ import { UtilService } from 'src/services/util.service';
   styleUrls: ['./custom-report.component.scss'],
 })
 export class CustomReportComponent {
-  @Input() user: User;
-  private _userList: User[];
-  @Output() alertEmitter = new EventEmitter<Alert>();
-  @Output() userTypeEmitter = new EventEmitter<string>();
   today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
@@ -28,7 +24,10 @@ export class CustomReportComponent {
   isUserSelected = false;
   selUserList = [];
   userIdList = [];
-  userMessage = 'Loading...';
+  @Input() user: User;
+  @Output() alertEmitter = new EventEmitter<Alert>();
+  @Output() userTypeEmitter = new EventEmitter<string>();
+  private _userList: User[];
 
   constructor(
     private statusService: StatusService,

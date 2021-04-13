@@ -10,12 +10,47 @@
         </button>
       </div>
       <div class="modal-body">
-
+        <div class="container-fluid">
+          <div class="row pl-3">
+            <div class="row">
+              <span class="mr-2" id="start-date-label">Start Date:</span>
+              <form class="form-inline mb-1 mr-2">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                      [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" />
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div class="row pl-5">
+              <span class="mr-2" id="end-date-label">End Date:</span>
+              <form class="form-inline mb-1 mr-2">
+                <div class="form-group">
+                  <div class="input-group">
+                    <!-- [weekdays]="false" -->
+                    <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
+                      [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" />
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal">
-          Close
-        </button>
+        <button type="button" class="btn btn-outline-primary btn-md" data-dismiss="modal" (click)="getResUtilreport()">
+          Get Resource Utilization Report </button>
       </div>
     </div>
   </div>

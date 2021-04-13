@@ -30,7 +30,7 @@ export class UserConsoleComponent implements OnInit {
   newUserFlag = false;
   loggedInUser: IUser;
   user: IUser;
-  private _userList: IUser[];
+  @Input() userList: IUser[];
   @Output() alertEmitter = new EventEmitter<Alert>();
   @Output() loggedInUserUpdateEmitter = new EventEmitter();
   @Output() updateUserListEmitter = new EventEmitter();
@@ -46,19 +46,6 @@ export class UserConsoleComponent implements OnInit {
     this.loggedInUser = this.localStoreService.getUser();
   }
 
-  @Input()
-  set userList(userList: IUser[]) {
-    this._userList = userList;
-    if (this._userList.length) {
-      const user: User = this.buildNewUser();
-      this.userList.unshift(user);
-    }
-  }
-
-  get userList() {
-    return this._userList;
-  }
-
   createNewUser() {
     this.user = this.buildNewUser();
     this.newUserFlag = true;
@@ -71,7 +58,7 @@ export class UserConsoleComponent implements OnInit {
     user.userName = 'NewUser';
     user.password = 'NewUser';
     user.email = 'newuser@blueconchtech.com';
-    user.baseHours = 42.5;
+    user.baseHours = 8.5;
     user.type = 'DEV';
     user.position = 'Developer';
     user.moduleName = 'Workbench 9.2';

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Alert } from 'src/app/model/alert';
-import { User } from 'src/app/model/user';
+import { IUser, User } from 'src/app/model/user';
 import { UserService } from 'src/services/user.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { UserService } from 'src/services/user.service';
 export class DeleteUserComponent {
   message: string = 'No user found';
   selectedUserId: string;
-  @Input() userList: User[];
+  @Input() userList: IUser[];
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
 
