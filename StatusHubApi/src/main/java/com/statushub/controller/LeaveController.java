@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.statushub.entity.Leave;
 import com.statushub.entity.Result;
+import com.statushub.repository.LeaveRepository;
 import com.statushub.service.LeaveService;
 
 @CrossOrigin(origins = "*")
@@ -23,6 +24,9 @@ public class LeaveController {
 
 	@Autowired
 	LeaveService leaveService;
+	
+	@Autowired
+	LeaveRepository leaveRepository;
 
 	@GetMapping("/leaves")
 	public Result getHalfdayLeavesByMonth(@RequestParam() final String type, @RequestParam() final String month) {
@@ -37,6 +41,11 @@ public class LeaveController {
 	@DeleteMapping("/leaves")
 	public Result deleteLeaves(@RequestParam() final List<Integer> leavesIds) {
 		return leaveService.deleteLeaveById(leavesIds);
+	}
+	
+	@GetMapping("/res-utilization-report")
+	public Result buildResourceUtilizationReport(@RequestParam() final String startDate, @RequestParam() final String endDate, @RequestParam() final int dateCount) {
+		return leaveService.buildResourceUtilizationReport(startDate, endDate, dateCount);
 	}
 
 }

@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 		} else {
 			userTypes.add(userType);
 		}
-		final List<User> userList = userRepo.getUserAllButAdmin(userTypes);
+		final List<User> userList = userRepo.findAllUsers(userTypes);
 		bulidUserList(finalUserList, userList);
 		return finalUserList;
 	}
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 		final List<User> finalUserList = new ArrayList<>();
 		final List<String> userTypes = new ArrayList<>();
 		userTypes.addAll(ReportConstant.getAllUserTypeList());
-		final List<User> allUserList = userRepo.getUserAllButAdmin(userTypes);
+		final List<User> allUserList = userRepo.findAllUsers(userTypes);
 		final  List<User> validUserList = userRepo.getValidUserList(date);
 		allUserList.removeAll(validUserList);
 		bulidUserList(finalUserList, allUserList);
@@ -96,10 +96,10 @@ public class UserServiceImpl implements UserService {
 		final Result result = new Result();
 		final List<String> userTypes = new ArrayList<>();
 		userTypes.addAll(ReportConstant.getAllUserTypeList());
-		final List<User> userList = userRepo.getUserAllButAdmin(userTypes);
+		final List<User> userList = userRepo.findAllUsers(userTypes);
 		userList.forEach(user -> user.setDefCount(0));
 		dateList.forEach(date -> {
-			final List<User> defList =  userRepo.getUserAllButAdmin(userTypes);
+			final List<User> defList =  userRepo.findAllUsers(userTypes);
 			final  List<User> validUserList = userRepo.getValidUserList(date);
 			defList.removeAll(validUserList);
 			userList.forEach(user -> {
