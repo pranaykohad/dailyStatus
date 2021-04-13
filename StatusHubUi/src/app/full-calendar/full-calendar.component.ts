@@ -27,6 +27,7 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { UtilService } from 'src/services/util.service';
 import * as calConfig from '../../assets/full-calendar-config.json';
 import { Alert } from '../model/alert';
+import { environment } from './../../environments/environment';
 
 @Component({
   selector: 'app-full-calendar',
@@ -170,11 +171,13 @@ export class FullCalendarComponent implements OnInit {
         month: calConfig.buttonText.month,
       },
       initialView: calConfig.initialView,
-      weekends: calConfig.weekends,
+      weekends: !environment.production,
       editable: calConfig.editable,
       dayMaxEvents: calConfig.dayMaxEvents,
       droppable: calConfig.droppable,
       selectable: calConfig.selectable,
+      showNonCurrentDates: calConfig.showNonCurrentDates,
+      fixedWeekCount: calConfig.fixedWeekCount,
       eventSources: [
         this.initFullDayLeaves(),
         this.initHalfDayLeaves(),

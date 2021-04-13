@@ -60,7 +60,7 @@
                   <div class="form-group">
                     <div class="input-group">
                       <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
-                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" />
+                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" [firstDayOfWeek]=7 />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
                           +
@@ -74,7 +74,7 @@
                   <div class="form-group">
                     <div class="input-group">
                       <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
-                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" />
+                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" [firstDayOfWeek]=7 />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
                           +
