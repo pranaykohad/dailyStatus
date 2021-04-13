@@ -21,7 +21,7 @@
             <div class="col-md-5 pr-0 pl-0 middle-brd">
               <div>
                 <label for="multi-sel">Mutiple select User List (hold shift to select more than one):</label>
-                <select multiple class="form-control module-name multi-sel" id="multi-sel"
+                <select multiple class="form-control module-name multi-sel user-drop-down-height" id="multi-sel"
                   (change)="usersChange($event.target.selectedOptions)">
                   <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId">
                     {{ usr.firstName }} {{ usr.lastName }}

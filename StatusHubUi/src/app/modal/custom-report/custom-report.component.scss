@@ -17,7 +17,7 @@
   }
   .sel-user {
     max-height: 162px;
-    min-height: 162px;
+    min-height: 318px;
     overflow-y: auto;
     font-size: 14px;
     background-color: bisque;
@@ -39,5 +39,8 @@
   }
   select:hover {
     cursor: pointer;
+  }
+  .user-drop-down-height {
+    height: 250px;
   }
 }
