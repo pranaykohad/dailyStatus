@@ -1,4 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  NgbCalendar,
+  NgbDate,
+  NgbInputDatepickerConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -24,9 +29,6 @@ export class ResourceUilityComponent {
     private utilService: UtilService,
     private dateUtilService: DateUtilService
   ) {
-    // this.config.markDisabled = (date: NgbDate) => calendar.getWeekday(date) >= 6;
-    // this.config.outsideDays = 'hidden';
-    // this.isDisabled = (date: NgbDate, current: {month: number}) => date.day === 13;
     this.alert = new Alert(null, null);
     this.initDates();
   }

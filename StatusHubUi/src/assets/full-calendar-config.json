@@ -16,5 +16,7 @@
       "editable": true,
       "dayMaxEvents": true,
       "droppable": true,
-      "selectable": true
+      "selectable": true,
+      "showNonCurrentDates": false,
+      "fixedWeekCount": false
 }

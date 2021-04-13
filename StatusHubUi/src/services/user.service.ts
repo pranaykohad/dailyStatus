@@ -24,6 +24,10 @@ export class UserService {
     );
   }
 
+  findAllUsersButAmin(): Observable<User> {
+    return this.httpClient.get<User>(`${BASE_URL}user-but-admin`);
+  }
+
   getUsersById(userId: number): Observable<User> {
     return this.httpClient.get<User>(`${BASE_URL}user?userId=${userId}`);
   }

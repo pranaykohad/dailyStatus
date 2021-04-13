@@ -11,7 +11,7 @@ import { UserService } from 'src/services/user.service';
 export class DeleteUserComponent {
   message: string = 'No user found';
   selectedUserId: string;
-  @Input() userList: IUser[];
+  userList: IUser[];
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
 
@@ -34,5 +34,20 @@ export class DeleteUserComponent {
         });
       });
     }
+  }
+
+  getUserList() {
+    this.userList = [];
+    this.userService.findAllUsersButAmin().subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        const alert: Alert = {
+          message: res['description'],
+          type: res['status'],
+        };
+        this.alertEmitter.emit(alert);
+      } else {
+        this.userList = res['data'];
+      }
+    });
   }
 }

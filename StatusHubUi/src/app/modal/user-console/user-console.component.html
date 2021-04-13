@@ -54,7 +54,7 @@
                 name="em" [(ngModel)]="user.email" />
             </div>
             <div class="form-group col-md-6">
-              <label for="bh" class="mr-2">Base Hours(per day): <span *ngIf="loggedInUser.role === 'ADMIN'"
+              <label for="bh" class="mr-2">Base Hours (per day): <span *ngIf="loggedInUser.role === 'ADMIN'"
                   class="req">*</span></label>
               <input *ngIf="loggedInUser.role === 'ADMIN'; else baseHourLabel"
                 class="form-control form-control-sm col-md-12" id="bh" placeholder="Base Hours" name="bh"

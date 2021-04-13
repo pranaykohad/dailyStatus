@@ -3,8 +3,9 @@ import { DEFAULT_USER_TYPE, userTypeList } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
-import { User } from 'src/app/model/user';
+import { IUser, User } from 'src/app/model/user';
 import { StatusService } from 'src/services/status.service';
+import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 
 @Component({
@@ -26,29 +27,31 @@ export class CustomReportComponent {
   userIdList = [];
   @Input() user: User;
   @Output() alertEmitter = new EventEmitter<Alert>();
-  @Output() userTypeEmitter = new EventEmitter<string>();
-  private _userList: User[];
+  userList: IUser[];
 
   constructor(
     private statusService: StatusService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private userService: UserService
   ) {
     this.initUserTypes();
     this.initDates();
   }
 
-  @Input()
-  set userList(userList: User[]) {
-    this._userList = userList;
-    this.setInitialSelectedUser();
-  }
-
-  get userList() {
-    return this._userList;
-  }
-
-  userTypeChange(userType: string) {
-    this.userTypeEmitter.emit(userType);
+  getUserList(userType: string) {
+    this.userList = [];
+    this.userService.getUsersByUserType(userType).subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        const alert: Alert = {
+          message: res['description'],
+          type: res['status'],
+        };
+        this.alertEmitter.emit(alert);
+      } else {
+        this.userList = res['data'];
+        this.setInitialSelectedUser();
+      }
+    });
   }
 
   usersChange(selectedList: HTMLOptionElement[]) {
