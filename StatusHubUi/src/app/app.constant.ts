@@ -25,7 +25,7 @@ export const POSITION_LIST = [
   'Sr. AQA',
   'AQA',
 ];
-export const numOfStatus = 2;
+export const numOfStatus = 6;
 export const SUNDAY = 0;
 export const MONDAY = 1;
 export const TUESDAY = 2;

@@ -37,9 +37,16 @@ export class LeaveService {
   ): Observable<any> {
     const start: string = this.dateUtilService.formatHyphenDate(startDate);
     const end: string = this.dateUtilService.formatHyphenDate(endDate);
-    console.log(start, end);
     return this.httpClient.get<any>(
       `${BASE_URL}res-utilization-report?&startDate=${start}&endDate=${end}&dateCount=${dateCount}`
+    );
+  }
+
+  getLeaveReport(startDate: string, endDate: string): Observable<any> {
+    const start: string = this.dateUtilService.formatHyphenDate(startDate);
+    const end: string = this.dateUtilService.formatHyphenDate(endDate);
+    return this.httpClient.get<any>(
+      `${BASE_URL}leave-report?&startDate=${start}&endDate=${end}`
     );
   }
 }

@@ -59,6 +59,18 @@ export class ResourceUilityComponent {
       });
   }
 
+  getLeaveReport() {
+    const startStrDate: string = `${this.customStartDate.year}-${this.customStartDate.month}-${this.customStartDate.day}`;
+    const endStrDate: string = `${this.customEndDate.year}-${this.customEndDate.month}-${this.customEndDate.day}`;
+    this.leaveService
+      .getLeaveReport(startStrDate, endStrDate)
+      .subscribe((res) => {
+        const alert = this.downloadReport(res);
+        this.alertEmitter.emit(alert);
+        this.initDates();
+      });
+  }
+
   private downloadReport(res: any): Alert {
     let alert = null;
     if (res['data']) {
