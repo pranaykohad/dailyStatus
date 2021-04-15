@@ -31,14 +31,14 @@ public class LeaveServiceImpl implements LeaveService {
 	private LeaveRepository leaveRepo;
 
 	@Autowired
-	UserRepository userRepository;
+	private UserRepository userRepository;
 
 	@Autowired
-	HolidayRepository holidayRepository;
+	private HolidayRepository holidayRepository;
 
 	@Autowired
-	ReportUtil reportUtil;
-
+	private ReportUtil reportUtil;
+	
 	@Override
 	@Transactional
 	public Result addLeaves(final List<Leave> leaves) {
@@ -73,6 +73,7 @@ public class LeaveServiceImpl implements LeaveService {
 		final List<Leave> leaves = leaveRepo.getHalfdayLeavesByMonth(type, month + '%');
 		if (!leaves.isEmpty()) {
 			buildTitle(leaves);
+			leaves.forEach(leave -> leave.setUser(null) );
 			result.setData(leaves);
 			result.setStatus(ResStatus.SUCCESS);
 		}
@@ -104,7 +105,6 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	public Result buildResourceUtilizationReport(final String startDate, final String endDate, final int dateCount) {
-
 		final Result result = new Result();
 		final List<User> billableUserList = userRepository.findAllBillableUsersButAmin(true);
 		final StringBuilder content = new StringBuilder();
@@ -116,7 +116,6 @@ public class LeaveServiceImpl implements LeaveService {
 		float totolBAvailableHours = 0.0f;
 
 		for (User user : billableUserList) {
-
 			final int fullDayLeavsCount = getLeaveCount(user.getUserId(), FULL_DAY, startDate, endDate);
 			final int halfDayLeavsCount = getLeaveCount(user.getUserId(), HALF_DAY, startDate, endDate);
 			final int holidayCount = holidayRepository.getHolidayCount(startDate, endDate);
@@ -151,6 +150,9 @@ public class LeaveServiceImpl implements LeaveService {
 		addSubTotalLine("Billable Subtotal", content, totolBBaseHours, totolBHolidayHours, totolBLeaveHours,
 				totolBAvailableHours);
 
+		content.append(ReportConstant.ONE_LINE + ",");
+		content.append("Additional Resources Applied,");
+		
 		final List<User> unBillableUserList = userRepository.findAllBillableUsersButAmin(false);
 
 		float totolUBBaseHours = 0.0f;
@@ -159,7 +161,6 @@ public class LeaveServiceImpl implements LeaveService {
 		float totolUBAvailableHours = 0.0f;
 
 		for (User user : unBillableUserList) {
-
 			final int fullDayLeavsCount = getLeaveCount(user.getUserId(), FULL_DAY, startDate, endDate);
 			final int halfDayLeavsCount = getLeaveCount(user.getUserId(), HALF_DAY, startDate, endDate);
 			final int holidayCount = holidayRepository.getHolidayCount(startDate, endDate);
@@ -193,7 +194,6 @@ public class LeaveServiceImpl implements LeaveService {
 
 		addSubTotalLine("Non-Billable Subtotal", content, totolUBBaseHours, totolUBHolidayHours, totolUBLeaveHours,
 				totolUBAvailableHours);
-
 		addTotalLine(content, totolBBaseHours + totolUBBaseHours, totolBHolidayHours + totolUBHolidayHours,
 				totolBLeaveHours + totolUBLeaveHours, totolBAvailableHours + totolUBAvailableHours);
 		buildResUtilFile(result, content, startDate, endDate);
@@ -259,7 +259,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 	private void addRow(final StringBuilder content, User user, final float baseHours, float totalHolidayHours,
 			final float leaveHours, final float availableHours) {
-		content.append(ReportConstant.ONE_LINE + ",");
+		content.append(ReportConstant.ONE_LINE+",");
 		content.append(user.getFirstName() + " " + user.getLastName() + ",");
 		content.append(user.getPosition() + ",");
 		content.append(baseHours + ",");
@@ -268,6 +268,40 @@ public class LeaveServiceImpl implements LeaveService {
 		content.append(availableHours + ",");
 		content.append(availableHours + ",");
 		content.append(HUNDRED_PERCENT);
+	}
+
+	@Override
+	public Result buildLeaveReport(String startDate, String endDate) {
+		final Result result = new Result();
+		result.setStatus(ResStatus.SUCCESS);
+		
+		final StringBuilder content = new StringBuilder();
+		reportUtil.buildLeaveReportHeading(content, startDate, endDate);
+		
+		final List<Leave> leaves = leaveRepo.getUserOnLeave(startDate, endDate);
+		content.append(ReportConstant.ONE_LINE);
+		
+		if(!leaves.isEmpty()) {
+			int count = 1;
+			for(Leave leave: leaves) {
+				content.append(count++ +",");
+				content.append(leave.getUser().getFirstName()+" "+leave.getUser().getLastName()+",");
+				content.append(leave.getType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
+				content.append(leave.getStart()+",");
+				content.append(ReportConstant.ONE_LINE);
+			}
+			
+//			for(int i = 0 ; i < leaves.size() ; i++) {
+//				content.append(i+1 +",");
+//				content.append(leaves.get(i).getUser().getFirstName()+" "+leaves.get(i).getUser().getLastName()+",");
+//				content.append(leaves.get(i).getType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
+//				content.append(leaves.get(i).getStart()+",");
+//				content.append(ReportConstant.ONE_LINE);
+//			}
+		}
+		
+		buildResUtilFile(result, content, startDate, endDate);
+		return result;
 	}
 
 }

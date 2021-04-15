@@ -170,6 +170,15 @@ public class ReportUtil {
 		content.append("Actual Hours,");
 		content.append("Utilization %,");
 	}
+	
+	public void buildLeaveReportHeading(final StringBuilder content, final String startDate, final String endDate) {
+		content.append("Leave plan from "+startDate+" to "+endDate);
+		content.append(ReportConstant.ONE_LINE);
+		content.append("Sr. No.,");
+		content.append("Team Member,");
+		content.append("Days,");
+		content.append("Dates");
+	}
 
 	private void addCustomHeading(final StringBuilder content) {
 		content.append("Sr. No.,");

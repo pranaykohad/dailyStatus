@@ -14,4 +14,5 @@ public interface LeaveService {
 	public Result deleteLeaveById(final List<Integer> leaveIds);
 	public int getLeaveCount(final int userId, final String type, final String startDate, final String endDate);
 	public Result buildResourceUtilizationReport(final String startDate, final String endDate, final int dateCount);
+	public Result buildLeaveReport(final String startDate, final String endDate);
 }

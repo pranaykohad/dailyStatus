@@ -47,5 +47,10 @@ public class LeaveController {
 	public Result buildResourceUtilizationReport(@RequestParam() final String startDate, @RequestParam() final String endDate, @RequestParam() final int dateCount) {
 		return leaveService.buildResourceUtilizationReport(startDate, endDate, dateCount);
 	}
+	
+	@GetMapping("/leave-report")
+	public Result buildLeaveReport(@RequestParam() final String startDate, @RequestParam() final String endDate) {
+		return leaveService.buildLeaveReport(startDate, endDate);
+	}
 
 }
