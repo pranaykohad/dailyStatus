@@ -11,7 +11,6 @@ import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 import {
-  DEFAULT_USER_TYPE,
   END_TIME,
   FULL_DAY_LABEL,
   HALF_DAY_LABEL,
@@ -34,34 +33,30 @@ import { Status } from './../model/status';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  alert: Alert;
+  alert: Alert = new Alert(null, null);
   user: User;
-  stateList;
+  stateList = stateList;
   statusList: Status[];
-  recentDate: DatePicker;
-  recentStatus: Status[];
-  alertTimeout: any;
-  today: DatePicker;
-  todaysStatus: Status[];
+  recentStatus: Status[] = [];
   message: string;
   editStatus = false;
   editLeavePlan = false;
   fullDayLeaves: ILeave[];
   halfDayLeaves: ILeave[];
-  addedItems: ILeave[];
-  removedItems: ILeave[];
+  addedItems: ILeave[] = [];
+  removedItems: ILeave[] = [];
   selectedItem: EventApi;
-  loggedUserName: string;
-  editMode = false;
-  DEFAULT_USER_TYPE = DEFAULT_USER_TYPE;
   holidays: IHoliday[];
-  currrentMonth: string;
   isTimeUp: boolean;
   countDown: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
+  private recentDate: DatePicker;
+  private alertTimeout: any;
+  private today: DatePicker;
+  private currrentMonth: string;
 
   constructor(
     private statusService: StatusService,
@@ -73,10 +68,7 @@ export class MainComponent implements OnInit {
     private holidayService: HolidayService,
     private dateUtilService: DateUtilService
   ) {
-    this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
-    this.stateList = stateList;
-    this.recentStatus = [];
     this.resetStatusList();
     const today = new Date();
     this.today = new DatePicker(
@@ -85,8 +77,6 @@ export class MainComponent implements OnInit {
       today.getFullYear()
     );
     this.setCurrentMonth();
-    this.addedItems = [];
-    this.removedItems = [];
     this.registerTimer();
   }
 
