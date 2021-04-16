@@ -12,8 +12,10 @@ import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 import {
   DEFAULT_USER_TYPE,
+  END_TIME,
   FULL_DAY_LABEL,
   HALF_DAY_LABEL,
+  START_TIME,
   stateList,
 } from '../app.constant';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
@@ -54,6 +56,8 @@ export class MainComponent implements OnInit {
   DEFAULT_USER_TYPE = DEFAULT_USER_TYPE;
   holidays: IHoliday[];
   currrentMonth: string;
+  isTimeUp: boolean;
+  countDown: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
@@ -83,6 +87,7 @@ export class MainComponent implements OnInit {
     this.setCurrentMonth();
     this.addedItems = [];
     this.removedItems = [];
+    this.registerTimer();
   }
 
   ngOnInit(): void {
@@ -106,7 +111,7 @@ export class MainComponent implements OnInit {
       this.submitLeaves();
       return;
     }
-    if (!this.statusList.length) {
+    if (!this.statusList.length || this.isTimeUp) {
       return;
     }
     const statusList: Status[] = [];
@@ -437,5 +442,20 @@ export class MainComponent implements OnInit {
     this.currrentMonth = this.dateUtilService.formatHyphenDateToYM(
       date.getFullYear() + '-' + (date.getMonth() + 1)
     );
+  }
+
+  private registerTimer() {
+    setInterval(() => {
+      const date: Date = new Date();
+      const currentHour: number = date.getHours();
+      this.isTimeUp = !(currentHour >= START_TIME && currentHour < END_TIME);
+      if (this.isTimeUp) {
+        this.countDown = null;
+      } else {
+        this.countDown = `${END_TIME - (date.getHours() + 1)}h ${
+          60 - (date.getMinutes() + 1)
+        }m ${60 - (date.getSeconds() + 1)}s`;
+      }
+    }, 1000);
   }
 }

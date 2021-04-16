@@ -45,6 +45,13 @@
         id="btn-leave-plan">
         Leave Plan
       </button>
+      <div *ngIf="countDown; else timesUpMsg" class="ml-2 p-1">
+        <span class="bold-txt" style="color: green;">Status submission will be disabled in
+        </span>{{countDown}}
+      </div>
+      <ng-template #timesUpMsg>
+        <div class="ml-2 p-1 bold-txt" style="color: red;">"Time waits for no one". Your time is up for today</div>
+      </ng-template>
     </div>
   </div>
   <hr />
@@ -64,27 +71,28 @@
           </div>
         </ng-container>
         <ng-template #statusListView>
-          <div class="row ml-3" *ngFor="let row of statusList; let index = index">
+          <div [class.disable-view]="isTimeUp" class="row ml-3" *ngFor="let row of statusList; let index = index">
             <div class="form-group row pl-0 justify-content-around-space-evenly">
               <label [for]="' tkt-id-' + index + 1" class="mr-2">{{ index + 1 }})</label>
               <input class="form-control form-control-sm col-md-8" [id]="'tkt-id-' + index + 1"
                 [(ngModel)]="row.ticketId" placeholder="Ticket Id" [name]="'tkt-id-' + index + 1"
-                [disabled]="row.delete" />
+                [disabled]="row.delete || isTimeUp" />
             </div>
             <div class="form-group col-md-7">
               <textarea class="form-control txt-bx p-0 pl-2" [id]="'tkt-desc-' + index + 1"
-                [(ngModel)]="row.description" placeholder="Description" [disabled]="row.delete"></textarea>
+                [(ngModel)]="row.description" placeholder="Description" [disabled]="row.delete || isTimeUp"></textarea>
             </div>
             <div class="form-group">
               <select class="module-name dropdown" (change)="changeState($event.target.selectedIndex, row)"
-                [disabled]="row.delete">
+                [disabled]="row.delete || isTimeUp">
                 <option *ngFor="let state of stateList" [selected]="row.state === state">
                   {{ state }}
                 </option>
               </select>
             </div>
             <div *ngIf="editStatus" class="form-group pl-2">
-              <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record">
+              <button class="btn btn-outline-danger btn-sm" (click)="row.delete = !row.delete;" title="Delete record"
+                [disabled]="isTimeUp">
                 Delete
               </button>
             </div>
@@ -197,7 +205,8 @@
         Submit Leave Plan
       </button>
       <ng-template #statusSubmitBtn>
-        <button class="btn btn-outline-success btn-sm mr-3" (click)="submitForm()" [disabled]="!statusList.length">
+        <button class="btn btn-outline-success btn-sm mr-3" (click)="submitForm()"
+          [disabled]="!statusList.length || isTimeUp">
           Submit Status
         </button>
       </ng-template>
