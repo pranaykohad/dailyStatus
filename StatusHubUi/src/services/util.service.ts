@@ -25,8 +25,8 @@ export class UtilService {
     window.URL.revokeObjectURL(url);
   }
 
-  removeComma(description: string): string {
-    return description.replace(/,/g, '.');
+  removeCommaAndNewLine(description: string): string {
+    return description.replace(/\r?\n|\r|,/g, '. ');
   }
 
   isSatOrSun(): boolean {

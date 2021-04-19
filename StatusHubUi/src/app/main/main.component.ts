@@ -47,7 +47,7 @@ export class MainComponent implements OnInit {
   removedItems: ILeave[] = [];
   selectedItem: EventApi;
   holidays: IHoliday[];
-  isTimeUp: boolean;
+  isTimeUp: boolean = true;
   countDown: string;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
@@ -337,7 +337,9 @@ export class MainComponent implements OnInit {
     this.statusList.forEach((status) => {
       if (status.description.trim().length) {
         status.description = status.description.trim();
-        status.description = this.utilService.removeComma(status.description);
+        status.description = this.utilService.removeCommaAndNewLine(
+          status.description
+        );
         status.ticketId = status.ticketId ? status.ticketId.trim() : null;
         if (status.description.length > 250) {
           this.alertHandler({
@@ -386,24 +388,6 @@ export class MainComponent implements OnInit {
       }
     });
   }
-
-  // private getThreeMonthHalfDayLeaves() {
-  //   const dateArray: string[] = this.dateUtilService.getYMSlashFromDate();
-  //   const previousMonth = dateArray[0];
-  //   const currentMonth = dateArray[1];
-  //   const nextMonth = dateArray[2];
-  //   let halfDayLeaves: ILeave[] = [];
-  //   forkJoin(
-  //     this.leaveService.getLeaves(HALF_DAY_LABEL, previousMonth),
-  //     this.leaveService.getLeaves(HALF_DAY_LABEL, currentMonth),
-  //     this.leaveService.getLeaves(HALF_DAY_LABEL, nextMonth)
-  //   ).subscribe((res) => {
-  //     halfDayLeaves = halfDayLeaves.concat(res[0]['data']);
-  //     halfDayLeaves = halfDayLeaves.concat(res[1]['data']);
-  //     halfDayLeaves = halfDayLeaves.concat(res[2]['data']);
-  //     this.halfDayLeaves = halfDayLeaves;
-  //   });
-  // }
 
   private initHalfDayLeaves(currrentMonth: string) {
     this.halfDayLeaves = [];
