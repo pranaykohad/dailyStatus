@@ -25,6 +25,7 @@ export const POSITION_LIST = [
   'Sr. AQA',
   'AQA',
 ];
+export const TYPES = ['All', 'Planned', 'Un-Planned'];
 export const numOfStatus = 6;
 export const SUNDAY = 0;
 export const MONDAY = 1;

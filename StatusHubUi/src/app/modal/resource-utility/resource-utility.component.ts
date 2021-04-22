@@ -1,9 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  NgbCalendar,
-  NgbDate,
-  NgbInputDatepickerConfig,
-} from '@ng-bootstrap/ng-bootstrap';
+import { TYPES } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -17,6 +13,8 @@ import { UtilService } from 'src/services/util.service';
   styleUrls: ['./resource-utility.component.scss'],
 })
 export class ResourceUilityComponent {
+  TYPES = TYPES;
+  selectedType = 'All';
   alert: Alert;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
@@ -59,11 +57,21 @@ export class ResourceUilityComponent {
       });
   }
 
+  tyChange(type: string) {
+    this.selectedType = type;
+  }
+
   getLeaveReport() {
+    let selectedType = 'All';
+    if (this.selectedType === 'Planned') {
+      selectedType = 'P';
+    } else if (this.selectedType === 'Un-Planned') {
+      selectedType = 'UP';
+    }
     const startStrDate: string = `${this.customStartDate.year}-${this.customStartDate.month}-${this.customStartDate.day}`;
     const endStrDate: string = `${this.customEndDate.year}-${this.customEndDate.month}-${this.customEndDate.day}`;
     this.leaveService
-      .getLeaveReport(startStrDate, endStrDate, 'All')
+      .getLeaveReport(startStrDate, endStrDate, selectedType)
       .subscribe((res) => {
         const alert = this.downloadReport(res);
         this.alertEmitter.emit(alert);
