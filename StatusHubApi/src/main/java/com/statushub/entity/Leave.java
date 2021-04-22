@@ -21,14 +21,17 @@ public class Leave {
 
 	@Column(name = "startDate")
 	private String start;
+
 	@JsonIgnore
-	private String type;
+	private String dayType;
 
 	@Transient
 	private String updatedStart;
 
 	@Transient
 	private String title;
+
+	private String type;
 
 	@ManyToOne
 	@JsonIgnore
@@ -58,17 +61,25 @@ public class Leave {
 	public void setUpdatedStart(final String updatedStart) {
 		this.updatedStart = updatedStart;
 	}
-	public String getType() {
-		return type;
+	public String getDayType() {
+		return dayType;
 	}
-	public void setType(final String type) {
-		this.type = type;
+	public void setDayType(final String dayType) {
+		this.dayType = dayType;
 	}
 	public User getUser() {
 		return user;
 	}
 	public void setUser(final User user) {
 		this.user = user;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(final String type) {
+		this.type = type;
 	}
 
 }

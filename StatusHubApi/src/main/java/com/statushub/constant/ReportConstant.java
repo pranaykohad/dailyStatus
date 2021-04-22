@@ -4,33 +4,35 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ReportConstant {
-	
+
 	private ReportConstant() {}
-		
+
 	public static final String ONE_LINE = "\r\n";
-	
+
 	public static final String TWO_LINE = "\r\n\r\n";
-	
+
 	public static final String THREE_LINE = "\r\n\r\n\r\n";
-	
+
 	public static final String TAB = "     ";
-	
+
 	private static final String GREETING= "Hello,"+ONE_LINE+ONE_LINE+"Please find below today’s update:";
-	
+
 	private static final List<String> MODULE_LIST = Arrays.asList("OCR", "Connector", "Workbench 9.2", "Portal", "Automation");
-	
+
 	private static final List<String> OCR_USER_TYPE_LIST = Arrays.asList("DEV", "QA");
-	
+
 	private static final List<String> CONN_USER_TYPE_LIST = Arrays.asList("DEV", "QA");
-	
+
 	private static final List<String> WB_USER_TYPE_LIST = Arrays.asList("DEV", "QA", "PQA");
-	
+
 	private static final List<String> PORT_TYPE_LIST = Arrays.asList("DEV", "QA");
-	
+
 	private static final List<String> AUTO_USER_TYPE_LIST = Arrays.asList("AQA");
-	
+
 	private static final List<String> ALL_USER_TYPE_LIST = Arrays.asList("DEV", "QA", "AQA", "PQA");
-	
+
+	private static final List<String> LEAVE_TYPES = Arrays.asList("P", "UP");
+
 	private static final List<String> STATE_LIST = Arrays.asList("In progress", "Completed");
 
 	public static String getGreeting() {
@@ -52,7 +54,7 @@ public class ReportConstant {
 	public static List<String> getWbUserTypeList() {
 		return WB_USER_TYPE_LIST;
 	}
-	
+
 	public static List<String> getPortTypeList() {
 		return PORT_TYPE_LIST;
 	}
@@ -68,5 +70,9 @@ public class ReportConstant {
 	public static List<String> getAllUserTypeList() {
 		return ALL_USER_TYPE_LIST;
 	}
-	
+
+	public static List<String> getLeaveTypes() {
+		return LEAVE_TYPES;
+	}
+
 }

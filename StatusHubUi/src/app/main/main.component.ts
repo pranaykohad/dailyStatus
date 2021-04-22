@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { EventApi } from '@fullcalendar/angular';
-import { FullCalendarComponent } from 'src/app/full-calendar/full-calendar.component';
 import { DatePicker } from 'src/app/model/datePicker';
 import { DateUtilService } from 'src/services/date-util.service';
 import { HolidayService } from 'src/services/holiday.service';
@@ -10,13 +9,7 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import {
-  END_TIME,
-  FULL_DAY_LABEL,
-  HALF_DAY_LABEL,
-  START_TIME,
-  stateList,
-} from '../app.constant';
+import { END_TIME, START_TIME, stateList } from '../app.constant';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
@@ -24,7 +17,7 @@ import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
 import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
-import { IHoliday, ILeave } from './../model/leave';
+import { IHoliday, ILeave, Leave } from './../model/leave';
 import { Status } from './../model/status';
 
 @Component({
@@ -41,22 +34,17 @@ export class MainComponent implements OnInit {
   message: string;
   editStatus = false;
   editLeavePlan = false;
-  fullDayLeaves: ILeave[];
-  halfDayLeaves: ILeave[];
-  addedItems: ILeave[] = [];
-  removedItems: ILeave[] = [];
+  removedItem: ILeave = new Leave();
   selectedItem: EventApi;
-  holidays: IHoliday[];
   isTimeUp: boolean = true;
   countDown: string;
+  holidays: IHoliday[];
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
-  @ViewChild('fullCalendar') fullCalendar: FullCalendarComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
   private recentDate: DatePicker;
   private alertTimeout: any;
   private today: DatePicker;
-  private currrentMonth: string;
 
   constructor(
     private statusService: StatusService,
@@ -65,19 +53,29 @@ export class MainComponent implements OnInit {
     private router: Router,
     private utilService: UtilService,
     private leaveService: LeaveService,
-    private holidayService: HolidayService,
-    private dateUtilService: DateUtilService
+    private dateUtilService: DateUtilService,
+    private cdrf: ChangeDetectorRef,
+    private holidayService: HolidayService
   ) {
     this.user = this.localStoreService.getUser();
     this.resetStatusList();
+    this.initHolidays();
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
       today.getDate(),
       today.getFullYear()
     );
-    this.setCurrentMonth();
     this.registerTimer();
+  }
+
+  private initHolidays(): void {
+    this.holidays = [];
+    this.holidayService.getAllHolidays().subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        this.holidays = res['data'];
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -86,9 +84,6 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
-      this.initHolidays();
-      this.initHalfDayLeaves(this.currrentMonth);
-      this.initFullDayLeaves(this.currrentMonth);
     }
   }
 
@@ -97,10 +92,6 @@ export class MainComponent implements OnInit {
   }
 
   submitForm(): void {
-    if (this.editLeavePlan) {
-      this.submitLeaves();
-      return;
-    }
     if (!this.statusList.length || this.isTimeUp) {
       return;
     }
@@ -126,8 +117,7 @@ export class MainComponent implements OnInit {
 
   resetStatusList() {
     if (this.editLeavePlan) {
-      this.addedItems = [];
-      this.removedItems = [];
+      this.removedItem = new Leave();
       this.selectedItem = null;
     }
     this.statusList = [];
@@ -202,104 +192,52 @@ export class MainComponent implements OnInit {
     this.editLeavePlan = true;
   }
 
-  deleteLeave() {
+  addRemovedItem() {
     if (!this.selectedItem) {
+      this.removedItem = new Leave();
       return;
     }
     const leave: ILeave = {
-      leaveId: this.selectedItem._def.extendedProps.leaveId
-        ? this.selectedItem._def.extendedProps.leaveId
-        : null,
+      leaveId: this.selectedItem._def.extendedProps.leaveId,
       title: this.selectedItem._def.title,
       start: this.selectedItem._instance.range.start.toString(),
-      updatedStart: null,
+      type: 'All',
     };
-    if (leave.leaveId) {
-      // add item in removed-item list, so that we can remove those from existing object
-      const temp = this.removedItems;
-      this.removedItems = [];
-      this.removedItems = this.removedItems.concat(temp).concat(leave);
-    } else {
-      // remove item from added-items list.
-      this.fullCalendar.updateAddedItems(
-        this.selectedItem._instance.range.start
-      );
-    }
-    // remove card from UI
-    this.selectedItem.remove();
-    this.selectedItem = null;
-  }
-
-  addedItemsHandler(leaves: ILeave[]) {
-    this.addedItems = leaves;
+    this.removedItem = leave;
   }
 
   selectedItemHandler(selectedItem: EventApi) {
     this.selectedItem = selectedItem;
-  }
-
-  monthHandler(month: string) {
-    this.leaveService.getLeaves(FULL_DAY_LABEL, month).subscribe((res) => {
-      if (res['status'] === 'SUCCESS') {
-        this.fullDayLeaves = res['data'];
-      }
-    });
-    this.leaveService.getLeaves(HALF_DAY_LABEL, month).subscribe((res) => {
-      if (res['status'] === 'SUCCESS') {
-        this.halfDayLeaves = res['data'];
-      }
-    });
+    this.addRemovedItem();
   }
 
   loggedInUserUpdateHandler() {
     this.user = this.localStoreService.getUser();
   }
 
-  private submitLeaves() {
-    if (this.addedItems.length) {
-      this.addLeaves();
-    }
-    this.deleteLeaves();
-  }
-
-  private addLeaves() {
-    const addedItems = this.addedItems;
-    addedItems.forEach((item) => {
-      item.start = this.dateUtilService.formatCalDateToDate(
-        new Date(item.start)
-      );
-    });
-    this.leaveService.addLeaves(addedItems).subscribe((res) => {
-      this.addedItems.length = 0;
-      this.alertHandler({
-        message: res['description'],
-        type: res['status'],
-      });
-      this.reInitFullCalendar();
-    });
-  }
-
-  private deleteLeaves() {
-    const leavesIds: number[] = [];
-    this.removedItems.forEach((item) => {
-      leavesIds.push(item.leaveId);
-    });
-    if (leavesIds.length) {
-      this.leaveService.deleteLeaves(leavesIds).subscribe((res) => {
-        this.removedItems.length = 0;
-        this.alertHandler({
-          message: res['description'],
-          type: res['status'],
+  deleteLeaves() {
+    if (this.removedItem.leaveId) {
+      this.leaveService
+        .deleteLeaves(this.removedItem.leaveId)
+        .subscribe((res) => {
+          this.removedItem = new Leave();
+          this.alertHandler({
+            message: res['description'],
+            type: res['status'],
+          });
+          // remove card from UI
+          this.selectedItem.remove();
+          this.selectedItem = null;
+          this.resetCalendar();
         });
-        this.reInitFullCalendar();
-      });
     }
   }
 
-  private reInitFullCalendar() {
-    this.initHalfDayLeaves(this.currrentMonth);
-    this.initFullDayLeaves(this.currrentMonth);
-    this.resetStatusList();
+  resetCalendar() {
+    this.editLeavePlan = false;
+    this.cdrf.detectChanges();
+    this.editLeavePlan = true;
+    this.cdrf.detectChanges();
   }
 
   private setRecentDate() {
@@ -378,44 +316,6 @@ export class MainComponent implements OnInit {
       };
     }
     return alert;
-  }
-
-  private initHolidays(): void {
-    this.holidays = [];
-    this.holidayService.getAllHolidays().subscribe((res) => {
-      if (res['status'] === 'SUCCESS') {
-        this.holidays = res['data'];
-      }
-    });
-  }
-
-  private initHalfDayLeaves(currrentMonth: string) {
-    this.halfDayLeaves = [];
-    this.leaveService
-      .getLeaves(HALF_DAY_LABEL, currrentMonth)
-      .subscribe((res) => {
-        if (res['status'] === 'SUCCESS') {
-          this.halfDayLeaves = res['data'];
-        }
-      });
-  }
-
-  private initFullDayLeaves(currrentMonth: string): void {
-    this.fullDayLeaves = [];
-    this.leaveService
-      .getLeaves(FULL_DAY_LABEL, currrentMonth)
-      .subscribe((res) => {
-        if (res['status'] === 'SUCCESS') {
-          this.fullDayLeaves = res['data'];
-        }
-      });
-  }
-
-  private setCurrentMonth() {
-    const date = new Date();
-    this.currrentMonth = this.dateUtilService.formatHyphenDateToYM(
-      date.getFullYear() + '-' + (date.getMonth() + 1)
-    );
   }
 
   private registerTimer() {

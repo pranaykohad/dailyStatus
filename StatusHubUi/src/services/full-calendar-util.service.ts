@@ -99,7 +99,7 @@ export class FullCalendarUtil {
   }
 
   checkItemInEventSource(
-    removedItems: ILeave[],
+    removedItem: ILeave,
     calendarOptions: CalendarOptions
   ) {
     let oldFullDayLeaves: ILeave[] =
@@ -108,23 +108,21 @@ export class FullCalendarUtil {
     let oldHalfDayLeaves: ILeave[] =
       calendarOptions.eventSources[HALF_DAY_LEAVE_INDEX]['events'];
 
-    removedItems.forEach((item) => {
-      if (this.checkItemLeaves(oldFullDayLeaves, item)) {
-        calendarOptions.eventSources[FULL_DAY_LEAVE_INDEX][
+    if (this.checkItemLeaves(oldFullDayLeaves, removedItem)) {
+      calendarOptions.eventSources[FULL_DAY_LEAVE_INDEX][
+        'events'
+      ] = oldFullDayLeaves.filter((i) => {
+        return i.leaveId !== removedItem.leaveId;
+      });
+    } else {
+      if (this.checkItemLeaves(oldHalfDayLeaves, removedItem)) {
+        calendarOptions.eventSources[HALF_DAY_LEAVE_INDEX][
           'events'
-        ] = oldFullDayLeaves.filter((i) => {
-          return i.leaveId !== item.leaveId;
+        ] = oldHalfDayLeaves.filter((i) => {
+          return i.leaveId !== removedItem.leaveId;
         });
-      } else {
-        if (this.checkItemLeaves(oldHalfDayLeaves, item)) {
-          calendarOptions.eventSources[HALF_DAY_LEAVE_INDEX][
-            'events'
-          ] = oldHalfDayLeaves.filter((i) => {
-            return i.leaveId !== item.leaveId;
-          });
-        }
       }
-    });
+    }
   }
 
   eventAllow(draggedEvent: EventApi, loggedUserName: string): boolean {

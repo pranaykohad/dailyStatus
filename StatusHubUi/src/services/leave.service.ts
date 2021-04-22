@@ -16,18 +16,16 @@ export class LeaveService {
 
   getLeaves(type: string, month: string): Observable<any> {
     return this.httpClient.get<any>(
-      `${BASE_URL}leaves?type=${type}&month=${month}`
+      `${BASE_URL}leave?type=${type}&month=${month}`
     );
   }
 
-  addLeaves(leaves: ILeave[]): Observable<any> {
-    return this.httpClient.post<any>(`${BASE_URL}leaves`, leaves);
+  addLeaves(leave: ILeave): Observable<any> {
+    return this.httpClient.post<any>(`${BASE_URL}leave`, leave);
   }
 
-  deleteLeaves(leavesIds: number[]): Observable<any> {
-    return this.httpClient.delete<any>(
-      `${BASE_URL}leaves?leavesIds=${leavesIds}`
-    );
+  deleteLeaves(leavesId: number): Observable<any> {
+    return this.httpClient.delete<any>(`${BASE_URL}leave?leavesId=${leavesId}`);
   }
 
   getResUtilreport(
@@ -42,11 +40,15 @@ export class LeaveService {
     );
   }
 
-  getLeaveReport(startDate: string, endDate: string): Observable<any> {
+  getLeaveReport(
+    startDate: string,
+    endDate: string,
+    type: string
+  ): Observable<any> {
     const start: string = this.dateUtilService.formatHyphenDate(startDate);
     const end: string = this.dateUtilService.formatHyphenDate(endDate);
     return this.httpClient.get<any>(
-      `${BASE_URL}leave-report?&startDate=${start}&endDate=${end}`
+      `${BASE_URL}leave-report?&startDate=${start}&endDate=${end}&type=${type}`
     );
   }
 }

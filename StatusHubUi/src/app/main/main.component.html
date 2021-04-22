@@ -58,10 +58,8 @@
   <div class="main-content col-md-12 p-0">
     <div class="main-content-left pt-1 pl-0" [ngClass]="editLeavePlan? 'col-md-10':'col-md-8'">
       <ng-container *ngIf="editLeavePlan; else statusView">
-        <app-full-calendar #fullCalendar [addedItems]="addedItems" [removedItems]="removedItems" [holidays]="holidays"
-          [halfDayLeaves]="halfDayLeaves" [fullDayLeaves]="fullDayLeaves"
-          (addedItemsEmitter)="addedItemsHandler($event)" (selectedItemEmitter)="selectedItemHandler($event)"
-          (alertEmitter)="alertHandler($event)" (monthEmitter)="monthHandler($event)">
+        <app-full-calendar [holidays]="holidays" (selectedItemEmitter)="selectedItemHandler($event)"
+          (alertEmitter)="alertHandler($event)" (resetEmitter)="resetCalendar()">
         </app-full-calendar>
       </ng-container>
       <ng-template #statusView>
@@ -112,9 +110,9 @@
             [id]="user.firstName+' '+user.lastName+':half-day'">
             Drag Half Day Leave
           </button>
-          <button class="btn btn-danger" [id]="user.firstName+' '+user.lastName+':half-day'" [disabled]="!selectedItem"
-            (click)="deleteLeave()">
-            Add to Delete
+          <button class="btn btn-danger" [id]="user.firstName+' '+user.lastName+':half-day'" (click)="deleteLeaves()"
+            [disabled]="!removedItem.leaveId">
+            Delete Leave
           </button>
         </div>
         <div class="pl-3 pb-2 pt-2 grey-bolder-grey font-size-13">
@@ -122,9 +120,9 @@
           <table class="table table-borderless mb-0">
             <tbody>
               <tr>
-                <td class="p-0 width-100"><label class="pr-2 mb-0">Holiday:</label></td>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Full day leave:</label></td>
                 <td class="p-0">
-                  <div class="legends-box holiday"></div>
+                  <div class="legends-box full-day"></div>
                 </td>
               </tr>
               <tr>
@@ -134,15 +132,9 @@
                 </td>
               </tr>
               <tr>
-                <td class="p-0 width-100"><label class="pr-2 mb-0">Full day leave:</label></td>
+                <td class="p-0 width-100"><label class="pr-2 mb-0">Holiday:</label></td>
                 <td class="p-0">
-                  <div class="legends-box full-day"></div>
-                </td>
-              </tr>
-              <tr>
-                <td class="p-0 width-100"><label class="pr-2 mb-0">Un-saved leave:</label></td>
-                <td class="p-0">
-                  <div class="legends-box unsaved-leaves"></div>
+                  <div class="legends-box holiday"></div>
                 </td>
               </tr>
             </tbody>
@@ -150,21 +142,15 @@
         </div>
         <div class="col-md-12">
           <span class="font-wt-500">Your Changes:</span>
-          <div *ngIf="!addedItems.length && !removedItems.length; else leaveList">
+          <div *ngIf="!removedItem.leaveId; else leaveList">
             No Changes
           </div>
           <ng-template #leaveList>
             <div class="leave-detail-contr">
-              <div *ngIf="removedItems.length">
-                <span class="font-wt-400">Remove Leaves:</span>
-                <div *ngFor="let item of removedItems" class="col-md-12">
-                  {{item.start | dateFormat}} ({{item.title.split(':')[1]}})
-                </div>
-              </div>
-              <div *ngIf="addedItems.length">
-                <span class="font-wt-400">Added Leaves:</span>
-                <div *ngFor="let item of addedItems" class="col-md-12">
-                  {{item.start | dateFormat}} ({{item.title.split(':')[1]}})
+              <div *ngIf="removedItem.leaveId">
+                <span class="font-wt-400">Selected Leaves:</span>
+                <div class="col-md-12">
+                  {{removedItem.start | dateFormat}} ({{removedItem.title.split(':')[1]}})
                 </div>
               </div>
             </div>
@@ -200,16 +186,10 @@
   <hr />
   <div>
     <div class="row ml-2">
-      <button *ngIf="editLeavePlan; else statusSubmitBtn" class="btn btn-outline-success btn-sm mr-3"
-        (click)="submitForm()" [disabled]="!(addedItems.length || removedItems.length)">
-        Submit Leave Plan
+      <button *ngIf="!editLeavePlan" class="btn btn-outline-success btn-sm mr-3" (click)="submitForm()"
+        [disabled]="!statusList.length || isTimeUp">
+        Submit Status
       </button>
-      <ng-template #statusSubmitBtn>
-        <button class="btn btn-outline-success btn-sm mr-3" (click)="submitForm()"
-          [disabled]="!statusList.length || isTimeUp">
-          Submit Status
-        </button>
-      </ng-template>
       <button class="btn btn-outline-danger btn-sm"
         (click)="resetStatusList(); alertHandler( { message : 'Your changes has been Reset', type : 'success'})">
         Back

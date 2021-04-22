@@ -13,21 +13,25 @@ import { FullCalendar } from 'primeng/fullcalendar';
 import {
   DARK_GREY,
   FULL_DAY_COLOR,
+  FULL_DAY_LABEL,
   FULL_DAY_LEAVE_INDEX,
   HALF_DAY_COLOR,
+  HALF_DAY_LABEL,
   HALF_DAY_LEAVE_INDEX,
   HOLIDAY_COLOR,
   HOLIDAY_LIST,
 } from 'src/app/app.constant';
-import { IHoliday, ILeave } from 'src/app/model/leave';
+import { IHoliday } from 'src/app/model/leave';
 import { User } from 'src/app/model/user';
 import { DateUtilService } from 'src/services/date-util.service';
 import { FullCalendarUtil } from 'src/services/full-calendar-util.service';
+import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { UtilService } from 'src/services/util.service';
 import * as calConfig from '../../assets/full-calendar-config.json';
 import { Alert } from '../model/alert';
 import { environment } from './../../environments/environment';
+import { ILeave } from './../model/leave';
 
 @Component({
   selector: 'app-full-calendar',
@@ -38,121 +42,39 @@ export class FullCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions;
   selectedItem: EventApi;
   loggedUserName: string;
-  @Input() addedItems: ILeave[];
   @Input() holidays: IHoliday[];
-  @Output() addedItemsEmitter = new EventEmitter<ILeave[]>();
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
   @Output() alertEmitter = new EventEmitter<Alert>();
-  @Output() monthEmitter = new EventEmitter<string>();
+  @Output() resetEmitter = new EventEmitter();
   @ViewChild('fullCalendar') fullCalendar: FullCalendar;
-  private _fullDayLeaves: ILeave[];
-  private _halfDayLeaves: ILeave[];
-  private _removedItems: ILeave[];
+  private fullDayLeaves: ILeave[];
+  private halfDayLeaves: ILeave[];
 
   constructor(
     private localStoreService: LocalStorageService,
     private utilService: UtilService,
     private dateUtilService: DateUtilService,
-    private fullCalendarUtil: FullCalendarUtil
+    private fullCalendarUtil: FullCalendarUtil,
+    private leaveService: LeaveService
   ) {
     const user: User = this.localStoreService.getUser();
     this.loggedUserName = user.firstName.trim() + ' ' + user.lastName.trim();
+    this.setCurrentMonth();
   }
 
   ngOnInit(): void {
+    const currentMonth: string = this.localStoreService.getCurrentMonth();
+    if (!currentMonth) {
+      return;
+    }
+    this.initHalfDayLeaves(currentMonth);
+    this.initFullDayLeaves(currentMonth);
     this.initCalendarOptions();
     this.registerExternalDragEvent();
     setTimeout(() => {
       this.registerButtonEvents();
+      this.fullCalendar.calendar.gotoDate(currentMonth);
     });
-  }
-
-  @Input()
-  set fullDayLeaves(fullDayLeaves: ILeave[]) {
-    this._fullDayLeaves = fullDayLeaves;
-    if (!this.calendarOptions) {
-      return;
-    }
-    let oldFullDayLeaves: ILeave[] = this.calendarOptions.eventSources[
-      FULL_DAY_LEAVE_INDEX
-    ]['events'];
-
-    const oldFullDayLeavesLen = oldFullDayLeaves.length;
-    //update object
-    this.fullCalendarUtil.mergeLeaves(
-      this.calendarOptions,
-      oldFullDayLeaves,
-      fullDayLeaves,
-      FULL_DAY_LEAVE_INDEX
-    );
-
-    const newFullDayLeavesLen = this.calendarOptions.eventSources[
-      FULL_DAY_LEAVE_INDEX
-    ]['events'].length;
-
-    if (oldFullDayLeavesLen !== newFullDayLeavesLen) {
-      //update UI
-      this.fullCalendar.calendar.addEventSource({
-        events: fullDayLeaves,
-        color: FULL_DAY_COLOR,
-      });
-    }
-  }
-
-  get fullDayLeaves(): ILeave[] {
-    return this._fullDayLeaves;
-  }
-
-  @Input()
-  set halfDayLeaves(halfDayLeaves: ILeave[]) {
-    this._halfDayLeaves = halfDayLeaves;
-    if (!this.calendarOptions) {
-      return;
-    }
-
-    let oldHalfDayLeaves: ILeave[] = this.calendarOptions.eventSources[
-      HALF_DAY_LEAVE_INDEX
-    ]['events'];
-    const oldHalfDayLeavesLen = oldHalfDayLeaves.length;
-
-    //update object
-    this.fullCalendarUtil.mergeLeaves(
-      this.calendarOptions,
-      oldHalfDayLeaves,
-      halfDayLeaves,
-      HALF_DAY_LEAVE_INDEX
-    );
-
-    const newHalfDayLeavesLen = this.calendarOptions.eventSources[
-      HALF_DAY_LEAVE_INDEX
-    ]['events'].length;
-
-    if (oldHalfDayLeavesLen !== newHalfDayLeavesLen) {
-      //update UI
-      this.fullCalendar.calendar.addEventSource({
-        events: halfDayLeaves,
-        color: HALF_DAY_COLOR,
-      });
-    }
-  }
-
-  get halfDayLeaves(): ILeave[] {
-    return this._halfDayLeaves;
-  }
-
-  @Input()
-  set removedItems(removedItems: ILeave[]) {
-    this._removedItems = removedItems;
-    if (removedItems.length) {
-      this.fullCalendarUtil.checkItemInEventSource(
-        removedItems,
-        this.calendarOptions
-      );
-    }
-  }
-
-  get removedItems() {
-    return this._removedItems;
   }
 
   initCalendarOptions(): void {
@@ -179,9 +101,9 @@ export class FullCalendarComponent implements OnInit {
       showNonCurrentDates: calConfig.showNonCurrentDates,
       fixedWeekCount: calConfig.fixedWeekCount,
       eventSources: [
-        this.initFullDayLeaves(),
-        this.initHalfDayLeaves(),
-        this.initHolidays(),
+        this.getFullDayLeaves(),
+        this.getHalfDayLeaves(),
+        this.getHolidays(),
       ],
       eventAllow: (dropInfo, draggedEvent) => {
         return this.fullCalendarUtil.eventAllow(
@@ -190,7 +112,7 @@ export class FullCalendarComponent implements OnInit {
         );
       },
       eventDrop: (info) => {
-        this.internalDrop(info);
+        // this.internalDrop(info);
       },
       drop: (info) => {
         this.externalDrop(info);
@@ -205,21 +127,17 @@ export class FullCalendarComponent implements OnInit {
     };
   }
 
-  updateAddedItems(removeLeaveDate) {
-    const date = new Date(removeLeaveDate);
-    const newMDYSlashDate = this.dateUtilService.formatSlashDate(
-      `${date.getMonth() - 1}/${date.getDate()}/${date.getFullYear()}`
+  addLeave(leave: ILeave) {
+    leave.start = this.dateUtilService.formatCalDateToDate(
+      new Date(leave.start)
     );
-    this.addedItems = this.addedItems.filter((item) => {
-      const d1 = new Date(item.start);
-      const oldMDYSlashDate = this.dateUtilService.formatSlashDate(
-        `${d1.getMonth() - 1}/${d1.getDate()}/${d1.getFullYear()}`
-      );
-      if (JSON.stringify(newMDYSlashDate) !== JSON.stringify(oldMDYSlashDate)) {
-        return true;
-      }
+    this.leaveService.addLeaves(leave).subscribe((res) => {
+      this.alertEmitter.emit({
+        message: res['description'],
+        type: res['status'],
+      });
+      this.resetEmitter.emit();
     });
-    this.addedItemsEmitter.emit(this.addedItems);
   }
 
   private externalDrop(info: any) {
@@ -227,25 +145,19 @@ export class FullCalendarComponent implements OnInit {
       leaveId: null,
       title: info.draggedEl.id,
       start: info.date.toString(),
-      updatedStart: null,
+      type: 'All',
     };
     const date = new Date(leave.start);
     const dataStr = `${
       date.getMonth() + 1
     }/${date.getDate()}/${date.getFullYear()}`;
-    const mdySlashDate = this.dateUtilService.formatSlashDate(dataStr);
     const ymdHyphenDate = this.dateUtilService.formatSlashToHyphenDate(dataStr);
     if (
-      this.fullCalendarUtil.isInNewLeaves(mdySlashDate, this.addedItems) ||
-      (this.fullCalendarUtil.isInExistingLeaves(
+      this.fullCalendarUtil.isInExistingLeaves(
         ymdHyphenDate,
         this.calendarOptions,
         this.loggedUserName
-      ) &&
-        !this.fullCalendarUtil.isInRemovedLeaves(
-          ymdHyphenDate,
-          this.removedItems
-        )) ||
+      ) ||
       this.fullCalendarUtil.isInHolidays(
         ymdHyphenDate,
         HOLIDAY_LIST,
@@ -260,27 +172,9 @@ export class FullCalendarComponent implements OnInit {
       // this.removeAddedLeave(new Date(info.start));
       info.remove();
     } else {
-      this.addedItems.push(leave);
-      this.addedItemsEmitter.emit(this.addedItems);
+      this.addLeave(leave);
     }
   }
-
-  // private internalDrop(info: any) {
-  //   const leave: ILeave = {
-  //     leaveId: info.oldEvent._def.extendedProps.leaveId,
-  //     title: info.oldEvent._def.title,
-  //     start: info.oldEvent._instance.range.start,
-  //     updatedStart: info.event._instance.range.start,
-  //   };
-  //   const existingIndex = this.updatedItems.findIndex(
-  //     (item) => item.leaveId === leave.leaveId
-  //   );
-  //   if (existingIndex !== -1) {
-  //     this.updatedItems[existingIndex].updatedStart = leave.updatedStart;
-  //   } else {
-  //     this.updatedItems.push(leave);
-  //   }
-  // }
 
   private eventClick(info) {
     this.selectedItem = null;
@@ -288,14 +182,6 @@ export class FullCalendarComponent implements OnInit {
       this.selectedItem = info.event;
     }
     this.selectedItemEmitter.emit(this.selectedItem);
-  }
-
-  private internalDrop(info: any) {
-    if (!info.oldEvent._def.extendedProps.leaveId) {
-      info.event.remove();
-      this.updateAddedItems(info.oldEvent._instance.range.start);
-    }
-    // this.internalDrop(info);
   }
 
   private registerExternalDragEvent() {
@@ -332,26 +218,120 @@ export class FullCalendarComponent implements OnInit {
   }
 
   private emitClickedMonth() {
-    const currentDate = new Date(this.fullCalendar.calendar.getDate());
-    const finalDate = this.dateUtilService.extractYearAndMonth(currentDate);
-    this.monthEmitter.emit(finalDate);
+    const currentDate: Date = new Date(this.fullCalendar.calendar.getDate());
+    const currentMonth: string = this.dateUtilService.extractYearAndMonth(
+      currentDate
+    );
+    this.localStoreService.setCurrentMonth(currentMonth);
+    this.initHalfDayLeaves(currentMonth);
+    this.initFullDayLeaves(currentMonth);
   }
 
-  private initFullDayLeaves() {
+  private setCurrentMonth() {
+    const oldMonth: string = this.localStoreService.getCurrentMonth();
+    if (oldMonth) {
+      return;
+    }
+    const date: Date = new Date();
+    const currentMonth: string = this.dateUtilService.formatHyphenDateToYM(
+      date.getFullYear() + '-' + (date.getMonth() + 1)
+    );
+    this.localStoreService.setCurrentMonth(currentMonth);
+  }
+
+  private initHalfDayLeaves(currrentMonth: string) {
+    this.halfDayLeaves = [];
+    this.leaveService
+      .getLeaves(HALF_DAY_LABEL, currrentMonth)
+      .subscribe((res) => {
+        if (res['status'] === 'SUCCESS') {
+          this.halfDayLeaves = res['data'];
+          this.updateHalfDayLeaves();
+        }
+      });
+  }
+
+  private updateHalfDayLeaves() {
+    let oldHalfDayLeaves: ILeave[] = this.calendarOptions.eventSources[
+      HALF_DAY_LEAVE_INDEX
+    ]['events'];
+    const oldHalfDayLeavesLen = oldHalfDayLeaves.length;
+
+    //update object
+    this.fullCalendarUtil.mergeLeaves(
+      this.calendarOptions,
+      oldHalfDayLeaves,
+      this.halfDayLeaves,
+      HALF_DAY_LEAVE_INDEX
+    );
+
+    const newHalfDayLeavesLen = this.calendarOptions.eventSources[
+      HALF_DAY_LEAVE_INDEX
+    ]['events'].length;
+
+    if (oldHalfDayLeavesLen !== newHalfDayLeavesLen) {
+      //update UI
+      this.fullCalendar.calendar.addEventSource({
+        events: this.halfDayLeaves,
+        color: HALF_DAY_COLOR,
+      });
+    }
+  }
+
+  private initFullDayLeaves(currrentMonth: string): void {
+    this.fullDayLeaves = [];
+    this.leaveService
+      .getLeaves(FULL_DAY_LABEL, currrentMonth)
+      .subscribe((res) => {
+        if (res['status'] === 'SUCCESS') {
+          this.fullDayLeaves = res['data'];
+          this.updateFullDayLeaves();
+        }
+      });
+  }
+
+  private updateFullDayLeaves() {
+    let oldFullDayLeaves: ILeave[] = this.calendarOptions.eventSources[
+      FULL_DAY_LEAVE_INDEX
+    ]['events'];
+
+    const oldFullDayLeavesLen = oldFullDayLeaves.length;
+    //update object
+    this.fullCalendarUtil.mergeLeaves(
+      this.calendarOptions,
+      oldFullDayLeaves,
+      this.fullDayLeaves,
+      FULL_DAY_LEAVE_INDEX
+    );
+
+    const newFullDayLeavesLen = this.calendarOptions.eventSources[
+      FULL_DAY_LEAVE_INDEX
+    ]['events'].length;
+
+    if (oldFullDayLeavesLen !== newFullDayLeavesLen) {
+      //update UI
+      this.fullCalendar.calendar.addEventSource({
+        events: this.fullDayLeaves,
+        color: FULL_DAY_COLOR,
+      });
+    }
+  }
+
+  private getFullDayLeaves() {
     return {
       events: this.fullDayLeaves,
       color: FULL_DAY_COLOR,
     };
   }
 
-  private initHalfDayLeaves() {
+  private getHalfDayLeaves() {
     return {
       events: this.halfDayLeaves,
       color: HALF_DAY_COLOR,
     };
   }
 
-  private initHolidays() {
+  private getHolidays() {
     return {
       events: this.holidays,
       color: HOLIDAY_COLOR,

@@ -63,7 +63,7 @@ export class ResourceUilityComponent {
     const startStrDate: string = `${this.customStartDate.year}-${this.customStartDate.month}-${this.customStartDate.day}`;
     const endStrDate: string = `${this.customEndDate.year}-${this.customEndDate.month}-${this.customEndDate.day}`;
     this.leaveService
-      .getLeaveReport(startStrDate, endStrDate)
+      .getLeaveReport(startStrDate, endStrDate, 'All')
       .subscribe((res) => {
         const alert = this.downloadReport(res);
         this.alertEmitter.emit(alert);

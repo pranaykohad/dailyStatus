@@ -1,7 +1,5 @@
 package com.statushub.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,33 +22,38 @@ public class LeaveController {
 
 	@Autowired
 	LeaveService leaveService;
-	
+
 	@Autowired
 	LeaveRepository leaveRepository;
 
-	@GetMapping("/leaves")
+	@GetMapping("/leave")
 	public Result getHalfdayLeavesByMonth(@RequestParam() final String type, @RequestParam() final String month) {
 		return leaveService.getLeavesByTypeAndMonth(type, month);
 	}
-	
-	@PostMapping("/leaves")
-	public Result addLeaves(@RequestBody final List<Leave> leaves) {
-		return leaveService.addLeaves(leaves);
+
+	@PostMapping("/leave")
+	public Result addLeaves(@RequestBody
+		final Leave leave) {
+		return leaveService.addLeaves(leave);
 	}
-	
-	@DeleteMapping("/leaves")
-	public Result deleteLeaves(@RequestParam() final List<Integer> leavesIds) {
-		return leaveService.deleteLeaveById(leavesIds);
+
+	@DeleteMapping("/leave")
+	public Result deleteLeaves(@RequestParam()
+	final Integer leavesId) {
+		return leaveService.deleteLeaveById(leavesId);
 	}
-	
+
 	@GetMapping("/res-utilization-report")
 	public Result buildResourceUtilizationReport(@RequestParam() final String startDate, @RequestParam() final String endDate, @RequestParam() final int dateCount) {
 		return leaveService.buildResourceUtilizationReport(startDate, endDate, dateCount);
 	}
-	
+
 	@GetMapping("/leave-report")
-	public Result buildLeaveReport(@RequestParam() final String startDate, @RequestParam() final String endDate) {
-		return leaveService.buildLeaveReport(startDate, endDate);
+	public Result buildLeaveReport(@RequestParam()
+	final String startDate, @RequestParam()
+	final String endDate, @RequestParam(defaultValue = "All")
+	final String type) {
+		return leaveService.buildLeaveReport(startDate, endDate, type);
 	}
 
 }

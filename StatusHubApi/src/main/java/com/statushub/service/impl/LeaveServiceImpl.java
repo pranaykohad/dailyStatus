@@ -1,5 +1,6 @@
 package com.statushub.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class LeaveServiceImpl implements LeaveService {
 	private static final String FULL_DAY = "full-day";
 
 	private static final String HALF_DAY = "half-day";
-	
+
 	private static final String HUNDRED_PERCENT = "100%,";
 
 	@Autowired
@@ -38,17 +39,15 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Autowired
 	private ReportUtil reportUtil;
-	
+
 	@Override
 	@Transactional
-	public Result addLeaves(final List<Leave> leaves) {
+	public Result addLeaves(final Leave leave) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
-
-		for (final Leave leave : leaves) {
+		if (leave != null) {
 			final String title = leave.getTitle();
 			final String[] tokens = title.split(":");
-
 			if (tokens != null && tokens.length == 2) {
 				final String userName = tokens[0];
 				final String[] userFullName = userName.split(" ");
@@ -82,14 +81,12 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	@Transactional
-	public Result deleteLeaveById(final List<Integer> leaveIds) {
+	public Result deleteLeaveById(final Integer leaveId) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		int count = 0;
-		for (final int leaveId : leaveIds) {
-			final int rowCount = leaveRepo.deleteLeaveByLeaveId(leaveId);
-			count = rowCount > 0 ? ++count : count;
-		}
+		final int rowCount = leaveRepo.deleteLeaveByLeaveId(leaveId);
+		count = rowCount > 0 ? ++count : count;
 		if (count > 0) {
 			result.setStatus(ResStatus.SUCCESS);
 			result.setData(count);
@@ -99,7 +96,7 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public int getLeaveCount(final int userId, final String type, String startDate, final String endDate) {
+	public int getLeaveCount(final int userId, final String type, final String startDate, final String endDate) {
 		return leaveRepo.getLeaveCount(userId, type, startDate, endDate);
 	}
 
@@ -115,7 +112,7 @@ public class LeaveServiceImpl implements LeaveService {
 		float totolBLeaveHours = 0.0f;
 		float totolBAvailableHours = 0.0f;
 
-		for (User user : billableUserList) {
+		for (final User user : billableUserList) {
 			final int fullDayLeavsCount = getLeaveCount(user.getUserId(), FULL_DAY, startDate, endDate);
 			final int halfDayLeavsCount = getLeaveCount(user.getUserId(), HALF_DAY, startDate, endDate);
 			final int holidayCount = holidayRepository.getHolidayCount(startDate, endDate);
@@ -148,11 +145,11 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 
 		addSubTotalLine("Billable Subtotal", content, totolBBaseHours, totolBHolidayHours, totolBLeaveHours,
-				totolBAvailableHours);
+			totolBAvailableHours);
 
 		content.append(ReportConstant.ONE_LINE + ",");
 		content.append("Additional Resources Applied,");
-		
+
 		final List<User> unBillableUserList = userRepository.findAllBillableUsersButAmin(false);
 
 		float totolUBBaseHours = 0.0f;
@@ -160,7 +157,7 @@ public class LeaveServiceImpl implements LeaveService {
 		float totolUBLeaveHours = 0.0f;
 		float totolUBAvailableHours = 0.0f;
 
-		for (User user : unBillableUserList) {
+		for (final User user : unBillableUserList) {
 			final int fullDayLeavsCount = getLeaveCount(user.getUserId(), FULL_DAY, startDate, endDate);
 			final int halfDayLeavsCount = getLeaveCount(user.getUserId(), HALF_DAY, startDate, endDate);
 			final int holidayCount = holidayRepository.getHolidayCount(startDate, endDate);
@@ -193,16 +190,16 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 
 		addSubTotalLine("Non-Billable Subtotal", content, totolUBBaseHours, totolUBHolidayHours, totolUBLeaveHours,
-				totolUBAvailableHours);
+			totolUBAvailableHours);
 		addTotalLine(content, totolBBaseHours + totolUBBaseHours, totolBHolidayHours + totolUBHolidayHours,
-				totolBLeaveHours + totolUBLeaveHours, totolBAvailableHours + totolUBAvailableHours);
+			totolBLeaveHours + totolUBLeaveHours, totolBAvailableHours + totolUBAvailableHours);
 		buildResUtilFile(result, content, startDate, endDate);
 		return result;
 	}
-	
+
 	private void buildTitle(final List<Leave> leaves) {
 		leaves.forEach(leave -> leave.setTitle(
-				leave.getUser().getFirstName() + " " + leave.getUser().getLastName() + ":" + leave.getType()));
+			leave.getUser().getFirstName() + " " + leave.getUser().getLastName() + ":" + leave.getDayType()));
 	}
 
 	private User getUserByFirstNameAndLastName(final String[] userFullName) {
@@ -215,7 +212,7 @@ public class LeaveServiceImpl implements LeaveService {
 		final User user = getUserByFirstNameAndLastName(userFullName);
 		if (user != null) {
 			leave.setUser(user);
-			leave.setType(!tokens[1].isEmpty() ? tokens[1] : FULL_DAY);
+			leave.setDayType(!tokens[1].isEmpty() ? tokens[1] : FULL_DAY);
 			leaveRepo.save(leave);
 			result.setStatus(ResStatus.SUCCESS);
 			result.setDescription("Leaves are successfully updated");
@@ -232,8 +229,8 @@ public class LeaveServiceImpl implements LeaveService {
 		result.setStatus(ResStatus.SUCCESS);
 	}
 
-	private void addTotalLine(final StringBuilder content, float totolBaseHours, float totolHolidayHours,
-			float totolLeaveHours, float totolAvailableHours) {
+	private void addTotalLine(final StringBuilder content, final float totolBaseHours, final float totolHolidayHours,
+		final float totolLeaveHours, final float totolAvailableHours) {
 		content.append(ReportConstant.ONE_LINE + ",");
 		content.append("Total" + ",,");
 		content.append(totolBaseHours + ",");
@@ -244,8 +241,8 @@ public class LeaveServiceImpl implements LeaveService {
 		content.append(HUNDRED_PERCENT);
 	}
 
-	private void addSubTotalLine(final String subotalTitle, final StringBuilder content, float totolBillableBH,
-			float totolBillableHH, float totolBillableLH, float totolBillableAH) {
+	private void addSubTotalLine(final String subotalTitle, final StringBuilder content, final float totolBillableBH,
+		final float totolBillableHH, final float totolBillableLH, final float totolBillableAH) {
 		content.append(ReportConstant.ONE_LINE + ",");
 		content.append(subotalTitle + ",,");
 		content.append(totolBillableBH + ",");
@@ -257,8 +254,8 @@ public class LeaveServiceImpl implements LeaveService {
 		content.append(ReportConstant.ONE_LINE);
 	}
 
-	private void addRow(final StringBuilder content, User user, final float baseHours, float totalHolidayHours,
-			final float leaveHours, final float availableHours) {
+	private void addRow(final StringBuilder content, final User user, final float baseHours, final float totalHolidayHours,
+		final float leaveHours, final float availableHours) {
 		content.append(ReportConstant.ONE_LINE+",");
 		content.append(user.getFirstName() + " " + user.getLastName() + ",");
 		content.append(user.getPosition() + ",");
@@ -271,35 +268,31 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public Result buildLeaveReport(String startDate, String endDate) {
+	public Result buildLeaveReport(final String startDate, final String endDate, final String type) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.SUCCESS);
-		
 		final StringBuilder content = new StringBuilder();
 		reportUtil.buildLeaveReportHeading(content, startDate, endDate);
-		
-		final List<Leave> leaves = leaveRepo.getUserOnLeave(startDate, endDate);
+		final List<String> types = new ArrayList<>();
+		if (type.equalsIgnoreCase("All")) {
+			types.addAll(ReportConstant.getLeaveTypes());
+		} else {
+			types.add(type);
+		}
+		final List<Leave> leaves = leaveRepo.getUserOnLeave(startDate, endDate, types);
 		content.append(ReportConstant.ONE_LINE);
-		
+
 		if(!leaves.isEmpty()) {
 			int count = 1;
-			for(Leave leave: leaves) {
+			for(final Leave leave: leaves) {
 				content.append(count++ +",");
 				content.append(leave.getUser().getFirstName()+" "+leave.getUser().getLastName()+",");
-				content.append(leave.getType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
+				content.append(leave.getDayType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
 				content.append(leave.getStart()+",");
 				content.append(ReportConstant.ONE_LINE);
 			}
-			
-//			for(int i = 0 ; i < leaves.size() ; i++) {
-//				content.append(i+1 +",");
-//				content.append(leaves.get(i).getUser().getFirstName()+" "+leaves.get(i).getUser().getLastName()+",");
-//				content.append(leaves.get(i).getType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
-//				content.append(leaves.get(i).getStart()+",");
-//				content.append(ReportConstant.ONE_LINE);
-//			}
 		}
-		
+
 		buildResUtilFile(result, content, startDate, endDate);
 		return result;
 	}
