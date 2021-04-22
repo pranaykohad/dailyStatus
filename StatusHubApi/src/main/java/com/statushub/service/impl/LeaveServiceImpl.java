@@ -289,6 +289,7 @@ public class LeaveServiceImpl implements LeaveService {
 				content.append(leave.getUser().getFirstName()+" "+leave.getUser().getLastName()+",");
 				content.append(leave.getDayType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
 				content.append(leave.getStart()+",");
+				content.append(leave.getType().equalsIgnoreCase("UP") ? "Un-planned" : "Planned" +",");
 				content.append(ReportConstant.ONE_LINE);
 			}
 		}

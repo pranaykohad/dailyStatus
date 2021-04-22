@@ -177,7 +177,8 @@ public class ReportUtil {
 		content.append("Sr. No.,");
 		content.append("Team Member,");
 		content.append("Days,");
-		content.append("Dates");
+		content.append("Date,");
+		content.append("Type");
 	}
 
 	private void addCustomHeading(final StringBuilder content) {
