@@ -6,11 +6,11 @@ import {
   Output,
 } from '@angular/core';
 import {
-  moduleList,
+  MODULE_LIST,
   NOT_APPLICABLE,
   POSITION_LIST,
-  roleList,
-  userTypeList,
+  ROLE_LIST,
+  USER_TYPE_LIST,
 } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { IUser, User } from 'src/app/model/user';
@@ -23,10 +23,10 @@ import { UserService } from 'src/services/user.service';
   styleUrls: ['./user-console.component.scss'],
 })
 export class UserConsoleComponent implements OnInit {
-  userTypeList = userTypeList;
+  userTypeList = USER_TYPE_LIST;
   positionList = POSITION_LIST;
-  moduleList = moduleList;
-  roleList = roleList;
+  moduleList = MODULE_LIST;
+  roleList = ROLE_LIST;
   newUserFlag = false;
   loggedInUser: IUser;
   user: IUser;

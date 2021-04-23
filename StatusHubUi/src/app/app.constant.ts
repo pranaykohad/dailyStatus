@@ -1,16 +1,16 @@
 import { environment } from '../environments/environment';
 
 export const BASE_URL = environment.BASE_URL;
-export const moduleList = [
+export const MODULE_LIST = [
   'OCR',
   'Connector',
   'Workbench 9.2',
   'Portal',
   'Automation',
 ];
-export const stateList = ['In progress', 'Completed'];
-export const roleList = ['NORMAL', 'ADMIN'];
-export const userTypeList = ['DEV', 'QA', 'AQA', 'PQA'];
+export const STATE_LIST = ['In progress', 'Completed'];
+export const ROLE_LIST = ['NORMAL', 'ADMIN'];
+export const USER_TYPE_LIST = ['DEV', 'QA', 'AQA', 'PQA'];
 export const POSITION_LIST = [
   'PgM',
   'Project Lead',
@@ -25,7 +25,7 @@ export const POSITION_LIST = [
   'Sr. AQA',
   'AQA',
 ];
-export const TYPES = ['All', 'Planned', 'Un-Planned'];
+export const LEAVE_TYPE_LIST = ['All', 'Planned', 'Un-Planned'];
 export const numOfStatus = 6;
 export const SUNDAY = 0;
 export const MONDAY = 1;

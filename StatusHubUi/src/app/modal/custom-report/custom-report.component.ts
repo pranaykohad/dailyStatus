@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DEFAULT_USER_TYPE, userTypeList } from 'src/app/app.constant';
+import { DEFAULT_USER_TYPE, USER_TYPE_LIST } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -203,7 +203,7 @@ export class CustomReportComponent {
 
   private initUserTypes() {
     this.userTypes.push(DEFAULT_USER_TYPE);
-    userTypeList.forEach((module) => {
+    USER_TYPE_LIST.forEach((module) => {
       this.userTypes.push(module);
     });
   }

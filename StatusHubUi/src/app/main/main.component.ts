@@ -9,7 +9,7 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { END_TIME, START_TIME, stateList } from '../app.constant';
+import { END_TIME, START_TIME, STATE_LIST } from '../app.constant';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
@@ -28,7 +28,7 @@ import { Status } from './../model/status';
 export class MainComponent implements OnInit {
   alert: Alert = new Alert(null, null);
   user: User;
-  stateList = stateList;
+  stateList = STATE_LIST;
   statusList: Status[];
   recentStatus: Status[] = [];
   message: string;
@@ -201,7 +201,7 @@ export class MainComponent implements OnInit {
       leaveId: this.selectedItem._def.extendedProps.leaveId,
       title: this.selectedItem._def.title,
       start: this.selectedItem._instance.range.start.toString(),
-      type: 'All',
+      type: null,
     };
     this.removedItem = leave;
   }

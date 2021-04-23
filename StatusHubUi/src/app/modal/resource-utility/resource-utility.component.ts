@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { TYPES } from 'src/app/app.constant';
+import { LEAVE_TYPE_LIST } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
@@ -13,7 +13,7 @@ import { UtilService } from 'src/services/util.service';
   styleUrls: ['./resource-utility.component.scss'],
 })
 export class ResourceUilityComponent {
-  TYPES = TYPES;
+  LEAVE_TYPE_LIST = LEAVE_TYPE_LIST;
   selectedType = 'All';
   alert: Alert;
   customStartDate: DatePicker;
