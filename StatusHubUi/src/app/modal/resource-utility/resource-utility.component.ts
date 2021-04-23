@@ -15,7 +15,6 @@ import { UtilService } from 'src/services/util.service';
 export class ResourceUilityComponent {
   LEAVE_TYPE_LIST = LEAVE_TYPE_LIST;
   selectedType = 'All';
-  alert: Alert;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
   enableWSRButton = false;
@@ -27,7 +26,6 @@ export class ResourceUilityComponent {
     private utilService: UtilService,
     private dateUtilService: DateUtilService
   ) {
-    this.alert = new Alert(null, null);
     this.initDates();
   }
 
@@ -42,10 +40,11 @@ export class ResourceUilityComponent {
     );
     const dateCount: number = this.dateUtilService.buildDateCount(start, end);
     if (!dateCount) {
-      this.alert = {
+      const alert: Alert = {
         message: 'Start Date cannot be greater than End Date',
         type: 'fail',
       };
+      this.alertEmitter.emit(alert);
       return;
     }
     this.leaveService
@@ -70,6 +69,19 @@ export class ResourceUilityComponent {
     }
     const startStrDate: string = `${this.customStartDate.year}-${this.customStartDate.month}-${this.customStartDate.day}`;
     const endStrDate: string = `${this.customEndDate.year}-${this.customEndDate.month}-${this.customEndDate.day}`;
+    if (
+      this.dateUtilService.isStartDateGreater(
+        this.customStartDate,
+        this.customEndDate
+      )
+    ) {
+      const alert: Alert = {
+        message: 'Start Date cannot be greater than End Date',
+        type: 'fail',
+      };
+      this.alertEmitter.emit(alert);
+      return;
+    }
     this.leaveService
       .getLeaveReport(startStrDate, endStrDate, selectedType)
       .subscribe((res) => {

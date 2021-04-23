@@ -90,7 +90,7 @@ public class LeaveServiceImpl implements LeaveService {
 		if (count > 0) {
 			result.setStatus(ResStatus.SUCCESS);
 			result.setData(count);
-			result.setDescription("Leaves are successfully updated");
+			result.setDescription("Your leave has been deleted successfully");
 		}
 		return result;
 	}
@@ -215,7 +215,7 @@ public class LeaveServiceImpl implements LeaveService {
 			leave.setDayType(!tokens[1].isEmpty() ? tokens[1] : FULL_DAY);
 			leaveRepo.save(leave);
 			result.setStatus(ResStatus.SUCCESS);
-			result.setDescription("Leaves are successfully updated");
+			result.setDescription("Your " + (leave.getType().equalsIgnoreCase("P") ? "Planned" : "Un-Planned") + " leave has been added successfully");
 		}
 	}
 
@@ -289,7 +289,7 @@ public class LeaveServiceImpl implements LeaveService {
 				content.append(leave.getUser().getFirstName()+" "+leave.getUser().getLastName()+",");
 				content.append(leave.getDayType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
 				content.append(leave.getStart()+",");
-				content.append(leave.getType().equalsIgnoreCase("UP") ? "Un-planned" : "Planned" +",");
+				content.append(leave.getType().equalsIgnoreCase("P") ? "Planned" : "Un-Planned" +",");
 				content.append(ReportConstant.ONE_LINE);
 			}
 		}

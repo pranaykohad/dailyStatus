@@ -28,7 +28,7 @@ public class SettingServiceImpl implements SettingService {
 		result.setStatus(ResStatus.SUCCESS);
 		final List<Setting> settingList = settingRepository.findAll();
 		LOG.debug("Setting list begins");
-		settingList.forEach(item -> LOG.debug("{} : {}", item.getKey(), item.getValue()));
+		settingList.forEach(item -> LOG.debug("{} : {}", item.getKeyName(), item.getValue()));
 		LOG.debug("Setting list ends");
 		result.setData(settingList);
 		return result;
@@ -38,9 +38,9 @@ public class SettingServiceImpl implements SettingService {
 	public Result getSetting(final String key) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.SUCCESS);
-		final Setting settingObj = settingRepository.findByKey(key);
-		LOG.debug("Get Setting Object {} : {}", settingObj.getKey(), settingObj.getValue());
-		result.setData(settingRepository.findByKey(key));
+		final Setting settingObj = settingRepository.findByKeyName(key);
+		LOG.debug("Get Setting Object {} : {}", settingObj.getKeyName(), settingObj.getValue());
+		result.setData(settingObj);
 		return result;
 	}
 
@@ -49,8 +49,8 @@ public class SettingServiceImpl implements SettingService {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		final Setting res = settingRepository.save(setting);
-		LOG.debug("Saved Setting Object: {} : {}", res.getKey(), res.getValue());
-		if (!res.getKey().isEmpty()) {
+		LOG.debug("Saved Setting Object: {} : {}", res.getKeyName(), res.getValue());
+		if (!res.getKeyName().isEmpty()) {
 			result.setData(res);
 			result.setStatus(ResStatus.SUCCESS);
 		}

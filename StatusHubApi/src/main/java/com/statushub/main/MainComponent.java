@@ -35,6 +35,7 @@ public class MainComponent {
 			adminUser.setFirstName("admin");
 			adminUser.setLastName("admin");
 			adminUser.setModuleName("Not Applicable");
+			adminUser.setPosition("Not Applicable");
 			adminUser.setUserName("admin");
 			adminUser.setPassword("admin");
 			adminUser.setRole("ADMIN");

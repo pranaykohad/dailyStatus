@@ -145,7 +145,7 @@ export class FullCalendarComponent implements OnInit {
       leaveId: null,
       title: info.draggedEl.id,
       start: info.date.toString(),
-      type: this.getLeaveType(),
+      type: this.dateUtilService.getLeaveType(info.date.toString()),
     };
     const date = new Date(leave.start);
     const dataStr = `${
@@ -174,12 +174,6 @@ export class FullCalendarComponent implements OnInit {
     } else {
       this.addLeave(leave);
     }
-  }
-
-  private getLeaveType(): string {
-    const date: Date = new Date();
-    console.log(date);
-    return 'P';
   }
 
   private eventClick(info) {
