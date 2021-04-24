@@ -4,13 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.statushub.entity.Result;
-import com.statushub.entity.Setting;
 import com.statushub.service.SettingService;
 
 @CrossOrigin(origins = "*")
@@ -31,12 +28,5 @@ public class SettingController {
 		final String key) {
 		return settingService.getSetting(key);
 	}
-
-	@PostMapping("/setting")
-	public Result saveOrUpdateSetting(@RequestBody
-	final Setting setting) {
-		return settingService.saveOrUpdateSetting(setting);
-	}
-
 
 }

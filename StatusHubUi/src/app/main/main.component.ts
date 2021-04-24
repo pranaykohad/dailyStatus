@@ -9,12 +9,7 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import {
-  END_TIME,
-  START_TIME,
-  STATE_LIST,
-  STATUS_ROW_COUNT,
-} from '../app.constant';
+import { STATE_LIST, STATUS_ROW_COUNT } from '../app.constant';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
@@ -43,6 +38,8 @@ export class MainComponent implements OnInit {
   isTimeUp: boolean = true;
   countDown: string;
   holidays: IHoliday[];
+  startTime: number;
+  endTime: number;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
@@ -62,6 +59,12 @@ export class MainComponent implements OnInit {
     private holidayService: HolidayService
   ) {
     this.user = this.localStoreService.getUser();
+    const startTime = Number(
+      this.localStoreService.getSettingByKey('START_TIME')
+    );
+    this.startTime = startTime ? startTime : 8;
+    const endTime = Number(this.localStoreService.getSettingByKey('END_TIME'));
+    this.endTime = endTime ? endTime : 17;
     this.resetStatusList();
     this.initHolidays();
     const today = new Date();
@@ -326,11 +329,13 @@ export class MainComponent implements OnInit {
     setInterval(() => {
       const date: Date = new Date();
       const currentHour: number = date.getHours();
-      this.isTimeUp = !(currentHour >= START_TIME && currentHour < END_TIME);
+      this.isTimeUp = !(
+        currentHour >= this.startTime && currentHour < this.endTime
+      );
       if (this.isTimeUp) {
         this.countDown = null;
       } else {
-        this.countDown = `${END_TIME - (date.getHours() + 1)}h ${
+        this.countDown = `${this.endTime - (date.getHours() + 1)}h ${
           60 - (date.getMinutes() + 1)
         }m ${60 - (date.getSeconds() + 1)}s`;
       }

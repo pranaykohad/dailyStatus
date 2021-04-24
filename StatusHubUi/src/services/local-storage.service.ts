@@ -29,8 +29,11 @@ export class LocalStorageService {
   getSettingByKey(key: string): string {
     const settingList = JSON.parse(localStorage.getItem('SETTINGS'));
     let value = '';
+    if (!settingList) {
+      return value;
+    }
     settingList.forEach((setting) => {
-      if (setting.key === key) {
+      if (setting.keyName === key) {
         value = setting.value;
       }
     });

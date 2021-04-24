@@ -5,13 +5,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {
-  MODULE_LIST,
-  NOT_APPLICABLE,
-  POSITION_LIST,
-  ROLE_LIST,
-  USER_TYPE_LIST,
-} from 'src/app/app.constant';
+import { NOT_APPLICABLE, ROLE_LIST } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { IUser, User } from 'src/app/model/user';
 import { LocalStorageService } from 'src/services/local-storage.service';
@@ -23,9 +17,9 @@ import { UserService } from 'src/services/user.service';
   styleUrls: ['./user-console.component.scss'],
 })
 export class UserConsoleComponent implements OnInit {
-  userTypeList = USER_TYPE_LIST;
-  positionList = POSITION_LIST;
-  moduleList = MODULE_LIST;
+  userTypeList = [];
+  moduleList = [];
+  positionList = [];
   roleList = ROLE_LIST;
   newUserFlag = false;
   loggedInUser: IUser;
@@ -41,9 +35,21 @@ export class UserConsoleComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userTypeList.push(NOT_APPLICABLE);
-    this.moduleList.push(NOT_APPLICABLE);
     this.loggedInUser = this.localStoreService.getUser();
+    const modList: string = this.localStoreService.getSettingByKey(
+      'MODULE_LIST'
+    );
+    this.moduleList = modList.split(',');
+    this.moduleList.push(NOT_APPLICABLE);
+    const userTypeList: string = this.localStoreService.getSettingByKey(
+      'USER_TYPE_LIST'
+    );
+    this.userTypeList = userTypeList.split(',');
+    this.userTypeList.push(NOT_APPLICABLE);
+    const posList: string = this.localStoreService.getSettingByKey(
+      'POSITION_LIST'
+    );
+    this.positionList = posList.split(',');
   }
 
   getLoggedUserDetail() {

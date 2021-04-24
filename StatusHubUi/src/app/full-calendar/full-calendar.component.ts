@@ -12,10 +12,8 @@ import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import { FullCalendar } from 'primeng/fullcalendar';
 import {
   DARK_GREY,
-  FULL_DAY_COLOR,
   FULL_DAY_LABEL,
   FULL_DAY_LEAVE_INDEX,
-  HALF_DAY_COLOR,
   HALF_DAY_LABEL,
   HALF_DAY_LEAVE_INDEX,
   HOLIDAY_COLOR,
@@ -42,6 +40,8 @@ export class FullCalendarComponent implements OnInit {
   calendarOptions: CalendarOptions;
   selectedItem: EventApi;
   loggedUserName: string;
+  FULL_DAY_COLOR: string;
+  HALF_DAY_COLOR: string;
   @Input() holidays: IHoliday[];
   @Output() selectedItemEmitter = new EventEmitter<EventApi>();
   @Output() alertEmitter = new EventEmitter<Alert>();
@@ -71,6 +71,7 @@ export class FullCalendarComponent implements OnInit {
     this.initFullDayLeaves(currentMonth);
     this.initCalendarOptions();
     this.registerExternalDragEvent();
+    this.setLengendsColor();
     setTimeout(() => {
       this.registerButtonEvents();
       this.fullCalendar.calendar.gotoDate(currentMonth);
@@ -273,7 +274,7 @@ export class FullCalendarComponent implements OnInit {
       //update UI
       this.fullCalendar.calendar.addEventSource({
         events: this.halfDayLeaves,
-        color: HALF_DAY_COLOR,
+        color: this.HALF_DAY_COLOR,
       });
     }
   }
@@ -312,7 +313,7 @@ export class FullCalendarComponent implements OnInit {
       //update UI
       this.fullCalendar.calendar.addEventSource({
         events: this.fullDayLeaves,
-        color: FULL_DAY_COLOR,
+        color: this.FULL_DAY_COLOR,
       });
     }
   }
@@ -320,14 +321,14 @@ export class FullCalendarComponent implements OnInit {
   private getFullDayLeaves() {
     return {
       events: this.fullDayLeaves,
-      color: FULL_DAY_COLOR,
+      color: this.FULL_DAY_COLOR,
     };
   }
 
   private getHalfDayLeaves() {
     return {
       events: this.halfDayLeaves,
-      color: HALF_DAY_COLOR,
+      color: this.HALF_DAY_COLOR,
     };
   }
 
@@ -336,5 +337,26 @@ export class FullCalendarComponent implements OnInit {
       events: this.holidays,
       color: HOLIDAY_COLOR,
     };
+  }
+
+  private setLengendsColor() {
+    const COLOR1: string = this.localStoreService.getSettingByKey(
+      'FULL_DAY_COLOR'
+    );
+    const COLOR2: string = this.localStoreService.getSettingByKey(
+      'HALF_DAY_COLOR'
+    );
+    this.FULL_DAY_COLOR = COLOR1 ? COLOR1 : '#28a745';
+    this.HALF_DAY_COLOR = COLOR2 ? COLOR2 : '#abc42d';
+    const fullDayLegend: HTMLElement = document.querySelector('#fullDayLegend');
+    const halfDayLegend: HTMLElement = document.querySelector('#halfDayLegend');
+    if (fullDayLegend) {
+      fullDayLegend.style.backgroundColor = this.FULL_DAY_COLOR;
+      fullDayLegend.style.borderColor = this.FULL_DAY_COLOR;
+    }
+    if (halfDayLegend) {
+      halfDayLegend.style.backgroundColor = this.HALF_DAY_COLOR;
+      halfDayLegend.style.borderColor = this.HALF_DAY_COLOR;
+    }
   }
 }

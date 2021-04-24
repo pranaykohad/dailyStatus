@@ -66,6 +66,25 @@ export class DefaulterListComponent {
 
   getCustomDefaultersList() {
     this.defaulterList = [];
+    const dateList: string[] = this.buildDateList();
+    if (!dateList) {
+      this.alert = {
+        message: 'Start Date cannot be greater than End Date',
+        type: 'fail',
+      };
+      return;
+    }
+    this.userService.getCustomDefaulters(dateList).subscribe((res) => {
+      if (res['data'].length) {
+        this.defaulterList = res['data'];
+        this.callForWeek = true;
+      } else {
+        this.message = 'No Defaulter';
+      }
+    });
+  }
+
+  private buildDateList(): string[] {
     const start = new Date(
       `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`
     );
@@ -76,20 +95,6 @@ export class DefaulterListComponent {
       start,
       end
     );
-    if (!dateList) {
-      this.alert = {
-        message: 'Start Date cannot be greater than End Date',
-        type: 'fail',
-      };
-      return;
-    }
-    this.userService.getCustomDefaulters(dateList).subscribe((res) => {
-      if (res['data']) {
-        this.defaulterList = res['data'];
-        this.callForWeek = true;
-      } else {
-        this.message = 'No Defaulter for this Week';
-      }
-    });
+    return dateList;
   }
 }

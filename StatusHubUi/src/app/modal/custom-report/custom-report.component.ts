@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DEFAULT_USER_TYPE, USER_TYPE_LIST } from 'src/app/app.constant';
+import { DEFAULT_USER_TYPE } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
 import { IUser, User } from 'src/app/model/user';
 import { DateUtilService } from 'src/services/date-util.service';
+import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
@@ -34,7 +35,8 @@ export class CustomReportComponent {
     private statusService: StatusService,
     private utilService: UtilService,
     private userService: UserService,
-    private dateUtilService: DateUtilService
+    private dateUtilService: DateUtilService,
+    private localStoreService: LocalStorageService
   ) {
     this.initUserTypes();
     this.initDates();
@@ -196,9 +198,10 @@ export class CustomReportComponent {
 
   private initUserTypes() {
     this.userTypes.push(DEFAULT_USER_TYPE);
-    USER_TYPE_LIST.forEach((module) => {
-      this.userTypes.push(module);
-    });
+    const userTypeList: string = this.localStoreService.getSettingByKey(
+      'USER_TYPE_LIST'
+    );
+    this.userTypes.push(...userTypeList.split(','));
   }
 
   private setInitialSelectedUser() {

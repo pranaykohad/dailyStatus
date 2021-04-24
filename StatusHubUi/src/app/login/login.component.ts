@@ -23,6 +23,7 @@ export class LoginComponent {
   ) {
     this.user = new User();
     this.localStoreService.resetLocalStorage();
+    this.setSettings();
   }
 
   login() {
@@ -33,7 +34,6 @@ export class LoginComponent {
           this.wrongCred = false;
         }, 5000);
       } else {
-        this.setSettings();
         this.localStoreService.setUser(res['data']);
         this.router.navigateByUrl('/main');
       }

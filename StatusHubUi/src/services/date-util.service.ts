@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { SATURDAY, SUNDAY } from 'src/app/app.constant';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DateUtilService {
+  constructor(private localStoreService: LocalStorageService) {}
+
   buildCustomDates(start: Date, end: Date): string[] {
     const dateList = [];
     if (end.getTime() - start.getTime() < 0) {
@@ -103,6 +106,10 @@ export class DateUtilService {
     const startDate: Date = new Date(start);
     const diffTime = startDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays >= 8 ? 'P' : 'UP';
+    const DIFF: number = Number(
+      this.localStoreService.getSettingByKey('PLANNED_LEAVE_DIFFRENCE')
+    );
+    const diff1: number = DIFF ? DIFF : 8;
+    return diffDays >= diff1 ? 'P' : 'UP';
   }
 }
