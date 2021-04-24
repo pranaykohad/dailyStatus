@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Setting } from 'src/app/model/Setting';
 import { User } from 'src/app/model/user';
 
 @Injectable({
@@ -19,6 +20,21 @@ export class LocalStorageService {
 
   getCurrentMonth(): string {
     return localStorage.getItem('CURRENT_MONTH');
+  }
+
+  setSettings(settings: Setting[]) {
+    localStorage.setItem('SETTINGS', JSON.stringify(settings));
+  }
+
+  getSettingByKey(key: string): string {
+    const settingList = JSON.parse(localStorage.getItem('SETTINGS'));
+    let value = '';
+    settingList.forEach((setting) => {
+      if (setting.key === key) {
+        value = setting.value;
+      }
+    });
+    return value;
   }
 
   resetLocalStorage() {

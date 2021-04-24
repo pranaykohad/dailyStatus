@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { TOP_DEF_COUNT } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
@@ -19,7 +18,6 @@ export class DefaulterListComponent {
   message: string = '';
   defaulterList: User[];
   callForWeek = false;
-  TOP_DEF_COUNT = TOP_DEF_COUNT;
   dateList = [];
   alert: Alert;
   @Output() alertEmitter = new EventEmitter<Alert>();

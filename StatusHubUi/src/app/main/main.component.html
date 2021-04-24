@@ -45,12 +45,12 @@
         id="btn-leave-plan">
         Leave Plan
       </button>
-      <div *ngIf="countDown; else timesUpMsg" class="ml-2 p-1">
+      <div *ngIf="countDown; else timesUpMsg" class="ml-2 p-1 high-light">
         <span class="bold-txt" style="color: green;">Status submission will be disabled in
         </span>{{countDown}}
       </div>
       <ng-template #timesUpMsg>
-        <div class="ml-2 p-1 bold-txt" style="color: red;">Your time is up for today</div>
+        <div class="ml-2 p-1 bold-txt high-light" style="color: red;">Your time is up for today</div>
       </ng-template>
     </div>
   </div>

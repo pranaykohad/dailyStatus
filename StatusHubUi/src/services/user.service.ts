@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BASE_URL } from 'src/app/app.constant';
 import { User } from 'src/app/model/user';
+import { DateUtilService } from './date-util.service';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
@@ -11,7 +12,8 @@ import { LocalStorageService } from './local-storage.service';
 export class UserService {
   constructor(
     private httpClient: HttpClient,
-    private localStoreService: LocalStorageService
+    private localStoreService: LocalStorageService,
+    private dateUtilService: DateUtilService
   ) {}
 
   addUser(user: User): Observable<User> {
@@ -50,28 +52,21 @@ export class UserService {
   }
 
   defaultersList(date: string): Observable<any> {
-    date = this.formatToTwoDigit(date);
+    date = this.dateUtilService.formatSlashDate(date);
     return this.httpClient.get<any>(`${BASE_URL}defaultersList?date=${date}`);
   }
 
   getCustomDefaulters(datesList: string[]): Observable<any> {
     const dates = [];
     datesList.forEach((date) => {
-      dates.push(this.formatToTwoDigit(date));
+      dates.push(this.dateUtilService.formatSlashDate(date));
     });
     return this.httpClient.get<any>(
       `${BASE_URL}customDefaulters?datesList=${dates}`
     );
   }
 
-  formatToTwoDigit(date: string): string {
-    const tokens: string[] = date.split('/');
-    return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
-      tokens[2]
-    }`;
-  }
-
-  private formatDate(value: string): string {
-    return value.length === 1 ? '0' + value : value;
+  getSettings(): Observable<any> {
+    return this.httpClient.get<any>(`${BASE_URL}setting`);
   }
 }

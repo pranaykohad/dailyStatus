@@ -217,6 +217,10 @@
   select:hover {
     cursor: pointer;
   }
+  .high-light {
+    background-color: yellow;
+    border-radius: 3px;
+  }
 }
 select {
   border-radius: 3px;

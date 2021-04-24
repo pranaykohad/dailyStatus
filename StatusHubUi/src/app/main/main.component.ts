@@ -9,13 +9,17 @@ import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { END_TIME, START_TIME, STATE_LIST } from '../app.constant';
+import {
+  END_TIME,
+  START_TIME,
+  STATE_LIST,
+  STATUS_ROW_COUNT,
+} from '../app.constant';
 import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
 import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
-import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
 import { IHoliday, ILeave, Leave } from './../model/leave';
 import { Status } from './../model/status';
@@ -125,7 +129,7 @@ export class MainComponent implements OnInit {
     this.editStatus = false;
     this.editLeavePlan = false;
     const date = new Date().toLocaleDateString();
-    for (let row = 1; row <= numOfStatus; row++) {
+    for (let row = 1; row <= STATUS_ROW_COUNT; row++) {
       this.statusList.push(
         new Status(
           '',
