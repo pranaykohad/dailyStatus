@@ -22,6 +22,8 @@
           Console</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#resUtility" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Resource Utility</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#settings" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Settings</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="delUserComp.getUserList()">Delete User</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
@@ -206,6 +208,7 @@
   <app-user-console #userConsole (alertEmitter)="alertHandler($event)"
     (loggedInUserUpdateEmitter)="loggedInUserUpdateHandler()">
   </app-user-console>
+  <app-setting #settingPage (alertEmitter)="alertHandler($event)"></app-setting>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: PRANAY KOHAD

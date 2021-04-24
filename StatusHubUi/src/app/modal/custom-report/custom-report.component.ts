@@ -4,6 +4,7 @@ import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
 import { IUser, User } from 'src/app/model/user';
+import { DateUtilService } from 'src/services/date-util.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
@@ -32,7 +33,8 @@ export class CustomReportComponent {
   constructor(
     private statusService: StatusService,
     private utilService: UtilService,
-    private userService: UserService
+    private userService: UserService,
+    private dateUtilService: DateUtilService
   ) {
     this.initUserTypes();
     this.initDates();
@@ -97,7 +99,12 @@ export class CustomReportComponent {
     if (!this.isUserSelected) {
       return;
     }
-    if (this.isStartDateGreater()) {
+    if (
+      this.dateUtilService.isStartDateGreater(
+        this.customStartDate,
+        this.customEndDate
+      )
+    ) {
       const alert = {
         message: 'Start Date cannot be greater than End Date',
         type: 'fail',
@@ -118,20 +125,6 @@ export class CustomReportComponent {
     Array.from(selectedUsrList).forEach((element) => {
       this.selectedUser.push(element.label);
     });
-  }
-
-  private isStartDateGreater() {
-    const endDate = new Date(
-      this.customEndDate.year,
-      this.customEndDate.month - 1,
-      this.customEndDate.day
-    );
-    const startDate = new Date(
-      this.customStartDate.year,
-      this.customStartDate.month - 1,
-      this.customStartDate.day
-    );
-    return endDate.getTime() - startDate.getTime() < 0;
   }
 
   private getStatus(

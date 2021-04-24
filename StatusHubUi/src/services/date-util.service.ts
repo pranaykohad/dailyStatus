@@ -83,4 +83,26 @@ export class DateUtilService {
   formatNumToTwoDigit(value: string): string {
     return value.length === 1 ? '0' + value : value;
   }
+
+  isStartDateGreater(customStartDate, customEndDate) {
+    const startDate = new Date(
+      customStartDate.year,
+      customStartDate.month - 1,
+      customStartDate.day
+    );
+    const endDate = new Date(
+      customEndDate.year,
+      customEndDate.month - 1,
+      customEndDate.day
+    );
+    return endDate.getTime() - startDate.getTime() < 0;
+  }
+
+  getLeaveType(start: string): string {
+    const today: Date = new Date();
+    const startDate: Date = new Date(start);
+    const diffTime = startDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays >= 8 ? 'P' : 'UP';
+  }
 }

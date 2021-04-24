@@ -8,6 +8,6 @@ import com.statushub.entity.Setting;
 @Repository
 public interface SettingRepository extends JpaRepository<Setting, Integer> {
 
-	public Setting findByKey(final String key);
+	public Setting findByKeyName(final String key);
 
 }

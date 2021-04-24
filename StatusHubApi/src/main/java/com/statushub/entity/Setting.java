@@ -13,7 +13,7 @@ public class Setting {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int settingId;
 
-	private String key;
+	private String keyName;
 
 	private String value;
 
@@ -21,20 +21,24 @@ public class Setting {
 		return settingId;
 	}
 
-	public String getKey() {
-		return key;
+	public void setSettingId(int settingId) {
+		this.settingId = settingId;
 	}
 
-	public void setKey(final String key) {
-		this.key = key;
+	public String getKeyName() {
+		return keyName;
+	}
+
+	public void setKeyName(String keyName) {
+		this.keyName = keyName;
 	}
 
 	public String getValue() {
 		return value;
 	}
 
-	public void setValue(final String value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
-
+	
 }
