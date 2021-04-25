@@ -40,6 +40,14 @@ export class LocalStorageService {
     return value;
   }
 
+  setScroll(scrollTop: number) {
+    localStorage.setItem('SCROLL_TOP', scrollTop.toString());
+  }
+
+  getScroll(): string {
+    return localStorage.getItem('SCROLL_TOP');
+  }
+
   resetLocalStorage() {
     localStorage.clear();
   }
