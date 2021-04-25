@@ -71,12 +71,12 @@ public class MainComponent {
 		settingList.add(setting);
 		
 		setting = new Setting();
-		setting.setKeyName("START_TIME");
+		setting.setKeyName("START_HOUR");
 		setting.setValue("8");
 		settingList.add(setting);
 		
 		setting = new Setting();
-		setting.setKeyName("END_TIME");
+		setting.setKeyName("END_HOUR");
 		setting.setValue("17");
 		settingList.add(setting);
 		

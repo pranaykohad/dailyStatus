@@ -38,8 +38,8 @@ export class MainComponent implements OnInit {
   isTimeUp: boolean = true;
   countDown: string;
   holidays: IHoliday[];
-  startTime: number;
-  endTime: number;
+  startHour: number;
+  endHour: number;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
@@ -59,12 +59,12 @@ export class MainComponent implements OnInit {
     private holidayService: HolidayService
   ) {
     this.user = this.localStoreService.getUser();
-    const startTime = Number(
-      this.localStoreService.getSettingByKey('START_TIME')
+    const startHour = Number(
+      this.localStoreService.getSettingByKey('START_HOUR')
     );
-    this.startTime = startTime ? startTime : 8;
-    const endTime = Number(this.localStoreService.getSettingByKey('END_TIME'));
-    this.endTime = endTime ? endTime : 17;
+    this.startHour = startHour ? startHour : 8;
+    const endHour = Number(this.localStoreService.getSettingByKey('END_HOUR'));
+    this.endHour = endHour ? endHour : 17;
     this.resetStatusList();
     this.initHolidays();
     const today = new Date();
@@ -330,12 +330,12 @@ export class MainComponent implements OnInit {
       const date: Date = new Date();
       const currentHour: number = date.getHours();
       this.isTimeUp = !(
-        currentHour >= this.startTime && currentHour < this.endTime
+        currentHour >= this.startHour && currentHour < this.endHour
       );
       if (this.isTimeUp) {
         this.countDown = null;
       } else {
-        this.countDown = `${this.endTime - (date.getHours() + 1)}h ${
+        this.countDown = `${this.endHour - (currentHour + 1)}h ${
           60 - (date.getMinutes() + 1)
         }m ${60 - (date.getSeconds() + 1)}s`;
       }
