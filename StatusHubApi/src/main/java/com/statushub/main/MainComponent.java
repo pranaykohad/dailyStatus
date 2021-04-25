@@ -96,16 +96,6 @@ public class MainComponent {
 				"PgM,Project Lead,Sr. Architech,Sr. Tech Lead,Lead Developer,Developer,Sr. Developer,Perf. Eng.,Lead QA,QA,Sr. AQA,AQA");
 		settingList.add(setting);
 
-		setting = new Setting();
-		setting.setKeyName("FULL_DAY_COLOR");
-		setting.setValue("#28a745");
-		settingList.add(setting);
-
-		setting = new Setting();
-		setting.setKeyName("HALF_DAY_COLOR");
-		setting.setValue("#abc42d");
-		settingList.add(setting);
-
 		settingService.saveOrUpdateSetting(settingList);
 	}
 
