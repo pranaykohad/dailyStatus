@@ -26,11 +26,12 @@ export class DefaulterListComponent {
     private dateUtilService: DateUtilService
   ) {
     this.alert = new Alert(null, null);
-    this.defaulterList = [];
     this.initDates();
   }
 
   initDates() {
+    this.message = '';
+    this.defaulterList = [];
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
