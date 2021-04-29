@@ -4,7 +4,6 @@ import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
 import { DateUtilService } from 'src/services/date-util.service';
 import { UserService } from 'src/services/user.service';
-import { UtilService } from 'src/services/util.service';
 
 @Component({
   selector: 'app-defaulter-list',
@@ -15,7 +14,7 @@ export class DefaulterListComponent {
   today: DatePicker;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
-  message: string = '';
+  message = '';
   defaulterList: User[];
   callForWeek = false;
   dateList = [];
@@ -24,16 +23,14 @@ export class DefaulterListComponent {
 
   constructor(
     private userService: UserService,
-    private utilService: UtilService,
     private dateUtilService: DateUtilService
   ) {
     this.alert = new Alert(null, null);
+    this.defaulterList = [];
     this.initDates();
   }
 
   initDates() {
-    this.defaulterList = [];
-    this.message = '';
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
@@ -50,6 +47,7 @@ export class DefaulterListComponent {
 
   getDefaulterList() {
     this.defaulterList = [];
+    this.message = 'Waiting for results...';
     this.userService
       .defaultersList(
         `${this.today.month}/${this.today.day}/${this.today.year}`
@@ -59,13 +57,14 @@ export class DefaulterListComponent {
           this.defaulterList = res['data'];
           this.callForWeek = false;
         } else {
-          this.message = 'No Defaulter for Today';
+          this.message = 'No Defaulter for today';
         }
       });
   }
 
   getCustomDefaultersList() {
     this.defaulterList = [];
+    this.message = 'Waiting for results...';
     const dateList: string[] = this.buildDateList();
     if (!dateList) {
       this.alert = {
@@ -79,7 +78,7 @@ export class DefaulterListComponent {
         this.defaulterList = res['data'];
         this.callForWeek = true;
       } else {
-        this.message = 'No Defaulter';
+        this.message = 'No Defaulter for selected dates';
       }
     });
   }
