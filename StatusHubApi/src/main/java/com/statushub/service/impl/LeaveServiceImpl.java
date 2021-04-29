@@ -97,7 +97,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	public int getLeaveCount(final int userId, final String type, final String startDate, final String endDate) {
-		return leaveRepo.getLeaveCount(userId, type, startDate, endDate);
+		return leaveRepo.getLeaveCountByTypeAndDate(userId, type, startDate, endDate);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.statushub.service.impl;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -11,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.statushub.constant.ReportConstant;
+import com.statushub.entity.Holiday;
 import com.statushub.entity.Result;
 import com.statushub.entity.Result.ResStatus;
 import com.statushub.entity.User;
+import com.statushub.repository.HolidayRepository;
+import com.statushub.repository.LeaveRepository;
 import com.statushub.repository.UserRepository;
 import com.statushub.service.UserService;
 
@@ -25,8 +29,14 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepo;
 
+	@Autowired
+	private HolidayRepository holidayRepository;
+
+	@Autowired
+	private LeaveRepository leaveRepository;
+
 	@Override
-	public User autheticateUser(final String  userName,final String password) {
+	public User autheticateUser(final String userName, final String password) {
 		return userRepo.getUserByUserNameAndPassword(userName, password);
 	}
 
@@ -44,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	public List<User> getUsersByUserType(final String userType) {
 		final List<User> finalUserList = new ArrayList<>();
 		final List<String> userTypes = new ArrayList<>();
-		if(userType.equalsIgnoreCase("All")) {
+		if (userType.equalsIgnoreCase("All")) {
 			userTypes.addAll(ReportConstant.getAllUserTypeList());
 		} else {
 			userTypes.add(userType);
@@ -57,17 +67,22 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Result getDefaultersList(final String date) {
 		final Result result = new Result();
-		final List<User> finalUserList = new ArrayList<>();
+		List<User> finalUserList = new ArrayList<>();
 		final List<String> userTypes = new ArrayList<>();
 		userTypes.addAll(ReportConstant.getAllUserTypeList());
 		final List<User> allUserList = userRepo.findAllUsers(userTypes);
-		final  List<User> validUserList = userRepo.getValidUserList(date);
-		allUserList.removeAll(validUserList);
-		bulidUserList(finalUserList, allUserList);
-		if (finalUserList.isEmpty()) {
-			result.setDescription("No Defaulter Today");
+		final List<User> validUserList = userRepo.getValidUserList(date);
+		if (isHoliday(date)) {
+			result.setDescription("It is a Holiday");
 		} else {
-			result.setData(finalUserList);
+			allUserList.removeAll(validUserList);
+			bulidUserList(finalUserList, allUserList);
+			finalUserList = removeOnLeaveUser(finalUserList, date);
+			if (finalUserList.isEmpty()) {
+				result.setDescription("No Defaulter Today");
+			} else {
+				result.setData(finalUserList);
+			}
 		}
 		return result;
 	}
@@ -79,7 +94,7 @@ public class UserServiceImpl implements UserService {
 			userRepo.deleteById(Integer.parseInt(userId));
 			result.setDescription("User is deleted successfully");
 		} catch (final Exception e) {
-			LOG.debug("Error while deleting user {}",userId);
+			LOG.debug("Error while deleting user {}", userId);
 			result.setStatus(ResStatus.FAILURE);
 			result.setDescription("Failed to delete user");
 		}
@@ -96,49 +111,30 @@ public class UserServiceImpl implements UserService {
 		final Result result = new Result();
 		final List<String> userTypes = new ArrayList<>();
 		userTypes.addAll(ReportConstant.getAllUserTypeList());
-		final List<User> userList = userRepo.findAllUsers(userTypes);
-		userList.forEach(user -> user.setDefCount(0));
+		List<User> finalUserList = userRepo.findAllUsers(userTypes);
+		finalUserList.forEach(user -> user.setDefCount(0));
 		dateList.forEach(date -> {
-			final List<User> defList =  userRepo.findAllUsers(userTypes);
-			final  List<User> validUserList = userRepo.getValidUserList(date);
-			defList.removeAll(validUserList);
-			userList.forEach(user -> {
-				defList.forEach(defUser -> {
-					if(user.getUserId() == defUser.getUserId()) {
-						user.setDefCount(user.getDefCount()+1);
+			if (!isHoliday(date)) {
+				final List<User> allUserList = userRepo.findAllUsers(userTypes);
+				final List<User> validUserList = userRepo.getValidUserList(date);
+				allUserList.removeAll(validUserList);
+				finalUserList.forEach(user -> {
+					if (!isUserOnLeave(user.getUserId(), date)) {
+						allUserList.forEach(defUser -> {
+							if ((user.getUserId() == defUser.getUserId())) {
+								user.setDefCount(user.getDefCount() + 1);
+							}
+						});
 					}
 				});
-			});
-		});
-		final List<User> zeroCntList = getZeroCountList(userList);
-		userList.removeAll(zeroCntList);
-		final List<User> sortedList = userList.stream().sorted(
-			Comparator.comparingInt(User::getDefCount)
-			.reversed()).collect(Collectors.toList());
-		result.setData(sortedList);
-		return result;
-	}
-
-	private List<User> getZeroCountList(final List<User> userList) {
-		final List<User> zeroCntList = new ArrayList<>();
-		userList.forEach(user -> {
-			if(user.getDefCount() == 0) {
-				zeroCntList.add(user);
 			}
 		});
-		return zeroCntList;
-	}
-
-	private void bulidUserList(final List<User> finalUserList, final List<User> userList) {
-		if(!userList.isEmpty()) {
-			userList.forEach(user-> {
-				final User tempUser = new User();
-				tempUser.setFirstName(user.getFirstName());
-				tempUser.setLastName(user.getLastName());
-				tempUser.setUserId(user.getUserId());
-				finalUserList.add(tempUser);
-			});
-		}
+		final List<User> validUsers = getValidUsers(finalUserList);
+		finalUserList.removeAll(validUsers);
+		final List<User> sortedList = finalUserList.stream()
+				.sorted(Comparator.comparingInt(User::getDefCount).reversed()).collect(Collectors.toList());
+		result.setData(sortedList);
+		return result;
 	}
 
 	@Override
@@ -150,8 +146,8 @@ public class UserServiceImpl implements UserService {
 	public Result getUserById(final int userId) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
-		final User user =  userRepo.getUserByUserId(userId);
-		if(user != null) {
+		final User user = userRepo.getUserByUserId(userId);
+		if (user != null) {
 			result.setData(user);
 			result.setStatus(ResStatus.SUCCESS);
 		}
@@ -163,11 +159,59 @@ public class UserServiceImpl implements UserService {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		final List<User> userList = userRepo.findAllUsersButAmin();
-		if(userList.size() > 0) {
+		if (!userList.isEmpty()) {
 			result.setData(userList);
 			result.setStatus(ResStatus.SUCCESS);
 		}
 		return result;
 	}
 
+	private List<User> getValidUsers(final List<User> userList) {
+		final List<User> list = new ArrayList<>();
+		userList.forEach(user -> {
+			if (user.getDefCount() == 0) {
+				list.add(user);
+			}
+		});
+		return list;
+	}
+
+	private void bulidUserList(final List<User> finalUserList, final List<User> userList) {
+		if (!userList.isEmpty()) {
+			userList.forEach(user -> {
+				final User tempUser = new User();
+				tempUser.setFirstName(user.getFirstName());
+				tempUser.setLastName(user.getLastName());
+				tempUser.setUserId(user.getUserId());
+				finalUserList.add(tempUser);
+			});
+		}
+	}
+
+	private boolean isHoliday(String date) {
+		final String currentHyphenDate = getSlashToHyphenDate(date);
+		final Holiday holiday = holidayRepository.findByStart(currentHyphenDate);
+		return holiday != null;
+	}
+
+	private String getSlashToHyphenDate(String date) {
+		final String[] tokens = date.split("/");
+		return tokens[2] + "-" + tokens[0] + "-" + tokens[1];
+	}
+
+	private List<User> removeOnLeaveUser(final List<User> userList, final String date) {
+		final List<User> finalUserList = new CopyOnWriteArrayList<>(userList);
+		for (User user : finalUserList) {
+			if (isUserOnLeave(user.getUserId(), date)) {
+				finalUserList.remove(user);
+			}
+		}
+		return finalUserList;
+	}
+
+	private boolean isUserOnLeave(final int userId, final String date) {
+		final String finalDate = getSlashToHyphenDate(date);
+		final int count = leaveRepository.getLeaveCountByDate(userId, finalDate);
+		return count == 1;
+	}
 }
