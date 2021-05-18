@@ -1,0 +1,5 @@
+/StatusHubApi/logs
+/StatusHubApi/*.xml
+static
+target
+environments

@@ -1,0 +1,22 @@
+{
+	"themeSystem": "bootstrap",
+      "headerToolbar": {
+        "left": "dayGridMonth",
+        "center": "title",
+        "right": "prev,today,next"
+      },
+      "buttonText": {
+        "prev": "Previous",
+        "today": "Today",
+        "next": "Next",
+        "month": "Month"
+      },
+      "initialView": "dayGridMonth",
+      "weekends": true,
+      "editable": true,
+      "dayMaxEvents": true,
+      "droppable": true,
+      "selectable": true,
+      "showNonCurrentDates": false,
+      "fixedWeekCount": false
+}

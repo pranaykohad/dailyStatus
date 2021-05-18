@@ -1,15 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  DEFAULT_USER_TYPE,
-  SATURDAY,
-  SUNDAY,
-  userTypeList,
-} from 'src/app/app.constant';
+import { DEFAULT_USER_TYPE } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { Attachment } from 'src/app/model/attachment';
 import { DatePicker } from 'src/app/model/datePicker';
-import { User } from 'src/app/model/user';
+import { IUser, User } from 'src/app/model/user';
+import { DateUtilService } from 'src/services/date-util.service';
+import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
+import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
 
 @Component({
@@ -18,10 +16,6 @@ import { UtilService } from 'src/services/util.service';
   styleUrls: ['./custom-report.component.scss'],
 })
 export class CustomReportComponent {
-  @Input() user: User;
-  private _userList: User[];
-  @Output() alertEmitter = new EventEmitter<Alert>();
-  @Output() userTypeEmitter = new EventEmitter<string>();
   today: DatePicker;
   currentMondayDate: DatePicker;
   currentMonthFirstDate: DatePicker;
@@ -33,28 +27,35 @@ export class CustomReportComponent {
   isUserSelected = false;
   selUserList = [];
   userIdList = [];
-  userMessage = 'Loading...';
+  @Input() user: User;
+  @Output() alertEmitter = new EventEmitter<Alert>();
+  userList: IUser[];
 
   constructor(
     private statusService: StatusService,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private userService: UserService,
+    private dateUtilService: DateUtilService,
+    private localStoreService: LocalStorageService
   ) {
     this.initUserTypes();
     this.initDates();
   }
 
-  @Input()
-  set userList(userList: User[]) {
-    this._userList = userList;
-    this.setInitialSelectedUser();
-  }
-
-  get userList() {
-    return this._userList;
-  }
-
-  userTypeChange(userType: string) {
-    this.userTypeEmitter.emit(userType);
+  getUserList(userType: string) {
+    this.userList = [];
+    this.userService.getUsersByUserType(userType).subscribe((res) => {
+      if (res['status'] === 'FAILURE') {
+        const alert: Alert = {
+          message: res['description'],
+          type: res['status'],
+        };
+        this.alertEmitter.emit(alert);
+      } else {
+        this.userList = res['data'];
+        this.setInitialSelectedUser();
+      }
+    });
   }
 
   usersChange(selectedList: HTMLOptionElement[]) {
@@ -100,7 +101,12 @@ export class CustomReportComponent {
     if (!this.isUserSelected) {
       return;
     }
-    if (this.isStartDateGreater()) {
+    if (
+      this.dateUtilService.isStartDateGreater(
+        this.customStartDate,
+        this.customEndDate
+      )
+    ) {
       const alert = {
         message: 'Start Date cannot be greater than End Date',
         type: 'fail',
@@ -121,20 +127,6 @@ export class CustomReportComponent {
     Array.from(selectedUsrList).forEach((element) => {
       this.selectedUser.push(element.label);
     });
-  }
-
-  private isStartDateGreater() {
-    const endDate = new Date(
-      this.customEndDate.year,
-      this.customEndDate.month - 1,
-      this.customEndDate.day
-    );
-    const startDate = new Date(
-      this.customStartDate.year,
-      this.customStartDate.month - 1,
-      this.customStartDate.day
-    );
-    return endDate.getTime() - startDate.getTime() < 0;
   }
 
   private getStatus(
@@ -206,9 +198,10 @@ export class CustomReportComponent {
 
   private initUserTypes() {
     this.userTypes.push(DEFAULT_USER_TYPE);
-    userTypeList.forEach((module) => {
-      this.userTypes.push(module);
-    });
+    const userTypeList: string = this.localStoreService.getSettingByKey(
+      'USER_TYPE_LIST'
+    );
+    this.userTypes.push(...userTypeList.split(','));
   }
 
   private setInitialSelectedUser() {

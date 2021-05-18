@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
+import { Setting } from '../model/Setting';
 
 import { UserService } from './../../services/user.service';
 import { User } from './../model/user';
@@ -22,6 +23,7 @@ export class LoginComponent {
   ) {
     this.user = new User();
     this.localStoreService.resetLocalStorage();
+    this.setSettings();
   }
 
   login() {
@@ -35,6 +37,12 @@ export class LoginComponent {
         this.localStoreService.setUser(res['data']);
         this.router.navigateByUrl('/main');
       }
+    });
+  }
+
+  private setSettings() {
+    this.userService.getSettings().subscribe((res) => {
+      this.localStoreService.setSettings(res['data']);
     });
   }
 }

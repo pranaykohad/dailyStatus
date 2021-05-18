@@ -61,7 +61,7 @@ public class StatusServiceImpl implements StatusService {
 	}
 
 	@Override
-	public Result createReport(final List<String> userIdList, final String startDate, final String endDate, final String reportType) {
+	public Result createReport(final List<Integer> userIdList, final String startDate, final String endDate, final String reportType) {
 		final Result result = new Result();
 		final StringBuilder dailyStatusFileContent = createDailyReport(userIdList, startDate, endDate, reportType);
 		final byte[] byteConent = dailyStatusFileContent.toString().getBytes();
@@ -131,7 +131,7 @@ public class StatusServiceImpl implements StatusService {
 		} 
 	}
 
-	private StringBuilder createDailyReport(final List<String> userIdList, final String startDate, final String endDate, final String  reportType) {
+	private StringBuilder createDailyReport(final List<Integer> userIdList, final String startDate, final String endDate, final String  reportType) {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addHeading(content, reportType, startDate, endDate);
 		userIdList.forEach(userId->{

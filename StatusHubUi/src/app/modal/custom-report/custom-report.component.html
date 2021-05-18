@@ -11,7 +11,7 @@
         <div class="container-fluid">
           <div>
             <label for="user-type" class="mr-2">User Type:</label>
-            <select id="user-type" class="dropdown brd-rd-3" (change)="userTypeChange($event.target.value)">
+            <select id="user-type" class="dropdown brd-rd-3" (change)="getUserList($event.target.value)">
               <option *ngFor="let userType of userTypes" [selected]="userType === selUserType">
                 {{userType}}
               </option>
@@ -21,7 +21,7 @@
             <div class="col-md-5 pr-0 pl-0 middle-brd">
               <div>
                 <label for="multi-sel">Mutiple select User List (hold shift to select more than one):</label>
-                <select multiple class="form-control module-name multi-sel" id="multi-sel"
+                <select multiple class="form-control module-name multi-sel user-drop-down-height" id="multi-sel"
                   (change)="usersChange($event.target.selectedOptions)">
                   <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId">
                     {{ usr.firstName }} {{ usr.lastName }}
@@ -60,7 +60,7 @@
                   <div class="form-group">
                     <div class="input-group">
                       <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
-                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" />
+                        [(ngModel)]="customStartDate" ngbDatepicker #d1="ngbDatepicker" [firstDayOfWeek]=7 />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d1.toggle()" type="button">
                           +
@@ -74,7 +74,7 @@
                   <div class="form-group">
                     <div class="input-group">
                       <input class="form-control date-width" placeholder="yyyy-mm-dd" name="dp"
-                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" />
+                        [(ngModel)]="customEndDate" ngbDatepicker #d2="ngbDatepicker" [firstDayOfWeek]=7 />
                       <div class="input-group-append">
                         <button class="btn btn-outline-secondary calendar" (click)="d2.toggle()" type="button">
                           +

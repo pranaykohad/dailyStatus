@@ -1,0 +1,138 @@
+<div class="modal fade" id="userConsole">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">User Console</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="user" class="container-fluid">
+          <div *ngIf="loggedInUser.role === 'ADMIN'" class="form-group">
+            <label for="users" class="mr-2">User:</label>
+            <select id="users" class="dropdown col-md-4 pl-1 mr-5 brd-rd-3" (change)="userChange($event.target.value)">
+              <option [disabled]="!newUserFlag">New User</option>
+              <option *ngFor="let usr of userList" [selected]="usr.userId === user.userId" [value]="usr.userId"
+                [disabled]="!usr.userId">
+                {{usr.firstName}} {{usr.lastName}}
+              </option>
+            </select>
+            <button type="button" class="btn btn-outline-success btn-sm" style="height: 30px;"
+              (click)="createNewUser()">Create New User</button>
+            <hr>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="fn">First Name: <span class="req">*</span></label>
+              <input class="form-control form-control-sm col-md-12" id="fn" placeholder="FirstName" name="fn"
+                [(ngModel)]="user.firstName" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="ln">Last Name: <span class="req">*</span></label>
+              <input class="form-control form-control-sm col-md-12" id="ln" placeholder="LastName" name="ln"
+                [(ngModel)]="user.lastName" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="un">UserName: <span class="req">*</span></label>
+              <input class="form-control form-control-sm col-md-12" id="un" placeholder="UserName" name="un"
+                [(ngModel)]="user.userName" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="pass">Password: <span class="req">*</span></label>
+              <input class="form-control form-control-sm col-md-12" id="pass" placeholder="Password" name="pass"
+                [(ngModel)]="user.password" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6" [ngStyle]="{'display' : loggedInUser.role === 'ADMIN' ? '' : 'flex' }">
+              <label for="em" class="mr-2">Email: <span class="req">*</span></label>
+              <input class="form-control form-control-sm"
+                [ngClass]="loggedInUser.role === 'ADMIN' ? 'col-md-12' : 'col-md-10'" id="em" placeholder="Email"
+                name="em" [(ngModel)]="user.email" />
+            </div>
+            <div class="form-group col-md-6">
+              <label for="bh" class="mr-2">Base Hours (per day): <span *ngIf="loggedInUser.role === 'ADMIN'"
+                  class="req">*</span></label>
+              <input *ngIf="loggedInUser.role === 'ADMIN'; else baseHourLabel"
+                class="form-control form-control-sm col-md-12" id="bh" placeholder="Base Hours" name="bh"
+                [(ngModel)]="user.baseHours" (keypress)="isNumberKey($event)" />
+              <ng-template #baseHourLabel>
+                {{user.baseHours}}
+              </ng-template>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="loggedInUser.role === 'ADMIN'" class="form-group col-md-3">
+              <label for="type">User Type:</label>
+              <select class="dropdown col-md-12 pl-1" style="border-radius: 3px"
+                (change)="typeChange($event.target.value)">
+                <option *ngFor="let userType of userTypeList" [selected]="userType === user.type">
+                  {{ userType }}
+                </option>
+              </select>
+            </div>
+            <div *ngIf="loggedInUser.role === 'ADMIN'" class="form-group col-md-3">
+              <label for="position">Position:</label>
+              <select class="dropdown col-md-12 pl-1" style="border-radius: 3px"
+                (change)="positionChange($event.target.value)">
+                <option *ngFor="let position of positionList" [selected]="position === user.position">
+                  {{ position }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group col-md-3" [ngStyle]="{'display' : loggedInUser.role === 'ADMIN' ? '' : 'flex' }">
+              <label for="module" class="mr-2">Module:</label>
+              <select class="dropdown col-md-12 pl-1" style="border-radius: 3px"
+                (change)="moduleChange($event.target.value)">
+                <option *ngFor="let module of moduleList" [selected]="module === user.moduleName">
+                  {{ module }}
+                </option>
+              </select>
+            </div>
+            <div *ngIf="loggedInUser.role === 'ADMIN'" class="form-group col-md-3">
+              <label for="role">Role:</label>
+              <select class="dropdown col-md-12 pl-1" style="border-radius: 3px"
+                (change)="roleChange($event.target.value)">
+                <option *ngFor="let role of roleList" [selected]="role === user.role">
+                  {{ role }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="row pl-3">
+              <div class="form-group col-md-12" [ngStyle]="{'display' : loggedInUser.role === 'ADMIN' ? '' : 'flex' }">
+                <label for=" Billable" class="mr-2">Billable:</label>
+                <div *ngIf="loggedInUser.role === 'ADMIN'; else billableLabel">
+                  <div class="form-check-inline">
+                    <label class="form-check-label rd" for="yes">
+                      <input type="radio" class="form-check-input" id="yes" name="optradio" [value]="true"
+                        [(ngModel)]="user.billable">Yes
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <label class="form-check-label rd" for="no">
+                      <input type="radio" class="form-check-input" id="no" name="optradio" [value]="false"
+                        [(ngModel)]="user.billable">No
+                    </label>
+                  </div>
+                </div>
+                <ng-template #billableLabel>
+                  <div>{{user.billable ? 'Yes' : 'No'}}</div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" (click)="submitUser()">
+          {{ newUserFlag ? 'Create User' : 'Update User' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

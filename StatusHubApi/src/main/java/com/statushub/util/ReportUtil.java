@@ -36,9 +36,7 @@ public class ReportUtil {
 		content.append(ReportConstant.TWO_LINE);
 	}
 
-
-
-	public void addName(final StringBuilder content, final String userId) {
+	public void addName(final StringBuilder content, final Integer userId) {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
@@ -158,6 +156,29 @@ public class ReportUtil {
 		month = month.length() == 1 ? "0" + month : month;
 		day = day.length() == 1 ? "0" + day : day;
 		return month+"/"+day+"/"+year;
+	}
+	
+	public void buildResUtilReportHeading(final StringBuilder content) {
+		content.append(ReportConstant.ONE_LINE);
+		content.append(",");
+		content.append("Team Member,");
+		content.append("Role,");
+		content.append("Base Hours,");
+		content.append("Holiday Hours,");
+		content.append("Leave Hours,");
+		content.append("Available Hours,");
+		content.append("Actual Hours,");
+		content.append("Utilization %,");
+	}
+	
+	public void buildLeaveReportHeading(final StringBuilder content, final String startDate, final String endDate) {
+		content.append("Leave plan from "+startDate+" to "+endDate);
+		content.append(ReportConstant.ONE_LINE);
+		content.append("Sr. No.,");
+		content.append("Team Member,");
+		content.append("Days,");
+		content.append("Date,");
+		content.append("Type");
 	}
 
 	private void addCustomHeading(final StringBuilder content) {
