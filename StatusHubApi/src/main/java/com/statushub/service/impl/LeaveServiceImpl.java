@@ -215,7 +215,7 @@ public class LeaveServiceImpl implements LeaveService {
 			leave.setDayType(!tokens[1].isEmpty() ? tokens[1] : FULL_DAY);
 			leaveRepo.save(leave);
 			result.setStatus(ResStatus.SUCCESS);
-			result.setDescription("Your " + (leave.getType().equalsIgnoreCase("P") ? "Planned" : "Un-Planned") + " leave has been added successfully");
+			result.setDescription("Your leave has been added successfully");
 		}
 	}
 
