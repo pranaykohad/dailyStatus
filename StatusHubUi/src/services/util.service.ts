@@ -25,35 +25,23 @@ export class UtilService {
     window.URL.revokeObjectURL(url);
   }
 
-  formatToTwoDigit(date: string): string {
-    const tokens: string[] = date.split('/');
-    return `${this.formatDate(tokens[0])}/${this.formatDate(tokens[1])}/${
-      tokens[2]
-    }`;
+  removeCommaAndNewLine(description: string): string {
+    return description.replace(/\r?\n|\r|,/g, '. ');
   }
 
-  removeComma(description: string): string {
-    return description.replace(/,/g, '.');
+  isSatOrSun(): boolean {
+    const today = new Date();
+    return today.getDay() === SATURDAY || today.getDay() === SUNDAY;
   }
 
-  buildCustomDates(start: Date, end: Date): string[] {
-    const dateList = [];
-    if (end.getTime() - start.getTime() < 0) {
-      return;
-    }
-    while (start.getTime() - end.getTime() <= 0) {
-      if (start.getDay() !== SUNDAY && start.getDay() !== SATURDAY) {
-        const tempDate = `${
-          start.getMonth() + 1
-        }/${start.getDate()}/${start.getFullYear()}`;
-        dateList.push(this.formatToTwoDigit(tempDate));
-      }
-      start.setDate(start.getDate() + 1);
-    }
-    return dateList;
+  removeDupliFrmList(halfDayLeaves: any[]): any[] {
+    return halfDayLeaves.filter((array, index, self) => {
+      return index === self.findIndex((t) => t.leaveId === array.leaveId);
+    });
   }
 
-  private formatDate(value: string): string {
-    return value.length === 1 ? '0' + value : value;
+  changeElementBGColor(prevBtn: HTMLButtonElement, color: string) {
+    prevBtn.style.backgroundColor = color;
+    prevBtn.style.borderColor = color;
   }
 }

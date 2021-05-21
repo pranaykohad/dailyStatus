@@ -8,17 +8,23 @@ export interface IUser {
   role: string;
   type: string;
   defCount: number;
+  position: string;
+  billable: boolean;
   email: string;
+  baseHours: number;
 }
 export class User implements IUser {
-  userId: number;
-  userName: string;
-  password: string;
-  moduleName: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  type: string;
-  defCount: number;
-  email: string;
+  public userId: number;
+  public userName: string;
+  public password: string;
+  public moduleName: string;
+  public firstName: string;
+  public lastName: string;
+  public role: string;
+  public type: string;
+  public defCount: number;
+  public position: string;
+  public billable: boolean;
+  public email: string;
+  public baseHours: number;
 }

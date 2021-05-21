@@ -1,16 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { EventApi } from '@fullcalendar/angular';
 import { DatePicker } from 'src/app/model/datePicker';
+import { DateUtilService } from 'src/services/date-util.service';
+import { HolidayService } from 'src/services/holiday.service';
+import { LeaveService } from 'src/services/leave.service';
 import { LocalStorageService } from 'src/services/local-storage.service';
 import { StatusService } from 'src/services/status.service';
 import { UserService } from 'src/services/user.service';
 import { UtilService } from 'src/services/util.service';
-import { stateList } from '../app.constant';
+import { STATE_LIST, STATUS_ROW_COUNT } from '../app.constant';
+import { CustomReportComponent } from '../modal/custom-report/custom-report.component';
 import { DefaulterListComponent } from '../modal/defaulter-list/defaulter-list.component';
+import { DeleteUserComponent } from '../modal/delete-user/delete-user.component';
 import { Attachment } from '../model/attachment';
 import { User } from '../model/user';
-import { numOfStatus } from './../app.constant';
 import { Alert } from './../model/alert';
+import { IHoliday, ILeave, Leave } from './../model/leave';
 import { Status } from './../model/status';
 
 @Component({
@@ -19,38 +25,64 @@ import { Status } from './../model/status';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent implements OnInit {
-  alert: Alert;
+  alert: Alert = new Alert(null, null);
   user: User;
-  stateList;
+  stateList = STATE_LIST;
   statusList: Status[];
-  recentDate: DatePicker;
-  recentStatus: Status[];
-  alertTimeout: any;
-  today: DatePicker;
-  userList: User[];
-  todaysStatus: Status[];
+  recentStatus: Status[] = [];
   message: string;
-  editMode = false;
+  editStatus = false;
+  editLeavePlan = false;
+  removedItem: ILeave = new Leave();
+  selectedItem: EventApi;
+  isTimeUp: boolean = true;
+  countDown: string;
+  holidays: IHoliday[];
+  startHour: number;
+  endHour: number;
   @ViewChild('defComp') defComp: DefaulterListComponent;
+  @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
+  @ViewChild('customReportComp') customReportComp: CustomReportComponent;
+  private recentDate: DatePicker;
+  private alertTimeout: any;
+  private today: DatePicker;
 
   constructor(
     private statusService: StatusService,
     private userService: UserService,
     private localStoreService: LocalStorageService,
     private router: Router,
-    private utilService: UtilService
+    private utilService: UtilService,
+    private leaveService: LeaveService,
+    private dateUtilService: DateUtilService,
+    private cdrf: ChangeDetectorRef,
+    private holidayService: HolidayService
   ) {
-    this.alert = new Alert(null, null);
     this.user = this.localStoreService.getUser();
-    this.stateList = stateList;
-    this.recentStatus = [];
+    const startHour = Number(
+      this.localStoreService.getSettingByKey('START_HOUR')
+    );
+    this.startHour = startHour ? startHour : 8;
+    const endHour = Number(this.localStoreService.getSettingByKey('END_HOUR'));
+    this.endHour = endHour ? endHour : 17;
     this.resetStatusList();
+    this.initHolidays();
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
       today.getDate(),
       today.getFullYear()
     );
+    this.registerTimer();
+  }
+
+  private initHolidays(): void {
+    this.holidays = [];
+    this.holidayService.getAllHolidays().subscribe((res) => {
+      if (res['status'] === 'SUCCESS') {
+        this.holidays = res['data'];
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -59,7 +91,6 @@ export class MainComponent implements OnInit {
     } else {
       this.setRecentDate();
       this.getRecentStatus();
-      this.getAllUser();
     }
   }
 
@@ -67,8 +98,8 @@ export class MainComponent implements OnInit {
     row.state = this.stateList[index];
   }
 
-  submitStatus() {
-    if (!this.statusList.length) {
+  submitForm(): void {
+    if (!this.statusList.length || this.isTimeUp) {
       return;
     }
     const statusList: Status[] = [];
@@ -85,27 +116,33 @@ export class MainComponent implements OnInit {
       });
     } else {
       this.alertHandler({
-        message: 'Cannot submit. Empty description',
+        message: 'Cannot submit with empty description',
         type: 'fail',
       });
     }
   }
 
   resetStatusList() {
+    if (this.editLeavePlan) {
+      this.removedItem = new Leave();
+      this.selectedItem = null;
+    }
     this.statusList = [];
     this.message = null;
-    this.editMode = false;
+    this.editStatus = false;
+    this.editLeavePlan = false;
     const date = new Date().toLocaleDateString();
-    for (let row = 1; row <= numOfStatus; row++) {
-      const sts: Status = {
-        ticketId: '',
-        description: '',
-        state: 'In progress',
-        dDate: this.utilService.formatToTwoDigit(date),
-        user: this.user,
-        delete: false,
-      };
-      this.statusList.push(sts);
+    for (let row = 1; row <= STATUS_ROW_COUNT; row++) {
+      this.statusList.push(
+        new Status(
+          '',
+          '',
+          'In progress',
+          this.dateUtilService.formatSlashDate(date),
+          this.user,
+          false
+        )
+      );
     }
   }
 
@@ -138,24 +175,13 @@ export class MainComponent implements OnInit {
       });
   }
 
-  getAllUser() {
-    this.userList = [];
-    this.userService.getAllUser().subscribe((res) => {
-      if (res['status'] === 'FAILURE') {
-        const alert = { message: res['description'], type: res['status'] };
-        this.alertHandler(alert);
-      } else {
-        this.userList = res['data'];
-      }
-    });
-  }
-
   getTodaysStatus() {
-    if (this.editMode) {
+    if (this.editStatus) {
       return;
     }
     this.statusList = [];
-    this.editMode = true;
+    this.editStatus = true;
+    this.editLeavePlan = false;
     const today: string = `${this.today.month}/${this.today.day}/${this.today.year}`;
     this.statusService
       .statusByDateAndUserId(today, this.user.userId)
@@ -169,9 +195,57 @@ export class MainComponent implements OnInit {
       });
   }
 
-  initDefList() {
-    this.defComp.defaulterList = [];
-    this.defComp.message = '';
+  showLeavePlan(): void {
+    this.editStatus = false;
+    this.editLeavePlan = true;
+  }
+
+  addRemovedItem() {
+    if (!this.selectedItem) {
+      this.removedItem = new Leave();
+      return;
+    }
+    const leave: ILeave = {
+      leaveId: this.selectedItem._def.extendedProps.leaveId,
+      title: this.selectedItem._def.title,
+      start: this.selectedItem._instance.range.start.toString(),
+      type: null,
+    };
+    this.removedItem = leave;
+  }
+
+  selectedItemHandler(selectedItem: EventApi) {
+    this.selectedItem = selectedItem;
+    this.addRemovedItem();
+  }
+
+  loggedInUserUpdateHandler() {
+    this.user = this.localStoreService.getUser();
+  }
+
+  deleteLeaves() {
+    if (this.removedItem.leaveId) {
+      this.leaveService
+        .deleteLeaves(this.removedItem.leaveId)
+        .subscribe((res) => {
+          this.removedItem = new Leave();
+          this.alertHandler({
+            message: res['description'],
+            type: res['status'],
+          });
+          // remove card from UI
+          this.selectedItem.remove();
+          this.selectedItem = null;
+          this.resetCalendar();
+        });
+    }
+  }
+
+  resetCalendar() {
+    this.editLeavePlan = false;
+    this.cdrf.detectChanges();
+    this.editLeavePlan = true;
+    this.cdrf.detectChanges();
   }
 
   private setRecentDate() {
@@ -209,7 +283,9 @@ export class MainComponent implements OnInit {
     this.statusList.forEach((status) => {
       if (status.description.trim().length) {
         status.description = status.description.trim();
-        status.description = this.utilService.removeComma(status.description);
+        status.description = this.utilService.removeCommaAndNewLine(
+          status.description
+        );
         status.ticketId = status.ticketId ? status.ticketId.trim() : null;
         if (status.description.length > 250) {
           this.alertHandler({
@@ -219,7 +295,7 @@ export class MainComponent implements OnInit {
           isStsLenCorrect = false;
         }
         statusList.push(status);
-      } else if (!status.description.trim().length && this.editMode) {
+      } else if (!status.description.trim().length && this.editStatus) {
         statusList = [];
         isStsLenCorrect = true;
       }
@@ -248,5 +324,22 @@ export class MainComponent implements OnInit {
       };
     }
     return alert;
+  }
+
+  private registerTimer() {
+    setInterval(() => {
+      const date: Date = new Date();
+      const currentHour: number = date.getHours();
+      this.isTimeUp = !(
+        currentHour >= this.startHour && currentHour < this.endHour
+      );
+      if (this.isTimeUp) {
+        this.countDown = null;
+      } else {
+        this.countDown = `${this.endHour - (currentHour + 1)}h ${
+          60 - (date.getMinutes() + 1)
+        }m ${60 - (date.getSeconds() + 1)}s`;
+      }
+    }, 1000);
   }
 }

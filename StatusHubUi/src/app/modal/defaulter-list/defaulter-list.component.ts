@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { TOP_DEF_COUNT } from 'src/app/app.constant';
 import { Alert } from 'src/app/model/alert';
 import { DatePicker } from 'src/app/model/datePicker';
 import { User } from 'src/app/model/user';
+import { DateUtilService } from 'src/services/date-util.service';
 import { UserService } from 'src/services/user.service';
-import { UtilService } from 'src/services/util.service';
 
 @Component({
   selector: 'app-defaulter-list',
@@ -15,23 +14,24 @@ export class DefaulterListComponent {
   today: DatePicker;
   customStartDate: DatePicker;
   customEndDate: DatePicker;
-  message: string = '';
+  message = '';
   defaulterList: User[];
   callForWeek = false;
-  TOP_DEF_COUNT = TOP_DEF_COUNT;
   dateList = [];
   alert: Alert;
   @Output() alertEmitter = new EventEmitter<Alert>();
 
   constructor(
     private userService: UserService,
-    private utilService: UtilService
+    private dateUtilService: DateUtilService
   ) {
     this.alert = new Alert(null, null);
     this.initDates();
   }
 
-  private initDates() {
+  initDates() {
+    this.message = '';
+    this.defaulterList = [];
     const today = new Date();
     this.today = new DatePicker(
       today.getMonth() + 1,
@@ -48,6 +48,7 @@ export class DefaulterListComponent {
 
   getDefaulterList() {
     this.defaulterList = [];
+    this.message = 'Waiting for results...';
     this.userService
       .defaultersList(
         `${this.today.month}/${this.today.day}/${this.today.year}`
@@ -57,20 +58,15 @@ export class DefaulterListComponent {
           this.defaulterList = res['data'];
           this.callForWeek = false;
         } else {
-          this.message = 'No Defaulter for Today';
+          this.message = 'No Defaulter for today';
         }
       });
   }
 
   getCustomDefaultersList() {
     this.defaulterList = [];
-    const start = new Date(
-      `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`
-    );
-    const end = new Date(
-      `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`
-    );
-    const dateList = this.utilService.buildCustomDates(start, end);
+    this.message = 'Waiting for results...';
+    const dateList: string[] = this.buildDateList();
     if (!dateList) {
       this.alert = {
         message: 'Start Date cannot be greater than End Date',
@@ -79,12 +75,26 @@ export class DefaulterListComponent {
       return;
     }
     this.userService.getCustomDefaulters(dateList).subscribe((res) => {
-      if (res['data']) {
+      if (res['data'].length) {
         this.defaulterList = res['data'];
         this.callForWeek = true;
       } else {
-        this.message = 'No Defaulter for this Week';
+        this.message = 'No Defaulter for selected dates';
       }
     });
+  }
+
+  private buildDateList(): string[] {
+    const start = new Date(
+      `${this.customStartDate.month}/${this.customStartDate.day}/${this.customStartDate.year}`
+    );
+    const end = new Date(
+      `${this.customEndDate.month}/${this.customEndDate.day}/${this.customEndDate.year}`
+    );
+    const dateList: string[] = this.dateUtilService.buildCustomDates(
+      start,
+      end
+    );
+    return dateList;
   }
 }

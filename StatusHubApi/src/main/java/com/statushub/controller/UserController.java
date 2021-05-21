@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,8 +43,13 @@ public class UserController {
 		}
 		return result;
 	}
-
-	@PostMapping("/update")
+	
+	@GetMapping("/user")
+	public Result getUsersById(@RequestParam final int userId) {
+		return userService.getUserById(userId);
+	}
+	
+	@PutMapping("/user")
 	public Result updateDetails(@RequestBody final User user) {
 		final Result result = new Result();
 		result.setData(userService.updateUserDetails(user));
@@ -57,18 +63,17 @@ public class UserController {
 		return result;
 	}
 
-	@GetMapping("/user")
-	public Result getAllUser() {
+	@GetMapping("/user-by-type")
+	public Result getUsersByUserType(@RequestParam(defaultValue = "All") final String userType) {
 		final Result result = new Result();
-		final List<User> userList = userService.getAllUser();
-		if(userList.isEmpty()) {
-			result.setStatus(ResStatus.FAILURE);
-			result.setDescription("Failed to get User List. Please contact Admnistrator. Or add user");
-			LOG.error("Failed to get User List. Please contact Admnistrator add user");
-		} else {
-			result.setData(userList);
-		}
+		final List<User> userList = userService.getUsersByUserType(userType);
+		result.setData(userList);
 		return result;
+	}
+	
+	@GetMapping("/user-but-admin")
+	public Result findAllUsersButAmin() {
+		return userService.findAllUsersButAmin();
 	}
 	
 	@DeleteMapping("/user")
