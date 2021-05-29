@@ -11,4 +11,16 @@
   .req {
     color: red;
   }
+  .show-pass-cntr {
+    width: 26px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    border-left: none;
+  }
+  .show-pass-cntr:hover {
+    cursor: pointer;
+  }
+  .width-300 {
+    max-width: 300px;
+  }
 }

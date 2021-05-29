@@ -25,6 +25,7 @@ export class UserConsoleComponent implements OnInit {
   loggedInUser: IUser;
   user: IUser;
   userList: IUser[];
+  showPassword = false;
   @Output() alertEmitter = new EventEmitter<Alert>();
   @Output() loggedInUserUpdateEmitter = new EventEmitter();
 
@@ -50,6 +51,10 @@ export class UserConsoleComponent implements OnInit {
       'POSITION_LIST'
     );
     this.positionList = posList.split(',');
+  }
+
+  changeIcon() {
+    this.showPassword = !this.showPassword;
   }
 
   getLoggedUserDetail() {
@@ -109,6 +114,7 @@ export class UserConsoleComponent implements OnInit {
   }
 
   userChange(userId: any) {
+    this.showPassword = false;
     this.userService.getUsersById(userId).subscribe((res) => {
       if (res['data']) {
         this.user = res['data'];
