@@ -1,17 +1,8 @@
-g:
-
-cd D:\PersonnalSpringBoot\DailyStatus\dailyStatus\StatusHubUi
-
+cd StatusHubUi
 call ng build --prod
 
-cd dist\StatusHub 
-
-call xcopy *  ..\..\..\StatusHubApi\src\main\resources\static /E /R
-
-cd ..\..\..\StatusHubApi
-
+cd ..\StatusHubApi
 call mvn clean
-
-call mvn install
+call mvn install -DskipTests
 
 pause;

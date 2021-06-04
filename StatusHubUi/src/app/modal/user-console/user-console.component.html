@@ -42,8 +42,15 @@
             </div>
             <div class="form-group col-md-6">
               <label for="pass">Password: <span class="req">*</span></label>
-              <input class="form-control form-control-sm col-md-12" id="pass" placeholder="Password" name="pass"
-                [(ngModel)]="user.password" />
+              <div class="col-md-12 row">
+                <input [type]="showPassword ? 'type' : 'password'"
+                  class="form-control form-control-sm col-md-11 width-300" id="pass" placeholder="Password" name="pass"
+                  [(ngModel)]="user.password" />
+                <div class="pl-1 show-pass-cntr" (click)="changeIcon()">
+                  <i id="show-pass-btn" class="fa" [ngClass]="showPassword ? 'fa-eye' : 'fa-eye-slash'"
+                    aria-hidden="true"></i>
+                </div>
+              </div>
             </div>
           </div>
           <div class="row">
