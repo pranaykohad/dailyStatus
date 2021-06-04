@@ -24,6 +24,8 @@
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Resource Utility</a>
         <a class="dropdown-item" data-toggle="modal" data-target="#deleteUser" href="javascript:void(0);"
           [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' " (click)="delUserComp.getUserList()">Delete User</a>
+        <a class="dropdown-item" data-toggle="modal" data-target="#setting" href="javascript:void(0);"
+          [ngClass]="(user.role !== 'ADMIN') ? 'disable-view' : '' ">Setting</a>
         <a class="dropdown-item" (click)="logout()" href="javascript:void(0);">Logout</a>
       </div>
     </div>
@@ -45,9 +47,9 @@
         id="btn-leave-plan">
         Leave Plan
       </button>
-      <div *ngIf="countDown; else timesUpMsg" class="ml-2 p-1 high-light">
+      <div *ngIf="!isTimeUp; else timesUpMsg" class="ml-2 p-1 high-light">
         <span class="bold-txt" style="color: green;">Status submission will be disabled in
-        </span>{{countDown}}
+        </span>{{this.remainingHrs}}h {{this.remainingMins}}m {{this.remainingSecs}}s
       </div>
       <ng-template #timesUpMsg>
         <div class="ml-2 p-1 bold-txt high-light" style="color: red;">Your time is up for today</div>
@@ -206,6 +208,7 @@
   <app-user-console #userConsole (alertEmitter)="alertHandler($event)"
     (loggedInUserUpdateEmitter)="loggedInUserUpdateHandler()">
   </app-user-console>
+  <app-setting (alertEmitter)="alertHandler($event)"></app-setting>
   <div class="footer">
     <div class="mr-2 mb-1">
       Created By: PRANAY KOHAD

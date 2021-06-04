@@ -65,8 +65,4 @@ export class UserService {
       `${BASE_URL}customDefaulters?datesList=${dates}`
     );
   }
-
-  getSettings(): Observable<any> {
-    return this.httpClient.get<any>(`${BASE_URL}setting`);
-  }
 }

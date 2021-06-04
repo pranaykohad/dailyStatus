@@ -38,14 +38,17 @@ export class MainComponent implements OnInit {
   isTimeUp: boolean = true;
   countDown: string;
   holidays: IHoliday[];
-  startHour: number;
   endHour: number;
+  endMinute: number;
   @ViewChild('defComp') defComp: DefaulterListComponent;
   @ViewChild('delUserComp') delUserComp: DeleteUserComponent;
   @ViewChild('customReportComp') customReportComp: CustomReportComponent;
   private recentDate: DatePicker;
   private alertTimeout: any;
   private today: DatePicker;
+  remainingHrs: number;
+  remainingMins: number;
+  remainingSecs: number;
 
   constructor(
     private statusService: StatusService,
@@ -59,12 +62,11 @@ export class MainComponent implements OnInit {
     private holidayService: HolidayService
   ) {
     this.user = this.localStoreService.getUser();
-    const startHour = Number(
-      this.localStoreService.getSettingByKey('START_HOUR')
-    );
-    this.startHour = startHour ? startHour : 8;
-    const endHour = Number(this.localStoreService.getSettingByKey('END_HOUR'));
-    this.endHour = endHour ? endHour : 17;
+    const endTime = this.localStoreService
+      .getSettingByKey('END_TIME')
+      .split(':');
+    this.endHour = endTime[0] ? Number(endTime[0]) : 17;
+    this.endMinute = endTime[1] ? Number(endTime[1]) : 0;
     this.resetStatusList();
     this.initHolidays();
     const today = new Date();
@@ -139,8 +141,7 @@ export class MainComponent implements OnInit {
           '',
           'In progress',
           this.dateUtilService.formatSlashDate(date),
-          this.user,
-          false
+          this.user
         )
       );
     }
@@ -328,18 +329,19 @@ export class MainComponent implements OnInit {
 
   private registerTimer() {
     setInterval(() => {
-      const date: Date = new Date();
-      const currentHour: number = date.getHours();
-      this.isTimeUp = !(
-        currentHour >= this.startHour && currentHour < this.endHour
-      );
-      if (this.isTimeUp) {
-        this.countDown = null;
-      } else {
-        this.countDown = `${this.endHour - (currentHour + 1)}h ${
-          60 - (date.getMinutes() + 1)
-        }m ${60 - (date.getSeconds() + 1)}s`;
-      }
+      const endTime: Date = new Date();
+      endTime.setHours(this.endHour);
+      endTime.setMinutes(this.endMinute);
+      endTime.setSeconds(0);
+      this.getTimeRemaining(endTime);
     }, 1000);
+  }
+
+  getTimeRemaining(endTime: Date) {
+    const total: number = endTime.getTime() - new Date().getTime();
+    this.remainingSecs = Math.floor((total / 1000) % 60);
+    this.remainingMins = Math.floor((total / 1000 / 60) % 60);
+    this.remainingHrs = Math.floor((total / (1000 * 60 * 60)) % 24);
+    this.isTimeUp = this.remainingHrs <= 0 && this.remainingMins <= -1;
   }
 }

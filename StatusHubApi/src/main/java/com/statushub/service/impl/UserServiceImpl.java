@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.statushub.constant.ReportConstant;
+import com.statushub.constant.AppConstant;
 import com.statushub.entity.Holiday;
 import com.statushub.entity.Result;
 import com.statushub.entity.Result.ResStatus;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 		final List<User> finalUserList = new ArrayList<>();
 		final List<String> userTypes = new ArrayList<>();
 		if (userType.equalsIgnoreCase("All")) {
-			userTypes.addAll(ReportConstant.getAllUserTypeList());
+			userTypes.addAll(AppConstant.getAllUserTypeList());
 		} else {
 			userTypes.add(userType);
 		}
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		final Result result = new Result();
 		List<User> finalUserList = new ArrayList<>();
 		final List<String> userTypes = new ArrayList<>();
-		userTypes.addAll(ReportConstant.getAllUserTypeList());
+		userTypes.addAll(AppConstant.getAllUserTypeList());
 		final List<User> allUserList = userRepo.findAllUsers(userTypes);
 		final List<User> validUserList = userRepo.getValidUserList(date);
 		if (isHoliday(date)) {
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
 	public Result getCustomDefaulters(final List<String> dateList) {
 		final Result result = new Result();
 		final List<String> userTypes = new ArrayList<>();
-		userTypes.addAll(ReportConstant.getAllUserTypeList());
+		userTypes.addAll(AppConstant.getAllUserTypeList());
 		List<User> finalUserList = userRepo.findAllUsers(userTypes);
 		finalUserList.forEach(user -> user.setDefCount(0));
 		dateList.forEach(date -> {

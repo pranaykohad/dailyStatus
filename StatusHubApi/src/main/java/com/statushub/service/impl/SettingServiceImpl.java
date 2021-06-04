@@ -45,7 +45,7 @@ public class SettingServiceImpl implements SettingService {
 	}
 
 	@Override
-	public Result saveOrUpdateSetting(final List<Setting> settings) {
+	public Result saveOrUpdateSettings(final List<Setting> settings) {
 		final Result result = new Result();
 		result.setStatus(ResStatus.FAILURE);
 		final List<Setting> res = settingRepository.saveAll(settings);
@@ -53,6 +53,17 @@ public class SettingServiceImpl implements SettingService {
 			res.forEach(item -> {
 				LOG.debug("Saved Setting Object: {} : {}", item.getKeyName(), item.getValue());
 			});
+			result.setStatus(ResStatus.SUCCESS);
+		}
+		return result;
+	}
+
+	@Override
+	public Result saveOrUpdateSetting(final Setting setting) {
+		final Result result = new Result();
+		result.setStatus(ResStatus.FAILURE);
+		final Setting save = settingRepository.save(setting);
+		if(save != null) {
 			result.setStatus(ResStatus.SUCCESS);
 		}
 		return result;

@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/services/local-storage.service';
-import { Setting } from '../model/Setting';
-
+import { SettingService } from 'src/services/setting.service';
 import { UserService } from './../../services/user.service';
 import { User } from './../model/user';
 
@@ -19,7 +18,8 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private userService: UserService,
-    private localStoreService: LocalStorageService
+    private localStoreService: LocalStorageService,
+    private settingService: SettingService
   ) {
     this.user = new User();
     this.localStoreService.resetLocalStorage();
@@ -41,7 +41,7 @@ export class LoginComponent {
   }
 
   private setSettings() {
-    this.userService.getSettings().subscribe((res) => {
+    this.settingService.getAllSettings().subscribe((res) => {
       this.localStoreService.setSettings(res['data']);
     });
   }

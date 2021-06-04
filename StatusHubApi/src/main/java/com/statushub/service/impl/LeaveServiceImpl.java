@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.statushub.constant.ReportConstant;
+import com.statushub.constant.AppConstant;
 import com.statushub.entity.Attachment;
 import com.statushub.entity.Leave;
 import com.statushub.entity.Result;
@@ -147,7 +147,7 @@ public class LeaveServiceImpl implements LeaveService {
 		addSubTotalLine("Billable Subtotal", content, totolBBaseHours, totolBHolidayHours, totolBLeaveHours,
 			totolBAvailableHours);
 
-		content.append(ReportConstant.ONE_LINE + ",");
+		content.append(AppConstant.ONE_LINE + ",");
 		content.append("Additional Resources Applied,");
 
 		final List<User> unBillableUserList = userRepository.findAllBillableUsersButAmin(false);
@@ -231,7 +231,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 	private void addTotalLine(final StringBuilder content, final float totolBaseHours, final float totolHolidayHours,
 		final float totolLeaveHours, final float totolAvailableHours) {
-		content.append(ReportConstant.ONE_LINE + ",");
+		content.append(AppConstant.ONE_LINE + ",");
 		content.append("Total" + ",,");
 		content.append(totolBaseHours + ",");
 		content.append(totolHolidayHours + ",");
@@ -243,7 +243,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 	private void addSubTotalLine(final String subotalTitle, final StringBuilder content, final float totolBillableBH,
 		final float totolBillableHH, final float totolBillableLH, final float totolBillableAH) {
-		content.append(ReportConstant.ONE_LINE + ",");
+		content.append(AppConstant.ONE_LINE + ",");
 		content.append(subotalTitle + ",,");
 		content.append(totolBillableBH + ",");
 		content.append(totolBillableHH + ",");
@@ -251,12 +251,12 @@ public class LeaveServiceImpl implements LeaveService {
 		content.append(totolBillableAH + ",");
 		content.append(totolBillableAH + ",");
 		content.append(HUNDRED_PERCENT);
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 	}
 
 	private void addRow(final StringBuilder content, final User user, final float baseHours, final float totalHolidayHours,
 		final float leaveHours, final float availableHours) {
-		content.append(ReportConstant.ONE_LINE+",");
+		content.append(AppConstant.ONE_LINE+",");
 		content.append(user.getFirstName() + " " + user.getLastName() + ",");
 		content.append(user.getPosition() + ",");
 		content.append(baseHours + ",");
@@ -275,12 +275,12 @@ public class LeaveServiceImpl implements LeaveService {
 		reportUtil.buildLeaveReportHeading(content, startDate, endDate);
 		final List<String> types = new ArrayList<>();
 		if (type.equalsIgnoreCase("All")) {
-			types.addAll(ReportConstant.getLeaveTypes());
+			types.addAll(AppConstant.getLeaveTypes());
 		} else {
 			types.add(type);
 		}
 		final List<Leave> leaves = leaveRepo.getUserOnLeave(startDate, endDate, types);
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 
 		if(!leaves.isEmpty()) {
 			int count = 1;
@@ -290,7 +290,7 @@ public class LeaveServiceImpl implements LeaveService {
 				content.append(leave.getDayType().equals(HALF_DAY) ? "1/2 Day," : "1 Day,");
 				content.append(leave.getStart()+",");
 				content.append(leave.getType().equalsIgnoreCase("P") ? "Planned" : "Un-Planned" +",");
-				content.append(ReportConstant.ONE_LINE);
+				content.append(AppConstant.ONE_LINE);
 			}
 		}
 

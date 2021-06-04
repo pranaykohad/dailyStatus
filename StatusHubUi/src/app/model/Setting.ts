@@ -1,8 +1,8 @@
 export interface ISetting {
-  key: string;
+  keyName: string;
   value: string;
 }
 export class Setting implements ISetting {
-  key: string;
+  keyName: string;
   value: string;
 }

@@ -11,5 +11,7 @@ public interface SettingService {
 
 	public Result getSetting(final String key);
 
-	public Result saveOrUpdateSetting(final List<Setting> setting);
+	public Result saveOrUpdateSettings(final List<Setting> setting);
+	
+	public Result saveOrUpdateSetting(final Setting setting);
 }

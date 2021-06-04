@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.statushub.constant.ReportConstant;
+import com.statushub.constant.AppConstant;
 import com.statushub.entity.Attachment;
 import com.statushub.entity.Result;
 import com.statushub.entity.Status;
@@ -100,7 +100,7 @@ public class StatusServiceImpl implements StatusService {
 	private StringBuilder createDailyReport(final String date) {
 		final StringBuilder content = new StringBuilder();
 		reportUtil.addGreeting(content);
-		ReportConstant.getModuleList().forEach(module-> {
+		AppConstant.getModuleList().forEach(module-> {
 			subHeadCntr = 0;
 			reportUtil.addModuleName(content, module);
 			final List<String> userTypeList = reportUtil.getUserTypeList(module);
@@ -113,10 +113,10 @@ public class StatusServiceImpl implements StatusService {
 
 	private void createContent(final String date, final StringBuilder content, final String module, final List<String> userTypeList) {
 		userTypeList.forEach(usertype->{
-			ReportConstant.getStateList().forEach(state->
+			AppConstant.getStateList().forEach(state->
 			addStsToContent(date, content, module, usertype, state)
 					);
-			content.append(ReportConstant.ONE_LINE);
+			content.append(AppConstant.ONE_LINE);
 		});
 	}
 
@@ -124,10 +124,10 @@ public class StatusServiceImpl implements StatusService {
 		final List<Status> statusList = getStatusByDate(date, module, userType, state);
 		if(!statusList.isEmpty()) {
 			subHeadCntr = subHeadCntr+1;
-			content.append(subHeadCntr+")"+ReportConstant.TAB);
+			content.append(subHeadCntr+")"+AppConstant.TAB);
 			reportUtil.createSubHeading(content, userType, state);
 			reportUtil.addStatus(content, statusList);
-			content.append(ReportConstant.ONE_LINE);
+			content.append(AppConstant.ONE_LINE);
 		} 
 	}
 
@@ -138,7 +138,7 @@ public class StatusServiceImpl implements StatusService {
 			reportUtil.addName(content, userId);
 			final List<Status> statusList = stsRepo.getStatusByUserAndDateRange(userId, startDate, endDate);
 			reportUtil.addCustomStatus(content, statusList);
-			content.append(ReportConstant.ONE_LINE);
+			content.append(AppConstant.ONE_LINE);
 		});
 		return content;
 	}

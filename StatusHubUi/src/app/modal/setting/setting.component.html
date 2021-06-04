@@ -1,0 +1,26 @@
+<div class="modal fade" id="setting">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Setting</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="form-group">
+              <label for="time">Select end time:</label>
+              <input type="time" id="time" [(ngModel)]="endTime" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary btn-sm" data-dismiss="modal" (click)="submitSetting()">
+          Submit </button>
+      </div>
+    </div>
+  </div>
+</div>

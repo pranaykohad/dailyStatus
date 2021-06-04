@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.statushub.constant.ReportConstant;
+import com.statushub.constant.AppConstant;
 import com.statushub.entity.Status;
 import com.statushub.entity.User;
 import com.statushub.repository.UserRepository;
@@ -27,25 +27,25 @@ public class ReportUtil {
 	private static final int SMALL_A = 97;
 
 	public void addGreeting(final StringBuilder content) {
-		content.append(ReportConstant.getGreeting());
-		content.append(ReportConstant.THREE_LINE);
+		content.append(AppConstant.getGreeting());
+		content.append(AppConstant.THREE_LINE);
 	}
 
 	public void addHeading(final StringBuilder content, final String reportType, final String startDate, final String endDate) {
 		content.append(reportType+" Report from "+startDate+" to "+endDate+" :");
-		content.append(ReportConstant.TWO_LINE);
+		content.append(AppConstant.TWO_LINE);
 	}
 
 	public void addName(final StringBuilder content, final Integer userId) {
 		final User user = userRepository.getUserByUserId(userId);
 		LOG.debug("User is added: {}",user.getUserId());
 		content.append("Name: "+user.getFirstName()+" "+user.getLastName());
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 	}
 
 	public void addModuleName(final StringBuilder content, final String module) {
 		content.append(module+":");
-		content.append(ReportConstant.TWO_LINE);
+		content.append(AppConstant.TWO_LINE);
 	}
 
 	public void addStatus(final StringBuilder content, final List<Status> todayStsList) {
@@ -57,7 +57,7 @@ public class ReportUtil {
 			}
 			content.append(sts.getDescription() + " ");
 			content.append("("+sts.getUser().getFirstName()+" "+sts.getUser().getLastName()+")");
-			content.append(ReportConstant.ONE_LINE);
+			content.append(AppConstant.ONE_LINE);
 		}
 	}
 
@@ -74,11 +74,11 @@ public class ReportUtil {
 				}
 				content.append(todayStsList.get(i).getDescription() + ",");
 				content.append(todayStsList.get(i).getState()+",");
-				content.append(ReportConstant.ONE_LINE);
+				content.append(AppConstant.ONE_LINE);
 			}
 		} else {
 			content.append("No record found");
-			content.append(ReportConstant.ONE_LINE);
+			content.append(AppConstant.ONE_LINE);
 		}
 	}
 
@@ -105,19 +105,19 @@ public class ReportUtil {
 		List<String> userTypes = new ArrayList<>();
 		switch (module) {
 			case "OCR":
-				userTypes = ReportConstant.getOcrUserTypeList();
+				userTypes = AppConstant.getOcrUserTypeList();
 				break;
 			case "Connector":
-				userTypes = ReportConstant.getConnUserTypeList();
+				userTypes = AppConstant.getConnUserTypeList();
 				break;
 			case "Workbench 9.2":
-				userTypes = ReportConstant.getWbUserTypeList();
+				userTypes = AppConstant.getWbUserTypeList();
 				break;
 			case "Portal":
-				userTypes = ReportConstant.getPortTypeList();
+				userTypes = AppConstant.getPortTypeList();
 				break;	
 			case "Automation":
-				userTypes = ReportConstant.getAutoUserTypeList();
+				userTypes = AppConstant.getAutoUserTypeList();
 				break;	
 			default:
 				break;
@@ -127,7 +127,7 @@ public class ReportUtil {
 
 	public void addSubHeading(final StringBuilder content, final String task, final String state) {
 		content.append(task+" is "+state+" for:");
-		content.append(ReportConstant.TWO_LINE);
+		content.append(AppConstant.TWO_LINE);
 	}
 
 	public String formatDescription(final List<Status> todayStsList, final int i) {
@@ -139,7 +139,7 @@ public class ReportUtil {
 			for(int j=0; j<subStrList.size(); j++) {
 				finalString.append(subStrList.get(j));
 				if(j < subStrList.size()-1) {
-					finalString.append(ReportConstant.ONE_LINE);
+					finalString.append(AppConstant.ONE_LINE);
 					finalString.append("       ");
 				}
 			}
@@ -159,7 +159,7 @@ public class ReportUtil {
 	}
 	
 	public void buildResUtilReportHeading(final StringBuilder content) {
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 		content.append(",");
 		content.append("Team Member,");
 		content.append("Role,");
@@ -173,7 +173,7 @@ public class ReportUtil {
 	
 	public void buildLeaveReportHeading(final StringBuilder content, final String startDate, final String endDate) {
 		content.append("Leave plan from "+startDate+" to "+endDate);
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 		content.append("Sr. No.,");
 		content.append("Team Member,");
 		content.append("Days,");
@@ -187,7 +187,7 @@ public class ReportUtil {
 		content.append("Ticket Id,");
 		content.append("Description,");
 		content.append("Status,");
-		content.append(ReportConstant.ONE_LINE);
+		content.append(AppConstant.ONE_LINE);
 	}
 
 	private boolean isTicketIdBlank(final String description) {

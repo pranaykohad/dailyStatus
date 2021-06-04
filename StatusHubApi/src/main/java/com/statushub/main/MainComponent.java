@@ -19,7 +19,6 @@ import com.statushub.entity.User;
 import com.statushub.service.SettingService;
 import com.statushub.service.UserService;
 
-
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = "com")
 @EntityScan("com.statushub.entity")
@@ -31,13 +30,13 @@ public class MainComponent {
 
 	@Autowired
 	SettingService settingService;
-	
-	private static final Logger LOG = LoggerFactory.getLogger("MainComponent.class");
 
+	private static final Logger LOG = LoggerFactory.getLogger("MainComponent.class");
 
 	public static void main(final String[] args) {
 		SpringApplication.run(MainComponent.class, args);
 		LOG.debug("StatusHub has started..........");
+
 	}
 
 	@PostConstruct
@@ -80,7 +79,7 @@ public class MainComponent {
 		settingList.add(setting);
 
 		setting = new Setting();
-		setting.setKeyName("END_HOUR");
+		setting.setKeyName("END_TIME");
 		setting.setValue("17");
 		settingList.add(setting);
 
@@ -100,7 +99,27 @@ public class MainComponent {
 				"PgM,Project Lead,Sr. Architech,Sr. Tech Lead,Lead Developer,Developer,Sr. Developer,Perf. Eng.,Lead QA,QA,Sr. AQA,AQA");
 		settingList.add(setting);
 
-		settingService.saveOrUpdateSetting(settingList);
+		setting = new Setting();
+		setting.setKeyName("ADMIN_MAIL");
+		setting.setValue("");
+		settingList.add(setting);
+		
+		setting = new Setting();
+		setting.setKeyName("USER_NAME");
+		setting.setValue("");
+		settingList.add(setting);
+
+		setting = new Setting();
+		setting.setKeyName("PASSWORD");
+		setting.setValue("");
+		settingList.add(setting);
+		
+		setting = new Setting();
+		setting.setKeyName("DEFAULTER_REMINDER_CRON_JOB");
+		setting.setValue("0 1 17 ? * 1-5");
+		settingList.add(setting);
+
+		settingService.saveOrUpdateSettings(settingList);
 	}
 
 }

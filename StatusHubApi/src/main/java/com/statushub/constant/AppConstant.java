@@ -3,9 +3,9 @@ package com.statushub.constant;
 import java.util.Arrays;
 import java.util.List;
 
-public class ReportConstant {
+public class AppConstant {
 
-	private ReportConstant() {}
+	private AppConstant() {}
 
 	public static final String ONE_LINE = "\r\n";
 
