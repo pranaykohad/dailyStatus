@@ -28,12 +28,12 @@ public class MailUtil {
 	}
 
 	public String defReminderContent() {
-		final Setting setting = settingRepository.findByKeyName("END_HOUR");
+		final Setting setting = settingRepository.findByKeyName("END_TIME");
 		final int endHour = Integer.parseInt(setting.getValue());
 		return "<html><body>Dear Sir/Madam,<br>You have not submitted your status for Today. "
-				+ "Please submit it on <a href='http://172.18.0.6:8000' target='_blank'>StatusHub</a> before " + (endHour - 12) + " " + setMeridiem(endHour)
-				+ ".<br><br>Regards,<br><b>StatusHub Admin</b><br>"
-				+ "(This is an auto generated mail, please do not reply)" + "</body></html>";
+		+ "Please submit it on <a href='http://172.18.0.6:8000' target='_blank'>StatusHub</a> before " + (endHour - 12) + " " + setMeridiem(endHour)
+		+ ".<br><br>Regards,<br><b>StatusHub Admin</b><br>"
+		+ "(This is an auto generated mail, please do not reply)" + "</body></html>";
 	}
 
 	public Properties getProperties() {

@@ -25,12 +25,6 @@ import { UserConsoleComponent } from './modal/user-console/user-console.componen
 import { DateFormatPipe } from './pipe/date-format.pipe';
 import { SettingComponent } from './modal/setting/setting.component';
 
-const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'main', component: MainComponent },
-  { path: '', redirectTo: 'index', pathMatch: 'full' },
-];
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +48,6 @@ const routes: Routes = [
     FormsModule,
     NgbPaginationModule,
     NgbAlertModule,
-    RouterModule.forRoot(routes, { useHash: true }),
     NgbModule,
     FullCalendarModule,
     DragDropModule,
